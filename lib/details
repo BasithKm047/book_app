@@ -1,0 +1,25 @@
+ElevatedButton(
+      child: Text('Button'),
+      onPressed: () {},
+      style: ElevatedButton.styleFrom({
+           Color backgroundColor, // set the background color
+           Color foregroundColor,
+           Color disabledForegroundColor,
+           Color shadowColor,
+           double elevation,
+           TextStyle textStyle,
+           EdgeInsetsGeometry padding,
+           Size minimumSize,
+           BorderSide side,
+           OutlinedBorder shape,
+           MouseCursor enabledMouseCursor,
+           MouseCursor disabledMouseCursor,
+           VisualDensity visualDensity,
+           MaterialTapTargetSize tapTargetSize,
+           Duration animationDuration,
+           bool enableFeedback
+     }),
+),\
+
+Color.fromARGB(255, 104, 175, 107)
+adb connect 10.0.15.193:5555

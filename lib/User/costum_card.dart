@@ -1,3 +1,4 @@
+import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,7 +19,7 @@ class CostumCard extends StatelessWidget {
           elevation: 5,
           child: Container(
             decoration: BoxDecoration(
-                color: Color.fromARGB(255, 104, 175, 107),
+                color: CostumColor().costum_color,
                 border: Border.all(
                   color: Colors.grey,
                   width: .5,
@@ -47,7 +48,7 @@ class CostumCard extends StatelessWidget {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
-                          'Fiction'),
+                          title),
                     )),
                 Expanded(
                   flex: 1,
@@ -61,7 +62,7 @@ class CostumCard extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.asset(
-                                fit: BoxFit.cover, 'Asset/book_image_2.jpg'),
+                                fit: BoxFit.cover, imagePath),
                           ),
                         )),
                   ),

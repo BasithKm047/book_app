@@ -18,16 +18,16 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   int selectedIndex = 0;
   final List<Widget> _pages = [
     const HomeScreen(),
-    const BookstoreScreen(),
+     BookstoreScreen(),
      LibraryScreen(),
     const SearchScreen(),
   ];
 
   List<Widget> navigationItems = [
-    Icon(Icons.home),
-    Icon(Icons.shopping_bag),
-    Icon(Boxicons.bx_library),
-    Icon(Boxicons.bx_search)
+    const Icon(Icons.home),
+    const Icon(Icons.shopping_bag),
+    const Icon(Boxicons.bx_library),
+    const Icon(Boxicons.bx_search)
 
     // BottomNavigationBarItem(label: 'Home', icon: Icon(
     //     // color: Colors.black,
@@ -52,21 +52,18 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: _pages[selectedIndex],
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20)
-          ),
-          child: CurvedNavigationBar(
-            // buttonBackgroundColor: Color.fromARGB(255, 104, 175, 107),
-            color: Colors.white,
-            backgroundColor:CostumColor().costum_color,
-            // height: 15,
-          
-            // backgroundColor: const Color.fromARGB(255, 104, 175, 107),
-          
-            onTap: onTapedItems,
-            items: navigationItems,
-          ),
+        bottomNavigationBar: CurvedNavigationBar(
+          // animationDuration: Duration(seconds: 2),
+          // animationCurve: ,
+          // buttonBackgroundColor: Color.fromARGB(255, 104, 175, 107),
+          color: Colors.white,
+          backgroundColor:CostumColor().costum_color,
+          // height: 15,
+        
+          // backgroundColor: const Color.fromARGB(255, 104, 175, 107),
+        
+          onTap: onTapedItems,
+          items: navigationItems,
         ));
   }
 }

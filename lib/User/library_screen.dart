@@ -1,3 +1,4 @@
+import 'package:book_app/User/library_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,12 +29,15 @@ class LibraryScreen extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
             LibrarDetails[index]),
-          trailing: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_forward_ios)),
+          trailing: IconButton(onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));
+          }, icon: const Icon(Icons.arrow_forward_ios)),
         );
-      }, separatorBuilder: (context, index) => Divider(), itemCount: 3),
+      }, separatorBuilder: (context, index) => const Divider(), itemCount: LibrarDetails.length),
     );
   }
   
+    // ignore: non_constant_identifier_names
     List LibrarDetails=[
       'Favourite',
       'Want to Read',

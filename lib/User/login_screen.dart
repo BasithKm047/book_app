@@ -1,8 +1,5 @@
 import 'package:book_app/Admin/admin_login_screen.dart';
-import 'package:book_app/User/home_screen.dart';
 import 'package:book_app/User/navigator_screen.dart';
-import 'package:book_app/User/signup_screen.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -169,32 +166,7 @@ class LoginScreen extends StatelessWidget {
                                       style: TextStyle(color: Colors.white),
                                       'Log in'))),
                         ),
-                        Text.rich(
-                          TextSpan(
-                              text: "Don't have an account?",
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 11.0,
-                              ),
-                              children: [
-                                TextSpan(
-                                    text: 'Sign up here',
-                                    style: GoogleFonts.jacquesFrancois(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color.fromARGB(
-                                          255, 104, 175, 107),
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SignupScreen(),
-                                        ));
-                                      })
-                              ]),
-                        )
+                      
                       ],
                     ),
                   ),

@@ -1,4 +1,7 @@
+import 'package:book_app/User/book_card.dart';
+import 'package:book_app/User/costum_bookview_screen.dart';
 import 'package:book_app/User/costum_card.dart';
+import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/User/navigator_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +21,7 @@ class MyApp extends StatelessWidget {
         
       
       ),
-      home:NavigatorScreen(),
+      home:NavigatorScreen()
     );
   }
 }

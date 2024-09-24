@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-                const CostumHomescreenDetails(title: 'Want to Read',imagePath: 'Asset/Fiction_books_1_image_1.jpg',),
+                const CostumHomescreenDetails(title: 'Want to Read',imagePath: 'Asset/Fiction_books_1_image_1.jpg',isAdmin: false,),
                 const SizedBox(
                   height: 30,
                 ),
@@ -107,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                       SizedBox(
                         height: 200,
                         child: InkWell(
-                          child: CustomListview(scrollDirection: Axis.horizontal,)
+                          child: CustomListview(scrollDirection: Axis.horizontal,isAdmin: false,)
                         ),
                       )
                     ],
@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-               const CostumHomescreenDetails(title: 'Most Readed Books', imagePath: 'Asset/Fiction_books_1_image_1.jpg')
+               const CostumHomescreenDetails(title: 'Most Readed Books', imagePath: 'Asset/Fiction_books_1_image_1.jpg',isAdmin: false,)
               ],
             ),
           ),

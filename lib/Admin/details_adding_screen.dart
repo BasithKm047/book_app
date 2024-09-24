@@ -5,7 +5,6 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DetailsAddingScreen extends StatefulWidget {
@@ -67,8 +66,8 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                 const SizedBox(height: 30,),
                 const CostumTextformfield(title: 'Book name',),
                 const SizedBox(height: 15,),
-                const CostumTextformfield(title: 'Book Geners add',),
-                const SizedBox(height: 15,),
+                // const CostumTextformfield(title: 'Book Geners add',),
+                // const SizedBox(height: 15,),
           Padding(
             padding: const EdgeInsets.only(left:20,right: 20 ),
             child: Container(
@@ -116,7 +115,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
               ),
             ),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
 
           Container(
             height: 250,
@@ -124,11 +123,15 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
             decoration: BoxDecoration(
               color: CostumColor().costum_color_2,
               borderRadius: BorderRadius.circular(10),
-              
+            
               
             ),
             child: TextFormField(
+              maxLines: null,
+              expands: true,
+              keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
+
                 
                 hintText: 'Discribtion',
                 hintStyle: CostumFontStyle(color: CostumColor().costum_color_3, fontSize: 15, fontWeight: FontWeight.normal).getFontstyle_2()
@@ -150,7 +153,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: IconButton(onPressed: (){}, icon: Icon(Icons.upload),),
+                    child: IconButton(onPressed: (){}, icon: const Icon(Icons.upload),),
                   ),
                   Text(
                     style: CostumFontStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.normal).getFontstyle_2(),
@@ -159,7 +162,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
               ),
             ),
           ),
-          SizedBox(height: 30,),
+          const SizedBox(height: 30,),
 
           SizedBox(
             height: 50,
@@ -214,10 +217,10 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
 
     if(result!=null){
       PlatformFile file=result.files.first;
-      print('selected file:${file.name}');
+      // print('selected file:${file.name}');
       print('File path:${file.path}');
     }else{
-      print('No File Selected');
+      // print('No File Selected');
     }
 
   }

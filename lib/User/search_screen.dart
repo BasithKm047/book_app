@@ -22,13 +22,13 @@ class SearchScreen extends StatelessWidget {
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.grey)
+              borderSide: const BorderSide(color: Colors.grey)
         
         
         
             ),
             labelText: 'Search',
-            suffixIcon: Icon(Icons.search)
+            suffixIcon: const Icon(Icons.search)
             
           ),
         ),

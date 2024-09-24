@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 class CostumHomescreenDetails extends StatelessWidget {
   final String title;
   final String imagePath;
-  const CostumHomescreenDetails({super.key, required this.title, required this.imagePath});
+  final bool isAdmin;
+  const CostumHomescreenDetails({super.key, required this.title, required this.imagePath, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class CostumHomescreenDetails extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,),));
                   },
                   icon: const Icon(Icons.arrow_forward_ios_outlined))
             ],
@@ -70,7 +71,7 @@ class CostumHomescreenDetails extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  CostumBookviewScreen(name: 'Book name',imagePath: 'Asset/Fiction_books_1_image_1.jpg',),));
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  const CostumBookviewScreen(name: 'Book name',imagePath: 'Asset/Fiction_books_1_image_1.jpg',),));
                             },
                             child: Image.asset(
                                 fit: BoxFit.cover,

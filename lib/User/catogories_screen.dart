@@ -1,10 +1,12 @@
 import 'package:book_app/User/book_card.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
 
 class CatogoriesScreen extends StatelessWidget {
   final String title;
-  const CatogoriesScreen({super.key, required this.title});
+  final bool isAdmin;
+  const CatogoriesScreen({super.key, required this.title, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,9 @@ class CatogoriesScreen extends StatelessWidget {
         return BookCard(
           imagePath: 'Asset/Fiction_books_1_image_1.jpg',
           title: 'name',
+          isAdmin: isAdmin,
+          icon: const Icon(Icons.delete),
+          icon_2: const Icon(Boxicons.bx_edit),
         
         );
 

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class CustomListview extends StatelessWidget {
   final Axis scrollDirection ;
-   CustomListview({super.key, required this.scrollDirection});
+  final bool isAdmin;
+   CustomListview({super.key, required this.scrollDirection, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class CustomListview extends StatelessWidget {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  CatogoriesScreen(title: catagories[index],),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  CatogoriesScreen(title: catagories[index],isAdmin: isAdmin,),));
                   },
                   child: CostumCard(title: catagories[index], imagePath:  'Asset/book_image_2.jpg'));
               },

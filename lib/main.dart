@@ -1,11 +1,16 @@
-import 'package:book_app/User/book_card.dart';
-import 'package:book_app/User/costum_bookview_screen.dart';
-import 'package:book_app/User/costum_card.dart';
-import 'package:book_app/User/catogories_screen.dart';
-import 'package:book_app/User/navigator_screen.dart';
-import 'package:flutter/material.dart';
 
-void main(List<String> args) {
+import 'package:book_app/User/navigator_screen.dart';
+import 'package:book_app/model/book_model.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+
+void main(List<String> args) async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(BookAdapter());
+
+
+
   runApp(const MyApp());
 }
 
@@ -21,7 +26,7 @@ class MyApp extends StatelessWidget {
         
       
       ),
-      home:NavigatorScreen()
+      home: const NavigatorScreen()
     );
   }
 }

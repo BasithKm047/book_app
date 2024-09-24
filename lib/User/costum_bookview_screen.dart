@@ -126,7 +126,7 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
               ),
               
               onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookReaderScreen(),));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BookReaderScreen(),));
             
             
             }, child:  Text(

@@ -39,12 +39,21 @@ dependencies:
   path_provider: ^2.1.4
   # syncfusion_flutter_pdfviewer: ^27.1.48
   file_picker: ^6.0.0
-
+  flashy_tab_bar2: ^0.0.10
+  stylish_bottom_bar: ^1.1.0
+  dot_navigation_bar: ^1.0.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  
+  
 
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.12
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -62,6 +71,7 @@ flutter:
     - Asset/Fiction_books_1_image_1.jpg
     - Asset/book_image_2.jpg
     - Asset/Books/the_girl_who_lept.pdf
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -9,7 +9,8 @@ class BookCard extends StatefulWidget {
   String imagePath;
   Icon? icon;
   Icon?icon_2;
-   BookCard({super.key,required this.title,required this.imagePath ,this.icon, this.icon_2});
+  final bool isAdmin;
+   BookCard({super.key,required this.title,required this.imagePath ,this.icon, this.icon_2,required this.isAdmin});
 
   @override
   State<BookCard> createState() => _BookCardState();
@@ -62,6 +63,10 @@ class _BookCardState extends State<BookCard> {
          
            )),
 
+
+           if(widget.isAdmin==true)
+           
+
            Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -90,7 +95,8 @@ class _BookCardState extends State<BookCard> {
            )
            :const SizedBox.shrink(),
             ],
-           )
+           ),
+           
 
           // Icon(Icons.abc_sharp),
 

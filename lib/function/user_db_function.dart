@@ -1,0 +1,42 @@
+import 'package:book_app/model/user_model.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+
+ValueNotifier <List<UserModel>>userList_notifier=ValueNotifier([]);
+
+Future<void>addUser(UserModel value)async{
+  userList_notifier.value.add(value);
+  final userDb=await Hive.openBox<UserModel>('UserDetails');
+  await userDb.put(value.id, value);
+  print('User added Successfully');
+
+
+}
+
+Future<void> updateUser(UserModel value) async {
+    final userDb = await Hive.openBox<UserModel>('UserDetails');
+    if (userDb.containsKey(value.id)) {
+      await userDb.put(value.id, value);
+    }
+    print('User Updated Successfully');
+  }
+
+  Future<void>deleteUser(UserModel value)async{
+    final userDb=await Hive.openBox('UserDetails');
+    if(userDb.containsKey(value.id)){
+      await userDb.delete(value.id);
+    }
+    print('user Deleted Success fully');
+
+  }
+
+  Future<void>getAllUser(UserModel value)async{
+      final userDb=await Hive.openBox('UserDetails');
+      final user=userDb.values.toList();
+      userList_notifier.value.toList();
+  print('User loaded: ${user.map((g) => g.name).toList()}');
+
+
+
+
+  }

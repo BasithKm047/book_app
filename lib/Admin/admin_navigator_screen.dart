@@ -1,9 +1,8 @@
 import 'package:book_app/Admin/admin_details_screen.dart';
 import 'package:book_app/Admin/admin_view_screen.dart';
 import 'package:book_app/Admin/details_adding_screen.dart';
-import 'package:book_app/Admin/admin_catogaries.dart';
+import 'package:book_app/Admin/admin_genre_screen.dart';
 import 'package:book_app/util/costum_color.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -64,7 +63,7 @@ int selectedIndex=0;
   }
   final List <Widget>_pages=[
        const AdminViewScreen(),
-       const AdminCatogaries(),
+       const AdminGenreScreen(),
        const   DetailsAddingScreen(),
     const AdminDetailsScreen(),
 
@@ -77,9 +76,9 @@ int selectedIndex=0;
   }
 
    List navigationItems=[
-    Icon(Icons.view_cozy),
-     Icon(Icons.grid_view_outlined),
-        Icon(Icons.add_box_outlined),
-        Icon(Boxicons.bx_user)
+    const Icon(Icons.view_cozy),
+     const Icon(Icons.grid_view_outlined),
+        const Icon(Icons.add_box_outlined),
+        const Icon(Boxicons.bx_user)
    ];
 }

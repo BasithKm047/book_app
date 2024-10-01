@@ -4,10 +4,16 @@ import 'package:flutter/material.dart';
 
 class CostumTextformfield extends StatefulWidget {
   final String title;
+  final TextEditingController controller;
+
   // final bool isDropdown;
   // final List<String>?isDropdownItems;
-   
-  const CostumTextformfield({super.key, required this.title, });
+
+  const CostumTextformfield({
+    super.key,
+    required this.title,
+    required this.controller,
+  });
 
   @override
   State<CostumTextformfield> createState() => _CostumTextformfieldState();
@@ -18,17 +24,15 @@ class _CostumTextformfieldState extends State<CostumTextformfield> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0,right: 20),
+      padding: const EdgeInsets.only(left: 20.0, right: 20),
       child: Container(
         decoration: BoxDecoration(
             color: CostumColor().costum_color_2,
             borderRadius: BorderRadius.circular(10)),
-        child: 
-
-        
-       TextFormField(
+        child: TextFormField(
+          controller: widget.controller,
           decoration: InputDecoration(
-            isDense: true,
+              isDense: true,
               hintStyle: CostumFontStyle(
                       color: CostumColor().costum_color_3,
                       fontSize: 15,
@@ -38,11 +42,17 @@ class _CostumTextformfieldState extends State<CostumTextformfield> {
               fillColor: CostumColor().costum_color_2,
               // border: OutlineInputBorder(
               //     // gapPadding: 10,
-      
+
               //     borderRadius: BorderRadius.circular(10)),
               border: InputBorder.none,
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 10, horizontal: 10)),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Enter ${widget.title} ';
+            }
+            return null;
+          },
         ),
       ),
     );

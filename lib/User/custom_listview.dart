@@ -1,5 +1,7 @@
 import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/User/costum_card.dart';
+import 'package:book_app/function/genres_db_function.dart';
+import 'package:book_app/model/genres_model.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -10,32 +12,32 @@ class CustomListview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getAllGenres();
     return Scaffold(
-      body:  ListView.separated(
-        scrollDirection: scrollDirection,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  CatogoriesScreen(title: catagories[index],isAdmin: isAdmin,),));
-                  },
-                  child: CostumCard(title: catagories[index], imagePath:  'Asset/book_image_2.jpg'));
-              },
-              itemCount: 5,
-              separatorBuilder: (context, index) => const Divider(
-                thickness: 1,
-                color: Colors.blueGrey,
-              ),
-            ),
+      body:  ValueListenableBuilder<List<GenresModel>>(
+        valueListenable: genremodelList,
+        builder: (context, value, child) {
+          return ListView.separated(
+          scrollDirection: scrollDirection,
+                itemBuilder: (context, index) {
+                  final genre=value[index];
+                  return InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  CatogoriesScreen(title: genre.name, isAdmin: isAdmin,),));
+                    },
+                    child: CostumCard(title: genre.name, imagePath:  'Asset/book_image_2.jpg'));
+                },
+                itemCount: value.length,
+                separatorBuilder: (context, index) => const Divider(
+                  thickness: 1,
+                  color: Colors.blueGrey,
+                ),
+              );
+        },
+         
+      ),
           
     );
   }
-   List catagories=[
-    'Fiction',
-    'Science',
-    'Non Fiction',
-    'Thriller',
-    'Romance',
-    'Fantacy',
-
-  ];
+   
 }

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/User/costum_bookview_screen.dart';
+import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
@@ -51,37 +54,43 @@ class CostumHomescreenDetails extends StatelessWidget {
             height: 220,
             child: Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 8),
-              child: ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                        width: 10,
-                      ),
-                  scrollDirection: Axis.horizontal,
-                  // scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                          // color: Color.fromARGB(255, 142, 137, 137),
-                          // borderRadius: BorderRadius.all(Radius.circular(20))
-                          ),
-                      width: 150,
-                      // height: 100,
-                      // color: const Color.fromARGB(255, 239, 228, 228),
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  const CostumBookviewScreen(name: 'Book name',imagePath: 'Asset/Fiction_books_1_image_1.jpg',),));
-                            },
-                            child: Image.asset(
-                                fit: BoxFit.cover,
-                                imagePath),
+              child: ValueListenableBuilder(
+                valueListenable: bookListnotifier,
+                builder: (context, value, child) {
+                  return  ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                          width: 10,
+                        ),
+                    scrollDirection: Axis.horizontal,
+                    // scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                            // color: Color.fromARGB(255, 142, 137, 137),
+                            // borderRadius: BorderRadius.all(Radius.circular(20))
+                            ),
+                        width: 150,
+                        // height: 100,
+                        // color: const Color.fromARGB(255, 239, 228, 228),
+                        child: Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>   CostumBookviewScreen(name: value[index].bookName,imagePath: value[index].image_path,),));
+                              },
+                              child: Image.file(
+                                  fit: BoxFit.cover,
+                                  File(value[index].image_path)),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                  itemCount: 10),
+                      );
+                    },
+                    itemCount: value.length);
+                }
+               
+              ),
             ),
           ),
         ],

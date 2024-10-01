@@ -12,6 +12,7 @@ class LibraryScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size(double.infinity, 100),
         child: AppBar(
+          centerTitle: true,
           title: Padding(
             padding: const EdgeInsets.only(top: 16.0,left: 8.0),
             child: Text(
@@ -42,8 +43,6 @@ class LibraryScreen extends StatelessWidget {
       'Favourite',
       'Want to Read',
       'Finished'
-
-
     ];
   
 }

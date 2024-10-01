@@ -17,8 +17,8 @@ class GenresModelAdapter extends TypeAdapter<GenresModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GenresModel(
-      name: fields[0] as String,
-      books: (fields[1] as List).cast<Book>(),
+      fields[0] as int,
+      name: fields[1] as String,
     );
   }
 
@@ -27,9 +27,9 @@ class GenresModelAdapter extends TypeAdapter<GenresModel> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.books);
+      ..write(obj.name);
   }
 
   @override

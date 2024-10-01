@@ -1,4 +1,5 @@
 import 'package:book_app/User/book_card.dart';
+import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,7 @@ class LibraryDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getAllBooks();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -20,14 +22,20 @@ class LibraryDetailsScreen extends StatelessWidget {
         
 
       ),
-      body: GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 0.50,
-      ), itemBuilder: (context, index) {
-        return BookCard(title: 'name', imagePath: 'Asset/Fiction_books_1_image_1.jpg',isAdmin: false,);
-      },
-      itemCount: 6,),
+      body: ValueListenableBuilder(
+        valueListenable: bookListnotifier,
+        builder: (context, value, child) {
+          return  GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.50,
+        ), itemBuilder: (context, index) {
+          return BookCard(title: value[index].bookName,isAdmin: false,imagePath: value[index].image_path,);
+        },
+        itemCount: value.length,);
+        },
+        
+      ),
     );
   }
 }

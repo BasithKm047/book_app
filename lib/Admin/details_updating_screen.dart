@@ -12,16 +12,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class DetailsAddingScreen extends StatefulWidget {
-  const DetailsAddingScreen({
-    super.key,
-  });
+class DetailsUpdatingScreen extends StatefulWidget {
+  const DetailsUpdatingScreen({super.key});
 
   @override
-  State<DetailsAddingScreen> createState() => _DetailsAddingScreenState();
+  State<DetailsUpdatingScreen> createState() => _DetailsUpdatingScreenState();
 }
 
-class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
+class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
   final TextEditingController _bookController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _discribtionController = TextEditingController();
@@ -37,7 +35,6 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     getAllGenres();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -250,7 +247,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
       ),
     );
   }
-
+  
   Future<void> getimage() async {
     final selectedimage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -295,9 +292,10 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
       }
       int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
       final newBook = Book(_bookController.text, _discribtionController.text,
-          _nameController.text, newid, _image!.path, _file_path!,GenresModel( name:selectedGenre!.name,newid));
+          _nameController.text, newid, _image!.path, _file_path!,GenresModel(selectedGenre!.id, name: selectedGenre!.name));
       await addBook(newBook);
 
     }
   }
+
 }

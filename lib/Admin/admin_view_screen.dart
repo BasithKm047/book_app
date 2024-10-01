@@ -1,5 +1,6 @@
 import 'package:book_app/User/costum_homescreen_details.dart';
 import 'package:book_app/User/custom_listview.dart';
+import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,7 @@ class AdminViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getAllBooks();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -93,7 +95,7 @@ class AdminViewScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 30,),
 
-               const CostumHomescreenDetails(title: 'Most Readed Books', imagePath: 'Asset/Fiction_books_1_image_1.jpg',isAdmin: true,)
+               const CostumHomescreenDetails(title: 'Finished', imagePath: 'Asset/Fiction_books_1_image_1.jpg',isAdmin: true,)
                     
           
             

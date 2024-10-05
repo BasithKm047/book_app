@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 ValueNotifier <List<Book>>bookListnotifier=ValueNotifier([]);
+ValueNotifier <List<Book>>bookListbyGenreNotifier=ValueNotifier([]);
 
   Future<void> addBook(Book value) async {
     final bookDb = await Hive.openBox<Book>('books');
@@ -16,6 +17,8 @@ ValueNotifier <List<Book>>bookListnotifier=ValueNotifier([]);
       await bookDb.put(value.id, value);
     }
     print('Book Updated Successfully');
+    getAllBooks();
+    getBooksByGenre(value.genre.name);
   }
 
   Future<void> deleteBooks(Book value) async {
@@ -24,6 +27,8 @@ ValueNotifier <List<Book>>bookListnotifier=ValueNotifier([]);
       await bookDb.delete(value.id);
     }
     print('Book deleted successfully');
+    getAllBooks();
+    getBooksByGenre(value.genre.name);
   }
 
   Future<void> getAllBooks() async {
@@ -35,4 +40,15 @@ ValueNotifier <List<Book>>bookListnotifier=ValueNotifier([]);
   bookListnotifier.notifyListeners();
 
   }
+
+Future<List<Book>> getBooksByGenre(String genreName) async {
+  final bookListbyGenre = Hive.box<Book>('books');
+  return bookListbyGenreNotifier.value=bookListbyGenre.values.where((book) => book.genre.name == genreName).toList();
+  
+
+  
+
+
+}
+
 

@@ -3,6 +3,7 @@ import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class GenreUpdatScreen extends StatefulWidget {
   final GenresModel genre;
@@ -58,6 +59,9 @@ class _GenreUpdatScreenState extends State<GenreUpdatScreen> {
                   color: CostumColor().costum_color_2,
                   borderRadius: BorderRadius.circular(10)),
               child: TextFormField(
+                 inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),  // Restrict to letters only
+          ],
                 controller: _nameController,
                 decoration: InputDecoration(
                     isDense: true,

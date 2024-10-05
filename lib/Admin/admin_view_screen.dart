@@ -1,11 +1,45 @@
+import 'dart:io';
+
 import 'package:book_app/User/costum_homescreen_details.dart';
 import 'package:book_app/User/custom_listview.dart';
 import 'package:book_app/function/book_db_function.dart';
+import 'package:book_app/model/book_model.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
-class AdminViewScreen extends StatelessWidget {
+class AdminViewScreen extends StatefulWidget {
   const AdminViewScreen({super.key});
+
+  @override
+  State<AdminViewScreen> createState() => _AdminViewScreenState();
+}
+
+class _AdminViewScreenState extends State<AdminViewScreen> {
+  TextEditingController _searchController = TextEditingController();
+  List<Book> filteredBook = [];
+
+  Future<void> filterBooks() async {
+    String searchTExt = _searchController.text.toLowerCase();
+    setState(() {
+  
+        filteredBook = bookListbyGenreNotifier.value.where(
+          (book) {
+            return book.bookName.toLowerCase().contains(searchTExt);
+          },
+        ).toList();
+    
+      
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAllBooks();
+    _searchController.addListener(() {
+      filterBooks();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,94 +50,126 @@ class AdminViewScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          style: CostumFontStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
-          'Admin'),
-          // actions: [
-          //   MenuBar(children: )
-          // ],
+            style: CostumFontStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400)
+                .getFontstyle(),
+            'Admin'),
+        // actions: [
+        //   MenuBar(children: )
+        // ],
       ),
-      body:  Scrollbar(
+      body: Scrollbar(
         radius: const Radius.circular(10),
         thickness: 4,
-
         child: SingleChildScrollView(
-          child: Column(children: [
-            const SizedBox(height: 20,),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                        decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.grey)
-                      
-                      
-                      
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
               ),
-              labelText: 'Search',
-              suffixIcon: const Icon(Icons.search),
-              
-                        ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    labelText: 'Search',
+                    suffixIcon: const Icon(Icons.search),
+                  ),
+                ),
+              ),
+              filteredBook.isNotEmpty
+                  ? SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => const Divider(),
+                        itemCount: filteredBook.length,
+                        itemBuilder: (context, index) {
+                          final book = filteredBook[index];
+                          return ListTile(
+                            leading: Image.file(
+                                fit: BoxFit.cover,
+                                File(book.image_path)),
+                            title: Text(book.bookName),
+                          );
+                        },
                       ),
-            ),
-            const SizedBox(height: 20,),
-
-          
-            const CostumHomescreenDetails(title: 'Want to Read', imagePath:'Asset/Fiction_books_1_image_1.jpg' ,isAdmin: true,),
-            const SizedBox(height: 30,),
-            Container(
-                      height: 300,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        // borderRadius: BorderRadius.all(Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0, -3),
-                            blurRadius: 25,
-                            // spreadRadius: 3,
-                          )
-                        ],
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                    style: CostumFontStyle(color: Colors.black, fontSize:20, fontWeight: FontWeight.bold).getFontstyle(),
-                                    'Genres'),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            height: 200,
-                            child: InkWell(
-                              child: CustomListview(scrollDirection: Axis.horizontal,isAdmin: true,)
-                            ),
-                          )
-                        ],
-                      ),
+                    )
+                  : const SizedBox.shrink(),
+              const SizedBox(
+                height: 20,
+              ),
+              const CostumHomescreenDetails(
+                title: 'Want to Read',
+                isAdmin: true,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Container(
+                height: 300,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  // borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0, -3),
+                      blurRadius: 25,
+                      // spreadRadius: 3,
+                    )
+                  ],
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                    const SizedBox(height: 30,),
-
-               const CostumHomescreenDetails(title: 'Finished', imagePath: 'Asset/Fiction_books_1_image_1.jpg',isAdmin: true,)
-                    
-          
-            
-          
-          
-          
-          
-          ],),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                              style: CostumFontStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)
+                                  .getFontstyle(),
+                              'Genres'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 200,
+                      child: InkWell(
+                          child: CustomListview(
+                        scrollDirection: Axis.horizontal,
+                        isAdmin: true,
+                      )),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              const CostumHomescreenDetails(
+                title: 'Finished',
+                isAdmin: true,
+              )
+            ],
+          ),
         ),
       ),
     );

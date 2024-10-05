@@ -3,6 +3,7 @@ import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class GenresAddingScreen extends StatefulWidget {
   const GenresAddingScreen({super.key});
@@ -43,6 +44,9 @@ class _GenresAddingScreenState extends State<GenresAddingScreen> {
                   color: CostumColor().costum_color_2,
                   borderRadius: BorderRadius.circular(10)),
               child: TextFormField(
+                 inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),  // Restrict to letters only
+          ],
                 controller: _genersController,
                 decoration: InputDecoration(
                     isDense: true,
@@ -92,10 +96,17 @@ class _GenresAddingScreenState extends State<GenresAddingScreen> {
       int newId = DateTime.now().millisecondsSinceEpoch % 0xFFFFFFFF;
       GenresModel newgenre = GenresModel( newId, name: genrName);
 
+  try{
+    
         await addGenres(newgenre);
       _genersController.clear();
       Navigator.of(context).pop();
       print('Genre added succesfully');
+
+  }catch(e){
+    print('Error adding genre :$e');
+
+  }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         

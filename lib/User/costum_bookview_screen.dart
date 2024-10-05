@@ -8,9 +8,9 @@
 
   class CostumBookviewScreen extends StatefulWidget {
     final String name;
-    final String imagePath;
+  
     
-    const CostumBookviewScreen({super.key, required this.name, required this.imagePath,   });
+    const CostumBookviewScreen({super.key, required this.name,   });
 
     @override
     State<CostumBookviewScreen> createState() => _CostumBookviewScreenState();
@@ -53,7 +53,7 @@
                     borderRadius: BorderRadius.circular(20),
                     child: Image.file(
                       fit: BoxFit.cover,
-                      File(widget.imagePath)
+                      File(bookDetails.image_path)
                       ),
                       ),
                 ),
@@ -69,11 +69,12 @@
                     
                   setState(() {
                     isFavourite=!isFavourite;
+                  
                     
                   });
           
                   //add the book to favourite screen
-                  !isFavourite ?ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  isFavourite ?ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: CostumColor().costum_color_1,
           
                     content:Text(
@@ -81,20 +82,24 @@
                       'Added to Favourite'))):null;
           
           
-                  }, icon: isFavourite?const Icon(color: Colors.red, Icons.favorite_outline):const Icon(color: Colors.red, Icons.favorite),
+                  }, icon: isFavourite?const Icon(color: Colors.red, Icons.favorite):const Icon(color: Colors.red, Icons.favorite_border_outlined),
                     ),
           
                   IconButton(onPressed: (){
+                    setState(() {
+                      isAdd=!isAdd;
+                    });
+
                     //add the book to want to read 
                   
-                  !isAdd?ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  isAdd?ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       backgroundColor: CostumColor().costum_color_1,
           
                       content: Text(
                         style: CostumFontStyle(fontSize: 15, fontWeight: FontWeight.normal,color:CostumColor().costum_color).getFontstyle(),
                         'Added to Want to Read'))):null;
                   }, 
-                  icon: const Icon(Icons.add))
+                  icon: isAdd? const Icon(Icons.done): const Icon(Icons.add))
                 ],
               ),
               const SizedBox(height: 10,),
@@ -137,7 +142,7 @@
                   ),
                   
                   onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BookReaderScreen(),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  BookReaderScreen( pdf_path: bookDetails.pdf_path,),));
                 
                 
                 }, child:  Text(

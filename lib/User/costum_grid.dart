@@ -1,4 +1,4 @@
-import 'package:book_app/Admin/genre_updat_screen.dart';
+import 'package:book_app/Admin/genre_update_screen.dart';
 import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/util/costum_color.dart';

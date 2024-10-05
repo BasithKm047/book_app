@@ -1,13 +1,15 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BookReaderScreen extends StatefulWidget {
+  final String pdf_path;
   const BookReaderScreen({
-    super.key,
+    super.key, required this.pdf_path,
   });
 
   @override
@@ -15,32 +17,46 @@ class BookReaderScreen extends StatefulWidget {
 }
 
 class _BookReaderScreenState extends State<BookReaderScreen> {
-  String? localpath;
+  String? pdfPath;
   int currentPage=0;
   int totalPage=0;
   bool pdfReady=false;
   late PDFViewController pdfViewController;
 
-  Future<void> loadPdfFromAsset() async {
-    try {
-      final byteData =
-          await rootBundle.load('Asset/Books/the_girl_who_lept.pdf');
-      final fil =
-          File('${(await getTemporaryDirectory()).path}/the_girl_who_lept.pdf');
-      await fil.writeAsBytes(byteData.buffer.asInt8List(), flush: true);
+  // Future<void> loadPdfFromAsset() async {
+  //   try {
+  //     final byteData =
+  //         await rootBundle.load(widget.pdf_path);
+  //     final file =
+  //         File('${(await getTemporaryDirectory()).path}/${widget.pdf_path.split('/').last}');
+  //     await file.writeAsBytes(byteData.buffer.asInt8List(), flush: true);
 
-      setState(() {
-        localpath = fil.path;
-      });
-    } catch (e) {
-      print('Error Loading PDF:$e');
-    }
-  }
+  //     setState(() {
+  //       localpath = file.path;
+  //     });
+  //   } catch (e) {
+  //     print('Error Loading PDF:$e');
+  //   }
+  // }
+
+  // Future<void>pickPdf()async{
+  //   FilePickerResult? result=await FilePicker.platform.pickFiles(
+  //     type: FileType.custom,
+  //     allowedExtensions: ['pdf'],
+  //   );
+  //   if(result!=null&& result.files.isNotEmpty){
+  //     pdfPath=result.files.single.path;
+  //   }
+  // }
+  
 
   @override
   void initState() {
     super.initState();
-    loadPdfFromAsset();
+    // loadPdfFromAsset();
+    setState(() {
+      pdfPath=widget.pdf_path;
+    });
   }
 
   @override
@@ -55,13 +71,14 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
           Icons.arrow_back)),
       ),
       
-       body: localpath != null
+       body: pdfPath != null
           ? Stack(
             children: [
              
               PDFView(
+                
                 fitEachPage: true,
-                filePath: localpath,
+                filePath: pdfPath,
                 swipeHorizontal: true,
                 pageFling: true,
                 fitPolicy: FitPolicy.HEIGHT,

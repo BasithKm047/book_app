@@ -35,7 +35,7 @@ class BookCard extends StatefulWidget {
 class _BookCardState extends State<BookCard> {
   @override
   Widget build(BuildContext context) {
-    getAllBooks();
+    
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -50,7 +50,7 @@ class _BookCardState extends State<BookCard> {
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => CostumBookviewScreen(
-                        name: widget.title, imagePath: widget.imagePath),
+                        name: widget.title, ),
                   ));
                 },
                 child: Image.file(
@@ -83,7 +83,7 @@ class _BookCardState extends State<BookCard> {
 
           if (widget.isAdmin == true)
             ValueListenableBuilder(
-              valueListenable: bookListnotifier,
+              valueListenable: bookListbyGenreNotifier,
               builder: (context, value, child) {
                 final bookDetails=value.firstWhere((val) =>val.bookName==widget.title,
                 orElse: () =>Book('', '', '', 1, '', '',genremodelList.value.first),
@@ -121,7 +121,7 @@ class _BookCardState extends State<BookCard> {
                               onPressed: () {
                                 //edit the book
                                 // widget.onUpdate;
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DetailsUpdatingScreen(),));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  DetailsUpdatingScreen(bookDetails:bookDetails,),));
                               },
                               icon: Icon(
                                   // size: 10,

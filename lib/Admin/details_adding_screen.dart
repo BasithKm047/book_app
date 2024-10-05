@@ -31,6 +31,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
 
   File? _image;
   String? _file_path;
+  var pickPdfFiles = true;
 
   @override
   void initState() {
@@ -135,7 +136,11 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                             value: selectedGenre,
                             items: genre.map((value) {
                               return DropdownMenuItem(
-                                  value: value, child: Text(value.name));
+                                  onTap: () {
+                                    // getBooksByGenre(selectedGenre!.name);
+                                  },
+                                  value: value,
+                                  child: Text(value.name));
                             }).toList(),
                             onChanged: (GenresModel? newgenre) {
                               setState(() {
@@ -167,14 +172,22 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                     onTap: () {},
                     maxLines: null,
                     expands: true,
-                    keyboardType: TextInputType.multiline,
+                    
+                    // keyboardType
+                    
                     decoration: InputDecoration(
+                      border: InputBorder.none,
                         hintText: 'Discribtion',
                         hintStyle: CostumFontStyle(
                                 color: CostumColor().costum_color_3,
                                 fontSize: 15,
                                 fontWeight: FontWeight.normal)
-                            .getFontstyle_2()),
+                            .getFontstyle_2(),
+                            
+                            ),
+          //                    inputFormatters: [
+          //               FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')), 
+          // ],
                   ),
                 ),
                 const SizedBox(
@@ -182,32 +195,41 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: CostumColor().costum_color_2, width: 1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: IconButton(
-                            onPressed: () {
-                              pickPdfFile();
-                            },
-                            icon: const Icon(Icons.upload),
+                  child: GestureDetector(
+                    onTap: () {
+                      pickPdfFile();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: CostumColor().costum_color_2, width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: IconButton(
+                              onPressed: () {
+                                pickPdfFile();
+                                
+                              },
+                               icon: _file_path!= null
+                        ? const Icon(Icons.check, color: Colors.green)  // Show done icon if PDF is picked
+                        : const Icon(Icons.upload),
+                              // icon: const Icon(Icons.upload),
+                            ),
                           ),
-                        ),
-                        Text(
-                            style: CostumFontStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal)
-                                .getFontstyle_2(),
-                            'Add Pdf')
-                      ],
+                          Text(
+                              style: CostumFontStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal)
+                                  .getFontstyle_2(),
+                              'Add Pdf')
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -227,7 +249,9 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                     ),
                     onPressed: () {
                       bookAdding();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminGenreScreen(),));
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //   builder: (context) => const AdminGenreScreen(),
+                      // ));
 
                       // save data
                     },
@@ -260,13 +284,12 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     setState(() {
       _image = imageTemborory;
     });
-   
   }
 
   Future<void> pickPdfFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf'],  
+      allowedExtensions: ['pdf'],
     );
 
     if (result != null) {
@@ -278,26 +301,75 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
       });
     } else {
       print('No File Selected');
+    
     }
   }
 
   Future<void> bookAdding() async {
-    if (_fomKey.currentState!.validate()) {
-      if (_image == null || _file_path == null || selectedGenre == null) {
-        String missingField = '';
-        if (_image == null) missingField = 'Image';
-        if (_file_path == null) missingField = 'File';
-        if (selectedGenre == null) missingField = 'Genre';
-
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Fill the $missingField')));
-        return;
-      }
-      int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
-      final newBook = Book(_bookController.text, _discribtionController.text,
-          _nameController.text, newid, _image!.path, _file_path!,GenresModel( name:selectedGenre!.name,newid));
-      await addBook(newBook);
-
+    if (!_fomKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all text fields')));
+      return;
     }
+
+    if (_image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select an image')));
+      return;
+    }
+
+    if (_file_path == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please upload a PDF file')));
+      return;
+    }
+
+    if (selectedGenre == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Please select a genre')));
+      return;
+    }
+
+    int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
+    final newBook = Book(
+        _bookController.text,
+        _discribtionController.text,
+        _nameController.text,
+        newid,
+        _image!.path,
+        _file_path!,
+        GenresModel(selectedGenre!.id, name: selectedGenre!.name));
+
+    await addBook(newBook);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Book Added Successful')));
+    // await getBooksByGenre(selectedGenre!.name);
+
+    Navigator.of(context).pushReplacement(
+      
+      MaterialPageRoute(builder: (context) => const AdminGenreScreen()),
+    );
+
+    //   if (!_fomKey.currentState!.validate()) {
+    //     if (_image == null || !pickPdfFiles || selectedGenre == null) {
+    //       String missingField = '';
+    //       if (_image == null) missingField = 'Image';
+    //       if (_file_path == null) missingField = 'File';
+    //       if (selectedGenre == null) missingField = 'Genre';
+
+    //       ScaffoldMessenger.of(context)
+    //           .showSnackBar(SnackBar(content: Text('Fill the $missingField')));
+    //       return;
+    //     }
+    //     int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
+    //     final newBook = Book(
+    //         _bookController.text,
+    //         _discribtionController.text,
+    //         _nameController.text,
+    //         newid,
+    //         _image!.path,
+    //         _file_path!,
+    //         GenresModel(name: selectedGenre!.name, newid));
+    //     await addBook(newBook);
+    //   }
   }
 }

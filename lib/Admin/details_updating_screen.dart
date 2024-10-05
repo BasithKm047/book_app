@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:book_app/Admin/admin_genre_screen.dart';
 import 'package:book_app/Admin/costum_textformfield.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
@@ -13,28 +12,56 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DetailsUpdatingScreen extends StatefulWidget {
-  const DetailsUpdatingScreen({super.key});
+  final Book bookDetails;
+  const DetailsUpdatingScreen({super.key, required this.bookDetails});
 
   @override
   State<DetailsUpdatingScreen> createState() => _DetailsUpdatingScreenState();
 }
 
 class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
-  final TextEditingController _bookController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _discribtionController = TextEditingController();
+  TextEditingController _bookController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _discribtionController = TextEditingController();
   final _fomKey = GlobalKey<FormState>();
 
   GenresModel? selectedGenre;
 
   File? _image;
   String? _file_path;
+  var pickPdfFilePick = true;
 
   @override
   void initState() {
-    getAllGenres();
+    getBooksByGenre(widget.bookDetails.genre.name);
     super.initState();
+    _bookController = TextEditingController(text: widget.bookDetails.bookName);
+    _nameController =
+        TextEditingController(text: widget.bookDetails.authorName);
+    _discribtionController =
+        TextEditingController(text: widget.bookDetails.discribtion);
+    _image = File(widget.bookDetails.image_path);
+    
+    
   }
+  //  void didUpdateWidget(covariant DetailsUpdatingScreen oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (oldWidget.bookDetails != widget.bookDetails) {
+  //     // Reinitialize the fields when the book changes
+  //     _initializeFields();
+  //   }
+  // }
+
+  // void _initializeFields() {
+  //   _bookController.text = widget.bookDetails.bookName;
+  //   _nameController.text = widget.bookDetails.authorName;
+  //   _discribtionController.text = widget.bookDetails.discribtion;
+  //   _image = File(widget.bookDetails.image_path); // Load existing image
+  //   _file_path = widget.bookDetails.pdf_path; // Load existing PDF
+  //   // Set the current genre
+  //   selectedGenre = widget.bookDetails.genre;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,7 +188,6 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
                       return null;
                     },
                     controller: _discribtionController,
-                    onTap: () {},
                     maxLines: null,
                     expands: true,
                     keyboardType: TextInputType.multiline,
@@ -223,8 +249,12 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
                       backgroundColor: CostumColor().costum_color,
                     ),
                     onPressed: () {
-                      bookAdding();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminGenreScreen(),));
+                      // bookAdding();
+                      updatebook();
+                      Navigator.of(context).pop();
+                      // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      //   builder: (context) => const AdminGenreScreen(),
+                      // ));
 
                       // save data
                     },
@@ -234,7 +264,7 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400)
                             .getFontstyle(),
-                        'Save'),
+                        'Update'),
                   ),
                 ),
                 const SizedBox(
@@ -247,8 +277,63 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
       ),
     );
   }
-  
-  Future<void> getimage() async {
+
+        Future<void> updatebook() async {
+  if (!_fomKey.currentState!.validate()) {
+    return;
+  }
+
+  if (_image == null || _file_path == null || selectedGenre == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all required fields.')));
+    return;
+  }
+
+  final updatedBook = Book(
+    _bookController.text,
+    _discribtionController.text,
+    _nameController.text,
+    widget.bookDetails.id, // Keep the original ID
+    _image!.path,
+    _file_path!,
+    GenresModel(selectedGenre!.id, name: selectedGenre!.name),
+  );
+
+  await updateBook(updatedBook); // Your function to update the book in the database
+  Navigator.pop(context); // Go back after updating
+}
+
+
+
+      
+
+    // if (!_fomKey.currentState!.validate()) {
+    //   if (_image == null || _file_path==null || selectedGenre == null) {
+    //     String missingField = '';
+    //     if (_image == null) missingField = 'Image';
+    //     if (_file_path == null) missingField = 'File';
+    //     if (selectedGenre == null) missingField = 'Genre';
+
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(SnackBar(content: Text('Fill the $missingField')));
+    //     return;
+    //   }
+     
+    // }else{
+    //    int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
+    //   final newBook = Book(
+    //       _bookController.text,
+    //       _discribtionController.text,
+    //       _nameController.text,
+    //       newid,
+    //       _image!.path,
+    //       _file_path!,
+    //       GenresModel(selectedGenre!.id, name: selectedGenre!.name));
+    //   await addBook(newBook);
+    // }\
+    
+    
+      Future<void> getimage() async {
     final selectedimage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (selectedimage == null) return;
@@ -257,13 +342,12 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
     setState(() {
       _image = imageTemborory;
     });
-   
   }
 
   Future<void> pickPdfFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf'],  
+      allowedExtensions: ['pdf'],
     );
 
     if (result != null) {
@@ -275,27 +359,10 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
       });
     } else {
       print('No File Selected');
+     
     }
   }
 
-  Future<void> bookAdding() async {
-    if (_fomKey.currentState!.validate()) {
-      if (_image == null || _file_path == null || selectedGenre == null) {
-        String missingField = '';
-        if (_image == null) missingField = 'Image';
-        if (_file_path == null) missingField = 'File';
-        if (selectedGenre == null) missingField = 'Genre';
-
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Fill the $missingField')));
-        return;
-      }
-      int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
-      final newBook = Book(_bookController.text, _discribtionController.text,
-          _nameController.text, newid, _image!.path, _file_path!,GenresModel(selectedGenre!.id, name: selectedGenre!.name));
-      await addBook(newBook);
-
-    }
-  }
+  
 
 }

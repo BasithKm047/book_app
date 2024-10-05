@@ -19,7 +19,7 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
   @override
   void initState() {
     super.initState();
-    getAllBooks();
+    getBooksByGenre(widget.title);
   }
 
   
@@ -35,7 +35,7 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
           widget.title),
       ),
       body: ValueListenableBuilder(
-        valueListenable: bookListnotifier,
+        valueListenable: bookListbyGenreNotifier,
         builder: (context, List<Book>bookDetails, child) {
           return  GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
         crossAxisSpacing: 16,

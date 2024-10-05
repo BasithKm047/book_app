@@ -3,17 +3,23 @@ import 'dart:io';
 import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/User/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
+import 'package:book_app/function/genres_db_function.dart';
+import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
 class CostumHomescreenDetails extends StatelessWidget {
   final String title;
-  final String imagePath;
+  // final String imagePath;
   final bool isAdmin;
-  const CostumHomescreenDetails({super.key, required this.title, required this.imagePath, required this.isAdmin});
+  // final GenresModel genres;
+  const CostumHomescreenDetails({super.key, required this.title, required this.isAdmin,});
 
   @override
   Widget build(BuildContext context) {
+    getAllBooks();
+    getAllGenres();
+    getBooksByGenre;
     return Container(
       height: 350,
       width: double.infinity,
@@ -37,11 +43,17 @@ class CostumHomescreenDetails extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                    style: CostumFontStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black)
-                        .getFontstyle(),
-                    title),
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,),));
+
+                  },
+                  child: Text(
+                      style: CostumFontStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black)
+                          .getFontstyle(),
+                      title),
+                ),
               ),
               IconButton(
                   onPressed: () {
@@ -64,6 +76,9 @@ class CostumHomescreenDetails extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     // scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
+                      final bookDetails=value[index];
+                      
+
                       return Container(
                         decoration: const BoxDecoration(
                             // color: Color.fromARGB(255, 142, 137, 137),
@@ -77,7 +92,7 @@ class CostumHomescreenDetails extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>   CostumBookviewScreen(name: value[index].bookName,imagePath: value[index].image_path,),));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>   CostumBookviewScreen(name: bookDetails.bookName,),));
                               },
                               child: Image.file(
                                   fit: BoxFit.cover,

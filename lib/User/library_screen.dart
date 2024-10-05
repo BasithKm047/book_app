@@ -25,6 +25,9 @@ class LibraryScreen extends StatelessWidget {
       ),
       body: ListView.separated(itemBuilder: (context, index) {
         return ListTile(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));
+          },
           title: Text(
             style: GoogleFonts.lora(
               fontWeight: FontWeight.w400,

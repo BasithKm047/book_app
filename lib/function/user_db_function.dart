@@ -19,6 +19,7 @@ Future<void> updateUser(UserModel value) async {
       await userDb.put(value.id, value);
     }
     print('User Updated Successfully');
+    getAllUser(value);
   }
 
   Future<void>deleteUser(UserModel value)async{
@@ -27,6 +28,7 @@ Future<void> updateUser(UserModel value) async {
       await userDb.delete(value.id);
     }
     print('user Deleted Success fully');
+    getAllUser(value);
 
   }
 

@@ -1,5 +1,5 @@
 
-import 'package:book_app/User/navigator_screen.dart';
+import 'package:book_app/User/welcome_screen.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         
       
       ),
-      home: const NavigatorScreen()
+      home: const WelcomeScreen()
     );
   }
 }

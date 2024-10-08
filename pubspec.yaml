@@ -71,6 +71,7 @@ flutter:
     - Asset/Fiction_books_1_image_1.jpg
     - Asset/book_image_2.jpg
     - Asset/Books/the_girl_who_lept.pdf
+    - Asset/download_1.jpeg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

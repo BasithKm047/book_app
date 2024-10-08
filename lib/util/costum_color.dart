@@ -9,4 +9,5 @@ class CostumColor{
   final Color costum_color_2=const Color.fromARGB(255, 169, 165, 165);
   // ignore: non_constant_identifier_names
   final Color costum_color_3=const Color.fromARGB(255, 93, 91, 91);
+  final Color costum_color_4=const Color.fromARGB(255, 56, 56, 56);
 }

@@ -1,6 +1,7 @@
 import 'package:book_app/User/login_screen.dart';
+import 'package:book_app/util/costum_color.dart';
+import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -8,7 +9,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 104, 175, 107),
+      backgroundColor: CostumColor().costum_color_4,
       body: Column(
         children: [
           Expanded(
@@ -23,17 +24,11 @@ class WelcomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      style: GoogleFonts.aBeeZee(
-                        color: Colors.white,
-                        fontSize: 13,
-                      ),
+                      style: CostumFontStyle(color: CostumColor().costum_color, fontSize: 13, fontWeight: FontWeight.w300).getFontstyle(),
                       'Welcome to'),
                   // SizedBox(height: 5,),
                   Text(
-                      style: GoogleFonts.aBeeZee(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
+                      style: CostumFontStyle(color: CostumColor().costum_color, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
                       'My Books')
                 ],
               )),
@@ -42,28 +37,28 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 70.0,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              // elevation: 0,
+                  // SizedBox(
+                  //   height: 70.0,
+                  //   width: double.infinity,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: ElevatedButton(
+                  //         style: ElevatedButton.styleFrom(
+                  //             backgroundColor: Colors.white,
+                  //             // elevation: 0,
 
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)))),
-                          onPressed: () {
+                  //             shape: const RoundedRectangleBorder(
+                  //                 borderRadius:
+                  //                     BorderRadius.all(Radius.circular(10)))),
+                  //         onPressed: () {
                           
-                          },
-                          child: Text(
-                              style: GoogleFonts.roboto(
-                                  color: const Color.fromARGB(255, 104, 175, 107)),
-                              'Create Account')),
-                    ),
-                  ),
+                  //         },
+                  //         child: Text(
+                  //             style: GoogleFonts.roboto(
+                  //                 color: const Color.fromARGB(255, 104, 175, 107)),
+                  //             'Create Account')),
+                  //   ),
+                  // ),
                   const SizedBox(
                     height: 5,
                   ),
@@ -91,8 +86,8 @@ class WelcomeScreen extends StatelessWidget {
                               ));
                             },
                             child: Text(
-                                style: GoogleFonts.roboto(color: Colors.white),
-                                'Log in'))),
+                                style: CostumFontStyle(color: CostumColor().costum_color_1, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),
+                                'Get start'))),
                   )
                 ],
               )),

@@ -2,28 +2,32 @@
 
 import 'dart:io';
 
-import 'package:book_app/Admin/admin_navigator_screen.dart';
+import 'package:book_app/User/navigator_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AdminLoginScreen extends StatefulWidget {
-  const AdminLoginScreen({super.key});
+class UserScreen extends StatefulWidget {
+  const UserScreen({super.key});
 
   @override
-  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
+  State<UserScreen> createState() => _UserScreenState();
 }
 
-class _AdminLoginScreenState extends State<AdminLoginScreen> {
+class _UserScreenState extends State<UserScreen> {
+  TextEditingController _usernameController=TextEditingController();
+  final _formkey=GlobalKey<FormState>();
   File? _image;
   @override
   Widget build(BuildContext context) {
-    return   SizedBox(
+    return SizedBox(
       height: ResponsiveHelper(context).getResponsiveHeight(60),
       width: double.infinity,
       child: Form(
+        autovalidateMode: AutovalidateMode.always,
+        key: _formkey,
         child: Card(
           color: CostumColor().costum_color_3,
           elevation: 10,
@@ -42,7 +46,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 },
                 child: CircleAvatar(
                   // color: Colors.amber,
-                maxRadius: 60,
+                  maxRadius: 60,
                   backgroundImage: _image != null
                       ? FileImage(_image!)
                       : const AssetImage(
@@ -58,8 +62,13 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
+                        
+                      controller: _usernameController,
                       decoration: InputDecoration(
+
+                        border:  OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)),borderSide: BorderSide(color: CostumColor().costum_color)),
                           enabledBorder: const OutlineInputBorder(
+
                               borderSide: BorderSide(
                                 color: Color.fromARGB(255, 104, 175, 107),
                                 width: 1,
@@ -75,31 +84,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             vertical: 10.0,
                             horizontal: 15.0,
                           )),
+                          validator: (value) {
+                            if(value==null||_usernameController.text.isEmpty){
+                              return 'Enter a name';
+                            }
+                            return null;
+                          },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 104, 175, 107),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(10))),
-                          labelText: 'Password',
-                          labelStyle: CostumFontStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400)
-                              .getFontstyle(),
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 15.0,
-                          )),
-                    ),
-                  ),
-
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -120,7 +112,16 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         )
                         ),
                         onPressed: (){
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminNavigatorScreen(),));
+                          if(_formkey.currentState!.validate()){
+                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const NavigatorScreen(),));
+                          }else{
+                            // ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+                            //   backgroundColor: CostumColor().costum_color_3,
+                            //   content: Text(
+                            //   style: CostumFontStyle(color: CostumColor().costum_color, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),
+                            //   'Enter a name')));
+                          }
+                          
                         
                       }, child: Text('Log in',
                       style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),)),
@@ -135,7 +136,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       ),
     );
   }
-    Future<void> getImage() async {
+
+  Future<void> getImage() async {
     final selectedimage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -152,5 +154,4 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       _image = imageTemporary;
     });
   }
-
 }

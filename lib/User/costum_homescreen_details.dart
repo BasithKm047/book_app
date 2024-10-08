@@ -4,7 +4,6 @@ import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/User/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
-import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 

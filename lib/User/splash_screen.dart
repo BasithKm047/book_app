@@ -1,4 +1,4 @@
-import 'package:book_app/User/home_screen.dart';
+import 'package:book_app/User/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 3),() {
        // ignore: use_build_context_synchronously
-       Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  const HomeScreen(),));
+       Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  const LoginScreen(),));
     },);
   }
   @override

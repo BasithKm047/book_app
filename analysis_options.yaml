@@ -11,6 +11,7 @@ analyzer:
   errors:
     annotate_overrides: ignore
     avoid_print: ignore
+    curly_braces_in_flow_control_structures: ignore
     dead_code: ignore
     invalid_use_of_protected_member: ignore
     invalid_use_of_visible_for_testing_member: ignore

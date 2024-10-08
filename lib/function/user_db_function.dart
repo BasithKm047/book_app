@@ -23,7 +23,7 @@ Future<void> updateUser(UserModel value) async {
   }
 
   Future<void>deleteUser(UserModel value)async{
-    final userDb=await Hive.openBox('UserDetails');
+    final userDb=await Hive.openBox<UserModel>('UserDetails');
     if(userDb.containsKey(value.id)){
       await userDb.delete(value.id);
     }
@@ -33,10 +33,10 @@ Future<void> updateUser(UserModel value) async {
   }
 
   Future<void>getAllUser(UserModel value)async{
-      final userDb=await Hive.openBox('UserDetails');
+      final userDb=await Hive.openBox<UserModel>('UserDetails');
       final user=userDb.values.toList();
       userList_notifier.value.toList();
-  print('User loaded: ${user.map((g) => g.name).toList()}');
+  print('User loaded: ${user.map((user) => user.username).toList()}');
 
 
 

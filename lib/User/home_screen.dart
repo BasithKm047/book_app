@@ -1,13 +1,11 @@
 import 'dart:io';
 
-import 'package:book_app/Admin/admin_login_screen.dart';
 import 'package:book_app/User/costum_homescreen_details.dart';
 import 'package:book_app/User/custom_listview.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/function/user_db_function.dart';
 import 'package:book_app/model/book_model.dart';
-import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,16 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           title: Text(style: GoogleFonts.lora(), "Home"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const AdminLoginScreen(),
-                  ));
-                },
-                icon: const Icon(
-                    size: 30.0, color: Colors.grey, Icons.admin_panel_settings))
-          ],
         ),
         body: ValueListenableBuilder(
           valueListenable: bookListnotifier,

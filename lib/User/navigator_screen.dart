@@ -17,7 +17,7 @@ class NavigatorScreen extends StatefulWidget {
 class _NavigatorScreenState extends State<NavigatorScreen> {
   int selectedIndex = 0;
   final List<Widget> _pages = [
-    const HomeScreen(),
+     HomeScreen(),
     const BookstoreScreen(),
     LibraryScreen(),
     const SearchScreen(),

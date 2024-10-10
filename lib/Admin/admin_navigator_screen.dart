@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 
 class AdminNavigatorScreen extends StatefulWidget {
-  const AdminNavigatorScreen({super.key});
+  final String ?name;
+  final String ?image_path;
+   AdminNavigatorScreen({super.key, this.name, this.image_path});
 
   @override
   State<AdminNavigatorScreen> createState() => _AdminviewScreenState();
@@ -18,6 +20,14 @@ class _AdminviewScreenState extends State<AdminNavigatorScreen> {
 int selectedIndex=0;
   @override
   Widget build(BuildContext context) {
+      final List <Widget>_pages=[
+       const AdminViewScreen(),
+       const AdminGenreScreen(),
+         DetailsAddingScreen(),
+     AdminDetailsScreen(image_path: widget.image_path,name: widget.name,),
+
+  ];
+
     return Scaffold(
       backgroundColor: Colors.white,
      
@@ -61,13 +71,6 @@ int selectedIndex=0;
       // ]),
     );
   }
-  final List <Widget>_pages=[
-       const AdminViewScreen(),
-       const AdminGenreScreen(),
-       const   DetailsAddingScreen(),
-    const AdminDetailsScreen(),
-
-  ];
 
   onTappedItems(index){
     setState(() {

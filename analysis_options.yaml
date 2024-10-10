@@ -13,8 +13,11 @@ analyzer:
     avoid_print: ignore
     curly_braces_in_flow_control_structures: ignore
     dead_code: ignore
+    deprecated_member_use: ignore
     invalid_use_of_protected_member: ignore
     invalid_use_of_visible_for_testing_member: ignore
+    must_be_immutable: ignore
+    no_leading_underscores_for_local_identifiers: ignore
     non_constant_identifier_names: ignore
     prefer_const_constructors_in_immutables: ignore
     prefer_final_fields: ignore

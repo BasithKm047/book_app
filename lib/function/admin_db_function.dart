@@ -41,3 +41,4 @@ Future<void>deleteAdmin(AdminModel value)async{
   getAllAdmin(value);
 
 }
+

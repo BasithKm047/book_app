@@ -19,7 +19,7 @@ Future<void> updateUser(UserModel value) async {
       await userDb.put(value.id, value);
     }
     print('User Updated Successfully');
-    getAllUser(value);
+    getAllUser();
   }
 
   Future<void>deleteUser(UserModel value)async{
@@ -28,11 +28,11 @@ Future<void> updateUser(UserModel value) async {
       await userDb.delete(value.id);
     }
     print('user Deleted Success fully');
-    getAllUser(value);
+    getAllUser();
 
   }
 
-  Future<void>getAllUser(UserModel value)async{
+  Future<void>getAllUser()async{
       final userDb=await Hive.openBox<UserModel>('UserDetails');
       final user=userDb.values.toList();
       userList_notifier.value.toList();

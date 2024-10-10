@@ -2,6 +2,7 @@
 import 'package:book_app/User/welcome_screen.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
+import 'package:book_app/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -16,6 +17,14 @@ void main(List<String> args) async{
 if(!Hive.isAdapterRegistered(GenresModelAdapter().typeId)){
   Hive.registerAdapter(GenresModelAdapter());
 }
+
+if(!Hive.isAdapterRegistered(UserModelAdapter().typeId)){
+  Hive.registerAdapter(UserModelAdapter());
+}
+
+Hive.openBox('admin');
+
+
 
 // await Hive.openBox('books');
 // await Hive.openBox('genres');

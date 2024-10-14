@@ -1,6 +1,7 @@
 import 'package:book_app/User/book_card.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/model/book_model.dart';
+import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -26,12 +27,12 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: CostumColor().costum_color_6,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: CostumColor().costum_color_6,
         title:  Text(
-          style: CostumFontStyle(fontSize: 20, fontWeight: FontWeight.w400,color:Colors.black).getFontstyle(),
+          style: CostumFontStyle(fontSize: 20, fontWeight: FontWeight.w400,color:Colors.white).getFontstyle(),
           widget.title),
       ),
       body: ValueListenableBuilder(
@@ -48,7 +49,8 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
             title: book.bookName,
             isAdmin: widget.isAdmin,
             icon: const Icon(Icons.delete),
-            icon_2: const Icon(Boxicons.bx_edit),
+            icon_2:  const Icon(
+              Boxicons.bx_edit),
             // onDelete: (book) => deleteBook(book), 
             // onUpdate: () => updateBooks,
 

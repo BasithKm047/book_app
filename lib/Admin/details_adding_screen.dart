@@ -340,7 +340,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
         newid,
         _image!.path,
         _file_path!,
-        GenresModel(selectedGenre!.id, name: selectedGenre!.name));
+        GenresModel(selectedGenre!.id, name: selectedGenre!.name,selectedGenre!.image_path));
 
     await addBook(newBook);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Book Added Successful')));

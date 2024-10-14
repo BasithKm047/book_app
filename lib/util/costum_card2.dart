@@ -1,3 +1,4 @@
+import 'package:book_app/User/bookstore_screen.dart';
 import 'package:book_app/util/card_1.dart';
 import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/model/genres_model.dart';
@@ -19,14 +20,24 @@ class Costumcard2 extends StatelessWidget {
 
         return Column(
           children: [
-            Card1(
-              name: value[0].name,image_path: images[0],
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BookstoreScreen(),));
+              },
+              child: Card1(
+                name: genreSample[0],image_path: images[0],
+              ),
             ),
             const SizedBox(
-              height: 5,
+              height: 50,
             ),
-            Card1(
-              name: value[1].name,image_path: images[1],
+            GestureDetector(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BookstoreScreen(),));
+              },
+              child: Card1(
+                name: genreSample[1],image_path: images[1],
+              ),
             ),
           ],
         );
@@ -55,4 +66,10 @@ class Costumcard2 extends StatelessWidget {
          'Asset/download_4.jpg',
         'Asset/downloads_3.jpg'
   ];
+  List genreSample=[
+    'Fiction',
+    'Non Fiction'
+
+  ];
+
 }

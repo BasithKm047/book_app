@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:book_app/User/catogories_screen.dart';
-import 'package:book_app/User/costum_bookview_screen.dart';
+import 'package:book_app/util/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
+import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
+import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
 
 class CostumHomescreenDetails extends StatelessWidget {
@@ -20,18 +22,18 @@ class CostumHomescreenDetails extends StatelessWidget {
     getAllGenres();
     getBooksByGenre;
     return Container(
-      height: 350,
+      height: ResponsiveHelper(context).getResponsiveHeight(45),
       width: double.infinity,
-      decoration: const BoxDecoration(
-        boxShadow: [
+      decoration: BoxDecoration(
+        boxShadow:  [
           BoxShadow(
-            color: Colors.grey,
-            offset: Offset(0, -3),
-            blurRadius: 25,
+            color: CostumColor().costum_color_4,
+            offset: const Offset(-3,3),
+            blurRadius: 10,
             // spreadRadius: 3,
           )
         ],
-        color: Colors.white,
+        color: CostumColor().costum_color_4,
       ),
       child: Column(
         children: [
@@ -49,7 +51,7 @@ class CostumHomescreenDetails extends StatelessWidget {
                   },
                   child: Text(
                       style: CostumFontStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black)
+                              fontSize: 13, fontWeight: FontWeight.bold,color: CostumColor().costum_color_1)
                           .getFontstyle(),
                       title),
                 ),
@@ -58,7 +60,10 @@ class CostumHomescreenDetails extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,),));
                   },
-                  icon: const Icon(Icons.arrow_forward_ios_outlined))
+                  icon:  Icon(
+                    size: 13,
+                    color: CostumColor().costum_color_1,
+                    Icons.arrow_forward_ios_outlined))
             ],
           ),
           SizedBox(
@@ -78,23 +83,18 @@ class CostumHomescreenDetails extends StatelessWidget {
                       final bookDetails=value[index];
                       
 
-                      return Container(
-                        decoration: const BoxDecoration(
-                            // color: Color.fromARGB(255, 142, 137, 137),
-                            // borderRadius: BorderRadius.all(Radius.circular(20))
-                            ),
-                        width: 150,
-                        // height: 100,
-                        // color: const Color.fromARGB(255, 239, 228, 228),
+                      return Card(
+                        elevation: 10,
                         child: Center(
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(10),
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) =>   CostumBookviewScreen(name: bookDetails.bookName,),));
                               },
                               child: Image.file(
-                                  fit: BoxFit.cover,
+                                
+                                  fit: BoxFit.contain,
                                   File(value[index].image_path)),
                             ),
                           ),

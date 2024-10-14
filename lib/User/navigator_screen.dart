@@ -8,21 +8,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 
 class NavigatorScreen extends StatefulWidget {
-  const NavigatorScreen({super.key});
+    String ?userName;
+   String ?image_path;
+   NavigatorScreen({super.key,required this.image_path,required this.userName});
 
   @override
   State<NavigatorScreen> createState() => _NavigatorScreenState();
 }
 
 class _NavigatorScreenState extends State<NavigatorScreen> {
+  late List<Widget> _pages;
   int selectedIndex = 0;
-  final List<Widget> _pages = [
-     HomeScreen(),
+  
+  @override
+  void initState() {
+    super.initState();
+   _pages = [
+     HomeScreen(image_path: widget.image_path,userName: widget.userName,),
     const BookstoreScreen(),
     LibraryScreen(),
     const SearchScreen(),
   ];
 
+  }
   // List<Widget> navigationItems = [
   //   BottomNavigationBarItem(label: 'Home', icon: Icon(
   //       // color: Colors.black,

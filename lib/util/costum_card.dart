@@ -1,4 +1,5 @@
 import 'package:book_app/util/costum_color.dart';
+import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,13 +14,13 @@ class CostumCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 200,
-        width: 300,
+        height: ResponsiveHelper(context).getResponsiveHeight(22),
+        width: ResponsiveHelper(context).getResponsiveWidth(40),
         child: Card(
           elevation: 5,
           child: Container(
             decoration: BoxDecoration(
-                color: CostumColor().costum_color,
+                color: CostumColor().costum_color_4,
                 border: Border.all(
                   color: Colors.grey,
                   width: .5,

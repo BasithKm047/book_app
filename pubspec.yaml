@@ -44,6 +44,7 @@ dependencies:
   dot_navigation_bar: ^1.0.2
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  provider: ^6.0.5
   
   
 
@@ -72,6 +73,9 @@ flutter:
     - Asset/book_image_2.jpg
     - Asset/Books/the_girl_who_lept.pdf
     - Asset/download_1.jpeg
+    - Asset/downloads_2.jpg
+    - Asset/downloads_3.jpg
+    - Asset/download_4.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

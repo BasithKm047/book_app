@@ -1,12 +1,12 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:book_app/Admin/admin_navigator_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:book_app/util/services.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AdminLoginScreen extends StatefulWidget {
@@ -21,23 +21,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   TextEditingController _adminNameController = TextEditingController();
   final String Username = 'basith';
   final String Password = '1234';
-
+   bool _isLoading = false;
   final _formkey = GlobalKey<FormState>();
 
   File? _image;
   @override
-  void initState() {
-    super.initState();
-    loadData();
-
-  }
-
-  void loadData()async{
-   await checkLoggedInStatus();
-
-  }
-
+  // void initState() {
+  //   super.initState();
+    
+  // }
   @override
+  
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: SizedBox(
@@ -162,10 +156,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                 shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)))),
-                            onPressed: () {
-                              login();
-                            },
-                            child: Text(
+                            onPressed:
+                             _isLoading? null:_login,
+                            child:_isLoading?const CircularProgressIndicator(): Text(
                               'Log in',
                               style: CostumFontStyle(
                                       color: Colors.white,
@@ -206,43 +199,52 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     });
   }
 
-  Future<void> checkLoggedInStatus() async {
-    final admin = await Hive.openBox('Admin');
-    final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
-
-    if (isLoggedIn) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => AdminNavigatorScreen(
-          image_path: _image?.path ?? '',
-          name: _adminNameController.text,
-        ),
-      ));
-      log('mesAdminNavigatorScreen');
-    } 
+  Future<void> _setLoginStatus(bool status) async {
+    final adminBox = await Hive.openBox('Admin');
+    await adminBox.put('isLoggedin', status);
   }
 
-  void login() {
-    String enteredUsername = _adminNameController.text.trim().toLowerCase();
-    String enteredPassword = _password_controller.text.trim();
-    if (_formkey.currentState!.validate() &&
-        enteredPassword == Password &&
-        enteredUsername == Username) {
-      final admin = Hive.box('Admin');
-      admin.put('isLoggedin', true);
+  Future<void> _login() async {
+    await _setLoginStatus(true);
+    if (_formkey.currentState!.validate()) {
+      setState(() => _isLoading = true); // Start loading
 
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-        builder: (context) => AdminNavigatorScreen(
-          image_path: _image?.path ?? '',
-          name: _adminNameController.text,
-        ),
-      ),
-      (Route<dynamic> route) => false,
-      );
-    } else {
-      print('not ok');
-      _showErrorDialog('Invalid Username or Password');
+      try {
+        bool isLoggedIn = await Services().login(_adminNameController.text, _password_controller.text);
+        if (isLoggedIn) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => AdminNavigatorScreen(
+                image_path: _image?.path??'Asset/download_1.jpeg',
+                name: _adminNameController.text,
+              ),
+            ),
+            (Route<dynamic> route) => false,
+          );
+        } else {
+          _showErrorDialog('Invalid Username or Password');
+        }
+      } catch (e) {
+        _showErrorDialog('Login failed. Please try again.');
+      } finally {
+        setState(() => _isLoading = false); // Stop loading
+      }
     }
   }
+
+  // void login() {
+  //   String enteredUsername = _adminNameController.text.trim().toLowerCase();
+  //   String enteredPassword = _password_controller.text.trim();
+  //   if (_formkey.currentState!.validate() &&
+  //       enteredPassword == Password &&
+  //       enteredUsername == Username) {
+  //     final admin = Hive.box('Admin');
+  //     admin.put('isLoggedin', true);
+  //   } else {
+  //     print('not ok');
+     
+  //   }
+  // }
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -282,4 +284,18 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       },
     );
   }
+  //   InputDecoration _inputDecoration(String labelText) {
+  //   return InputDecoration(
+  //     labelText: labelText,
+  //     enabledBorder: const OutlineInputBorder(
+  //       borderSide: BorderSide(color: Color.fromARGB(255, 104, 175, 107), width: 1),
+  //       borderRadius: BorderRadius.all(Radius.circular(10)),
+  //     ),
+  //     border: const OutlineInputBorder(
+  //       borderRadius: BorderRadius.all(Radius.circular(10)),
+  //     ),
+  //     contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+  //   );
+  // }
+
 }

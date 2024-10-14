@@ -296,7 +296,7 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
     widget.bookDetails.id, // Keep the original ID
     _image!.path,
     _file_path!,
-    GenresModel(selectedGenre!.id, name: selectedGenre!.name),
+    GenresModel(selectedGenre!.id, name: selectedGenre!.name,selectedGenre!.image_path),
   );
 
   await updateBook(updatedBook); // Your function to update the book in the database

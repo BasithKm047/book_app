@@ -1,10 +1,11 @@
-import 'dart:io';
 
-import 'package:book_app/User/costum_homescreen_details.dart';
-import 'package:book_app/User/custom_listview.dart';
+import 'package:book_app/util/costum_homescreen_details.dart';
+import 'package:book_app/util/costum_card2.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/model/book_model.dart';
+import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
+import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
 
 class AdminViewScreen extends StatefulWidget {
@@ -21,14 +22,11 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
   Future<void> filterBooks() async {
     String searchTExt = _searchController.text.toLowerCase();
     setState(() {
-  
-        filteredBook = bookListbyGenreNotifier.value.where(
-          (book) {
-            return book.bookName.toLowerCase().contains(searchTExt);
-          },
-        ).toList();
-    
-      
+      filteredBook = bookListbyGenreNotifier.value.where(
+        (book) {
+          return book.bookName.toLowerCase().contains(searchTExt);
+        },
+      ).toList();
     });
   }
 
@@ -45,13 +43,13 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
   Widget build(BuildContext context) {
     getAllBooks();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: CostumColor().costum_color_6,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: CostumColor().costum_color_6,
         centerTitle: true,
         title: Text(
             style: CostumFontStyle(
-                    color: Colors.black,
+                    color: CostumColor().costum_color_1,
                     fontSize: 20,
                     fontWeight: FontWeight.w400)
                 .getFontstyle(),
@@ -72,37 +70,37 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                    labelText: 'Search',
-                    suffixIcon: const Icon(Icons.search),
-                  ),
-                ),
-              ),
-              filteredBook.isNotEmpty
-                  ? SizedBox(
-                      height: 200,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemCount: filteredBook.length,
-                        itemBuilder: (context, index) {
-                          final book = filteredBook[index];
-                          return ListTile(
-                            leading: Image.file(
-                                fit: BoxFit.cover,
-                                File(book.image_path)),
-                            title: Text(book.bookName),
-                          );
-                        },
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: TextFormField(
+              //     controller: _searchController,
+              //     decoration: InputDecoration(
+              //       fillColor: CostumColor().costum_color,
+              //       border: OutlineInputBorder(
+              //           borderRadius: BorderRadius.circular(10),
+              //           borderSide:  BorderSide(color: CostumColor().costum_color)),
+              //       labelText: 'Search',
+              //       suffixIcon: const Icon(Icons.search),
+              //     ),
+              //   ),
+              // ),
+              // filteredBook.isNotEmpty
+              //     ? SizedBox(
+              //         height: 200,
+              //         child: ListView.separated(
+              //           separatorBuilder: (context, index) => const Divider(),
+              //           itemCount: filteredBook.length,
+              //           itemBuilder: (context, index) {
+              //             final book = filteredBook[index];
+              //             return ListTile(
+              //               leading: Image.file(
+              //                   fit: BoxFit.cover, File(book.image_path)),
+              //               title: Text(book.bookName),
+              //             );
+              //           },
+              //         ),
+              //       )
+              //     : const SizedBox.shrink(),
               const SizedBox(
                 height: 20,
               ),
@@ -114,19 +112,19 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                 height: 30,
               ),
               Container(
-                height: 300,
+                height: ResponsiveHelper(context).getResponsiveHeight(70),
                 width: double.infinity,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   // borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, -3),
-                      blurRadius: 25,
-                      // spreadRadius: 3,
-                    )
-                  ],
-                  color: Colors.white,
+                  // boxShadow: const [
+                  //   // BoxShadow(
+                  //   //   color: Colors.grey,
+                  //   //   offset: Offset(0, -3),
+                  //   //   blurRadius: 25,
+                  //   //   // spreadRadius: 3,
+                  //   // )
+                  // ],
+                  color: CostumColor().costum_color_4,
                 ),
                 child: Column(
                   children: [
@@ -139,25 +137,25 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(
                               style: CostumFontStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
+                                      color: CostumColor().costum_color_1,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold)
                                   .getFontstyle(),
-                              'Genres'),
+                              'More to Explore'),
                         ),
                       ],
                     ),
-                    const SizedBox(
+                   const SizedBox(
                       height: 20,
                     ),
+                    
                     SizedBox(
-                      height: 200,
-                      child: InkWell(
-                          child: CustomListview(
-                        scrollDirection: Axis.horizontal,
-                        isAdmin: true,
-                      )),
+                      height: ResponsiveHelper(context).getResponsiveHeight(60),
+                      width: ResponsiveHelper(context).getResponsiveWidth(85),
+                      
+                      child: Costumcard2( isAdmin: true),
                     )
+                    
                   ],
                 ),
               ),

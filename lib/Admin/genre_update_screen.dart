@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
+import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class GenreUpdatScreen extends StatefulWidget {
   final GenresModel genre;
@@ -14,11 +18,13 @@ class GenreUpdatScreen extends StatefulWidget {
 }
 
 class _GenreUpdatScreenState extends State<GenreUpdatScreen> {
+  File? _image;
   late TextEditingController _nameController;
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.genre.name);
+    _image=File(widget.genre.image_path!);
     // widget.genre;
   }
 
@@ -29,7 +35,7 @@ class _GenreUpdatScreenState extends State<GenreUpdatScreen> {
   }
 
   Future<void> updateGenre() async {
-    final updateGenre = GenresModel( widget.genre.id,
+    final updateGenre = GenresModel(widget.genre.id, widget.genre.image_path,
         name: _nameController.text);
     await updateGeners(updateGenre);
     Navigator.of(context).pop();
@@ -52,6 +58,29 @@ class _GenreUpdatScreenState extends State<GenreUpdatScreen> {
           const SizedBox(
             height: 50,
           ),
+          Container(
+            height: ResponsiveHelper(context).getResponsiveHeight(20),
+            width: ResponsiveHelper(context).getResponsiveWidth(40),
+            decoration: BoxDecoration(
+              color: CostumColor().costum_color_2,
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: IconButton(
+              onPressed: () {
+                getimage();
+              },
+              icon: _image != null && _image!.path.isNotEmpty
+                  ? Image.file(
+                      fit: BoxFit.cover,
+                      File(_image!.path),
+                    )
+                  : const Icon(
+                      size: 50,
+                      Icons.add_a_photo_outlined,
+                    ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
@@ -59,9 +88,10 @@ class _GenreUpdatScreenState extends State<GenreUpdatScreen> {
                   color: CostumColor().costum_color_2,
                   borderRadius: BorderRadius.circular(10)),
               child: TextFormField(
-                 inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),  // Restrict to letters only
-          ],
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z]')), // Restrict to letters only
+                ],
                 controller: _nameController,
                 decoration: InputDecoration(
                     isDense: true,
@@ -103,5 +133,16 @@ class _GenreUpdatScreenState extends State<GenreUpdatScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> getimage() async {
+    final selectedimage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (selectedimage == null) return;
+    final imageTemborory = File(selectedimage.path);
+
+    setState(() {
+      _image = imageTemborory;
+    });
   }
 }

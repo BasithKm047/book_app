@@ -3,6 +3,7 @@ import 'package:book_app/User/welcome_screen.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/model/user_model.dart';
+import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -29,7 +30,8 @@ Hive.openBox('admin');
 // await Hive.openBox('books');
 // await Hive.openBox('genres');
 
-  runApp(const MyApp());
+  runApp(
+    const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -41,9 +43,13 @@ class MyApp extends StatelessWidget {
       
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primaryColor: Colors.blue,
+        scaffoldBackgroundColor: CostumColor().costum_color_6
         
       
       ),
+      
+    
       home: const WelcomeScreen()
     );
   }

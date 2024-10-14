@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:book_app/Admin/details_updating_screen.dart';
-import 'package:book_app/User/costum_bookview_screen.dart';
+import 'package:book_app/util/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/model/book_model.dart';
@@ -125,7 +125,7 @@ class _BookCardState extends State<BookCard> {
                               },
                               icon: Icon(
                                   // size: 10,
-                                  color: const Color.fromARGB(255, 38, 37, 37),
+                                  color: CostumColor().costum_color,
                                   widget.icon_2!.icon),
                             ),
                           )

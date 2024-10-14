@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:book_app/User/home_screen.dart';
+import 'package:book_app/User/navigator_screen.dart';
 import 'package:book_app/function/user_db_function.dart';
 import 'package:book_app/model/user_model.dart';
 import 'package:book_app/util/costum_color.dart';
@@ -124,7 +124,7 @@ class _UserScreenState extends State<UserScreen> {
                             if (_formkey.currentState!.validate()) {
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
-                                builder: (context) => HomeScreen(
+                                builder: (context) => NavigatorScreen(
                                   userName: _usernameController.text,
                                   image_path: _image?.path??'',
                                 ),

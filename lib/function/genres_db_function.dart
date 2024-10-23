@@ -51,7 +51,7 @@ Future<void>deletGenres(GenresModel value)async{
 Future<void>getAllGenres()async{
   final genreDb=await Hive.openBox<GenresModel>('genres');
   final genres = genreDb.values.toList();
-  genremodelList.value=genreDb.values.toList();
+  genremodelList.value=genres;
   print('Genres loaded: ${genres.map((g) => g.name).toList()}');
   genremodelList.notifyListeners();
    

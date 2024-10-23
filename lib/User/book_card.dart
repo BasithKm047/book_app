@@ -3,19 +3,20 @@ import 'dart:io';
 import 'package:book_app/Admin/details_updating_screen.dart';
 import 'package:book_app/util/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
-import 'package:book_app/function/genres_db_function.dart';
-import 'package:book_app/model/book_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
 class BookCard extends StatefulWidget {
+  final bool isLanguage;
   String title;
   String imagePath;
   Icon? icon;
   Icon? icon_2;
   final bool isAdmin;
+  
+   
   // final Function(Book)?onDelete;
   // final Function(Book)? onUpdate;
   
@@ -26,7 +27,7 @@ class BookCard extends StatefulWidget {
       required this.imagePath,
       this.icon,
       this.icon_2,
-      required this.isAdmin});
+      required this.isAdmin, required this.isLanguage});
 
   @override
   State<BookCard> createState() => _BookCardState();
@@ -86,7 +87,7 @@ class _BookCardState extends State<BookCard> {
               valueListenable: bookListbyGenreNotifier,
               builder: (context, value, child) {
                 final bookDetails=value.firstWhere((val) =>val.bookName==widget.title,
-                orElse: () =>Book('', '', '', 1, '', '',genremodelList.value.first),
+                // orElse: () =>Book('', '', '', 1, '', '',genremodelList.value.first,languageModelList.value.first),
                 
                 );
 

@@ -19,7 +19,7 @@ class Card1 extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10)),
             color: Color.fromARGB(255, 114, 114, 114)),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const SizedBox(
               width: 10,
@@ -29,7 +29,7 @@ class Card1 extends StatelessWidget {
               name,
               style: CostumFontStyle(
                       color: CostumColor().costum_color_6,
-                      fontSize: 15,
+                      fontSize: ResponsiveHelper(context).getResponsiveFontSize(5),
                       fontWeight: FontWeight.w500)
                   .getFontstyle(),
             ),
@@ -38,7 +38,7 @@ class Card1 extends StatelessWidget {
             const SizedBox(
               width: 20,
             ),
-            Divider(color: CostumColor().costum_color_4,thickness: 1,),
+            Divider(color: CostumColor().costum_color_3,thickness: 1,),
             const SizedBox(width: 10,),
             SizedBox(
               width: ResponsiveHelper(context).getResponsiveWidth(40),

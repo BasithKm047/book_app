@@ -30,7 +30,9 @@ class LibraryDetailsScreen extends StatelessWidget {
         mainAxisSpacing: 16,
         childAspectRatio: 0.50,
         ), itemBuilder: (context, index) {
-          return BookCard(title: value[index].bookName,isAdmin: false,imagePath: value[index].image_path,);
+          return BookCard(title: value[index].bookName,isAdmin: false,imagePath: value[index].image_path,isLanguage: false,);
+          
+
         },
         itemCount: value.length,);
         },

@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:book_app/Admin/costum_textformfield.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
+import 'package:book_app/function/language_db_function.dart';
+import 'package:book_app/model/author_model.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
+import 'package:book_app/model/language_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:file_picker/file_picker.dart';
@@ -26,7 +29,7 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
   final _fomKey = GlobalKey<FormState>();
 
   GenresModel? selectedGenre;
-
+ LanguageModel ?selectedLanguage;
   File? _image;
   String? _file_path;
   var pickPdfFilePick = true;
@@ -37,7 +40,7 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
     super.initState();
     _bookController = TextEditingController(text: widget.bookDetails.bookName);
     _nameController =
-        TextEditingController(text: widget.bookDetails.authorName);
+        // TextEditingController(text: widget.bookDetails.authorName);
     _discribtionController =
         TextEditingController(text: widget.bookDetails.discribtion);
     _image = File(widget.bookDetails.image_path);
@@ -170,6 +173,58 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
                         },
                       )),
                 ),
+                const SizedBox(height: 20,),
+                 Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          color: CostumColor().costum_color_2,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: ValueListenableBuilder(
+                        valueListenable: languageModelList,
+                        builder: (context, List<LanguageModel> language, child) {
+                          if (language.isEmpty) {
+                            return const Center(
+                              child: Text('No Language '),
+                            );
+                          }
+                          return DropdownButtonFormField<LanguageModel>(
+                            onTap: () {},
+                            decoration: InputDecoration(
+                              hintStyle: CostumFontStyle(
+                                      color: CostumColor().costum_color_3,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal)
+                                  .getFontstyle_2(),
+                              hintText: 'Language',
+                              fillColor: CostumColor().costum_color_3,
+                              // border: OutlineInputBorder(
+                              //   borderRadius: BorderRadius.circular(10),
+
+                              // ),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 10),
+                            ),
+                            isExpanded: true,
+                            value: selectedLanguage,
+                            items: language.map((value) {
+                              return DropdownMenuItem(
+                                  onTap: () {
+                                    // getBooksByGenre(selectedGenre!.name);
+                                  },
+                                  value: value,
+                                  child: Text(value.language));
+                            }).toList(),
+                            onChanged: (LanguageModel ?newLanguage) {
+                              setState(() {
+                                selectedLanguage = newLanguage;
+                              });
+                            },
+                          );
+                        },
+                      )),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -289,18 +344,19 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
     return;
   }
 
-  final updatedBook = Book(
-    _bookController.text,
-    _discribtionController.text,
-    _nameController.text,
-    widget.bookDetails.id, // Keep the original ID
-    _image!.path,
-    _file_path!,
-    GenresModel(selectedGenre!.id, name: selectedGenre!.name,selectedGenre!.image_path),
-  );
+  // final updatedBook = Book(
+  //   _bookController.text,
+  //   _discribtionController.text,
+  //   AuthorModel(id, name, image_path)
+  //   widget.bookDetails.id, // Keep the original ID
+  //   _image!.path,
+  //   _file_path!,
+  //   GenresModel(selectedGenre!.id, name: selectedGenre!.name,selectedGenre!.image_path),
+  //   LanguageModel(selectedLanguage!.language, selectedLanguage!.id)
+  // );
 
-  await updateBook(updatedBook); // Your function to update the book in the database
-  Navigator.pop(context); // Go back after updating
+  // await updateBook(updatedBook); // Your function to update the book in the database
+  // Navigator.pop(context); // Go back after updating
 }
 
 

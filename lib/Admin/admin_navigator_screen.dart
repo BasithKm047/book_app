@@ -1,7 +1,7 @@
 import 'package:book_app/Admin/admin_details_screen.dart';
+import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/admin_view_screen.dart';
 import 'package:book_app/Admin/details_adding_screen.dart';
-import 'package:book_app/Admin/admin_genre_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +22,14 @@ int selectedIndex=0;
   Widget build(BuildContext context) {
       final List <Widget>_pages=[
        const AdminViewScreen(),
-       const AdminGenreScreen(),
+       const AdminTabcontrollerScreen(),
          DetailsAddingScreen(),
      AdminDetailsScreen(image_path: widget.image_path,name: widget.name,),
 
   ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:  CostumColor().costum_color_3,
      
       body: _pages[selectedIndex],
       bottomNavigationBar:  SizedBox(
@@ -39,7 +39,7 @@ int selectedIndex=0;
   
     
   
-    backgroundColor: CostumColor().costum_color_3,
+    backgroundColor: Colors.transparent,
     selectedItemColor: Colors.white,
     splashColor: Colors.transparent,
     enableFloatingNavBar: true,

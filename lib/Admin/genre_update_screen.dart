@@ -35,7 +35,7 @@ class _GenreUpdatScreenState extends State<GenreUpdatScreen> {
   }
 
   Future<void> updateGenre() async {
-    final updateGenre = GenresModel(widget.genre.id, widget.genre.image_path,
+    final updateGenre = GenresModel(widget.genre.id,_image!.path,
         name: _nameController.text);
     await updateGeners(updateGenre);
     Navigator.of(context).pop();

@@ -4,19 +4,20 @@ import 'package:book_app/Admin/admin_genre_screen.dart';
 import 'package:book_app/Admin/costum_textformfield.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
+import 'package:book_app/function/language_db_function.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
+import 'package:book_app/model/language_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
+import 'package:book_app/util/media_querry.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DetailsAddingScreen extends StatefulWidget {
-  
-   DetailsAddingScreen({
+  DetailsAddingScreen({
     super.key,
-   
   });
 
   @override
@@ -25,11 +26,13 @@ class DetailsAddingScreen extends StatefulWidget {
 
 class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
   final TextEditingController _bookController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _discribtionController = TextEditingController();
+  final TextEditingController _AuthorController = TextEditingController();
   final _fomKey = GlobalKey<FormState>();
 
   GenresModel? selectedGenre;
+  LanguageModel? selectedLanguage;
+  File? _authorImage;
 
   File? _image;
   String? _file_path;
@@ -39,240 +42,398 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
   void initState() {
     getAllGenres();
     super.initState();
+    getAllLanguage();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
-          Form(
-            key: _fomKey,
-            autovalidateMode: AutovalidateMode.always,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: GestureDetector(
-                    onTap: () {
-                      getimage();
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          image: _image != null
-                              ? DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: FileImage(_image!),
-                                )
-                              : null,
-                          color: CostumColor().costum_color_2,
-                          borderRadius: BorderRadius.circular(10)),
-                      height: 200,
-                      width: 200,
-                      child: _image == null
-                          ? Center(
-                              child: Text(
-                                  style: CostumFontStyle(
-                                          color: CostumColor().costum_color_3,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal)
-                                      .getFontstyle_2(),
-                                  'Image'),
-                            )
-                          : null,
+    return SafeArea(
+      child: Scaffold(
+        body: ListView(
+          children: [
+            Form(
+              key: _fomKey,
+              autovalidateMode: AutovalidateMode.always,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 100),
+                    child: GestureDetector(
+                      onTap: () {
+                        getimage();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            image: _image != null
+                                ? DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: FileImage(_image!),
+                                  )
+                                : null,
+                            color: CostumColor().costum_color_2,
+                            borderRadius: BorderRadius.circular(10)),
+                        height:
+                            ResponsiveHelper(context).getResponsiveHeight(23),
+                        width: ResponsiveHelper(context).getResponsiveWidth(45),
+                        child: _image == null
+                            ? Center(
+                                child: Text(
+                                    style: CostumFontStyle(
+                                            color: CostumColor().costum_color_3,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal)
+                                        .getFontstyle_2(),
+                                    'Image'),
+                              )
+                            : null,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                CostumTextformfield(
-                  title: 'Book name',
-                  controller: _bookController,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CostumTextformfield(
-                  controller: _nameController,
-                  title: 'Author name',
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  CostumTextformfield(
+                    title: 'Book name',
+                    controller: _bookController,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, right: 20),
+                    child: Container(
                       decoration: BoxDecoration(
                           color: CostumColor().costum_color_2,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: ValueListenableBuilder(
-                        valueListenable: genremodelList,
-                        builder: (context, List<GenresModel> genre, child) {
-                          if (genre.isEmpty) {
-                            return const Center(
-                              child: Text('No Genres '),
-                            );
-                          }
-                          return DropdownButtonFormField(
-                            onTap: () {},
-                            decoration: InputDecoration(
-                              hintStyle: CostumFontStyle(
-                                      color: CostumColor().costum_color_3,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal)
-                                  .getFontstyle_2(),
-                              hintText: 'Genres',
-                              fillColor: CostumColor().costum_color_3,
-                              // border: OutlineInputBorder(
-                              //   borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Column(
+                                children: [
+                                  Icon(Icons.person),
+                                  Text('Author image')
+                                ],
+                              )),
 
-                              // ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 10),
+                          Container(
+                            width: ResponsiveHelper(context).getResponsiveWidth(50),
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(10),
+
                             ),
-                            isExpanded: true,
-                            value: selectedGenre,
-                            items: genre.map((value) {
-                              return DropdownMenuItem(
-                                  onTap: () {
-                                    // getBooksByGenre(selectedGenre!.name);
-                                  },
-                                  value: value,
-                                  child: Text(value.name));
-                            }).toList(),
-                            onChanged: (GenresModel? newgenre) {
-                              setState(() {
-                                selectedGenre = newgenre;
-                              });
-                            },
-                          );
-                        },
-                      )),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 250,
-                  width: 250,
-                  decoration: BoxDecoration(
-                    color: CostumColor().costum_color_2,
-                    borderRadius: BorderRadius.circular(10),
+                            child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Author name',
+                              border: InputBorder.none
+                            ),
+                            ),
+                          )       ,
+                        ],
+                      ),
+
+                      // child: TextFormField(
+                      //   onTap: () {
+                      //   showDialog(context: context, builder: (context) {
+                      //     return AlertDialog(
+                      //       title:   Container(
+
+                      //         height: ResponsiveHelper(context).getResponsiveHeight(40),
+                      //         decoration: BoxDecoration(
+                      //           // color: Colors.amberAccent,
+                      //           borderRadius: BorderRadius.circular(20),
+
+                      //         ),
+                      //         child:Column(
+                      //           children: [
+                      //             ClipRRect(child: GestureDetector(
+                      //               onTap: () => getAuthorimage,
+                      //               child: SizedBox(
+                      //                 height: ResponsiveHelper(context).getResponsiveHeight(20),
+                      //                 child:  _authorImage==null?Image.asset(
+                      //                   fit: BoxFit.cover,
+                      //                   'Asset/download_1.jpeg'):Image.file(
+                      //                     fit: BoxFit.cover,
+                      //                     File(_authorImage!.path),
+                      //                 ),
+                      //               ),
+                      //             ),),
+                      //             TextFormField(
+                      //               decoration: const InputDecoration(
+                      //                 hintText: 'hie'
+                      //               ),
+                      //             )
+                      //           ],
+                      //         ),
+                      //       ),
+
+                      //     );
+                      //   },);
+
+                      //   },
+                      //   controller: _AuthorController,
+                      //   decoration: InputDecoration(
+                      //       isDense: true,
+                      //       hintStyle: CostumFontStyle(
+                      //               color: CostumColor().costum_color_3,
+                      //               fontSize: 15,
+                      //               fontWeight: FontWeight.normal)
+                      //           .getFontstyle_2(),
+                      //       hintText: 'Author Details',
+                      //       fillColor: CostumColor().costum_color_2,
+                      //       // border: OutlineInputBorder(
+                      //       //     // gapPadding: 10,
+
+                      //       //     borderRadius: BorderRadius.circular(10)),
+                      //       border: InputBorder.none,
+                      //       contentPadding: const EdgeInsets.symmetric(
+                      //           vertical: 10, horizontal: 10)),
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return 'Enter Author Details ';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
+                    ),
                   ),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Enter Discribtion';
-                      }
-                      return null;
-                    },
-                    controller: _discribtionController,
-                    onTap: () {},
-                    maxLines: null,
-                    expands: true,
-                    
-                    // keyboardType
-                    
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: CostumColor().costum_color_2,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ValueListenableBuilder(
+                          valueListenable: genremodelList,
+                          builder: (context, List<GenresModel> genre, child) {
+                            if (genre.isEmpty) {
+                              return const Center(
+                                child: Text('No Genres '),
+                              );
+                            }
+                            return DropdownButtonFormField(
+                              onTap: () {},
+                              decoration: InputDecoration(
+                                hintStyle: CostumFontStyle(
+                                        color: CostumColor().costum_color_3,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal)
+                                    .getFontstyle_2(),
+                                hintText: 'Genres',
+                                fillColor: CostumColor().costum_color_3,
+                                // border: OutlineInputBorder(
+                                //   borderRadius: BorderRadius.circular(10),
+
+                                // ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 10),
+                              ),
+                              isExpanded: true,
+                              value: selectedGenre,
+                              items: genre.map((value) {
+                                return DropdownMenuItem(
+                                    onTap: () {
+                                      // getBooksByGenre(selectedGenre!.name);
+                                    },
+                                    value: value,
+                                    child: Text(value.name));
+                              }).toList(),
+                              onChanged: (GenresModel? newgenre) {
+                                setState(() {
+                                  selectedGenre = newgenre;
+                                });
+                              },
+                            );
+                          },
+                        )),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: CostumColor().costum_color_2,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ValueListenableBuilder(
+                          valueListenable: languageModelList,
+                          builder:
+                              (context, List<LanguageModel> language, child) {
+                            if (language.isEmpty) {
+                              return const Center(
+                                child: Text('No Language '),
+                              );
+                            }
+                            return DropdownButtonFormField<LanguageModel>(
+                              onTap: () {},
+                              decoration: InputDecoration(
+                                hintStyle: CostumFontStyle(
+                                        color: CostumColor().costum_color_3,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal)
+                                    .getFontstyle_2(),
+                                hintText: 'Language',
+                                fillColor: CostumColor().costum_color_3,
+                                // border: OutlineInputBorder(
+                                //   borderRadius: BorderRadius.circular(10),
+
+                                // ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 10),
+                              ),
+                              isExpanded: true,
+                              value: selectedLanguage,
+                              items: language.map((value) {
+                                return DropdownMenuItem(
+                                    onTap: () {
+                                      // getBooksByGenre(selectedGenre!.name);
+                                    },
+                                    value: value,
+                                    child: Text(value.language));
+                              }).toList(),
+                              onChanged: (LanguageModel? newLanguage) {
+                                setState(() {
+                                  selectedLanguage = newLanguage;
+                                });
+                              },
+                            );
+                          },
+                        )),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 250,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      color: CostumColor().costum_color_2,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Enter Discribtion';
+                        }
+                        return null;
+                      },
+                      controller: _discribtionController,
+                      onTap: () {},
+                      maxLines: null,
+                      expands: true,
+
+                      // keyboardType
+
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
                         hintText: 'Discribtion',
                         hintStyle: CostumFontStyle(
                                 color: CostumColor().costum_color_3,
                                 fontSize: 15,
                                 fontWeight: FontWeight.normal)
                             .getFontstyle_2(),
-                            
-                            ),
-          //                    inputFormatters: [
-          //               FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')), 
-          // ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      pickPdfFile();
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: CostumColor().costum_color_2, width: 1),
-                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: IconButton(
-                              onPressed: () {
-                                pickPdfFile();
-                                
-                              },
-                               icon: _file_path!= null
-                        ? const Icon(Icons.check, color: Colors.green)  // Show done icon if PDF is picked
-                        : const Icon(Icons.upload),
-                              // icon: const Icon(Icons.upload),
+                      //                    inputFormatters: [
+                      //               FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                      // ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        pickPdfFile();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: CostumColor().costum_color_2, width: 1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: IconButton(
+                                onPressed: () {
+                                  pickPdfFile();
+                                },
+                                icon: _file_path != null
+                                    ? const Icon(Icons.check,
+                                        color: Colors.green)
+                                    : const Icon(
+                                        color: Colors.white, Icons.upload),
+                                // icon: const Icon(Icons.upload),
+                              ),
                             ),
-                          ),
-                          Text(
-                              style: CostumFontStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal)
-                                  .getFontstyle_2(),
-                              'Add Pdf')
-                        ],
+                            Text(
+                                style: CostumFontStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal)
+                                    .getFontstyle_2(),
+                                'Add Pdf')
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                  height: 50,
-                  width: 120,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    width: 120,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        backgroundColor: CostumColor().costum_color,
                       ),
-                      backgroundColor: CostumColor().costum_color,
-                    ),
-                    onPressed: () {
-                      bookAdding();
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //   builder: (context) => const AdminGenreScreen(),
-                      // ));
+                      onPressed: () {
+                        bookAdding();
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) => const AdminGenreScreen(),
+                        // ));
 
-                      // save data
-                    },
-                    child: Text(
-                        style: CostumFontStyle(
-                                color: CostumColor().costum_color_1,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400)
-                            .getFontstyle(),
-                        'Save'),
+                        // save data
+                      },
+                      child: Text(
+                          style: CostumFontStyle(
+                                  color: CostumColor().costum_color_1,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400)
+                              .getFontstyle(),
+                          'Save'),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 30,
-                )
-              ],
+                  const SizedBox(
+                    height: 30,
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -303,7 +464,6 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
       });
     } else {
       print('No File Selected');
-    
     }
   }
 
@@ -333,21 +493,24 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     }
 
     int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
-    final newBook = Book(
-        _bookController.text,
-        _discribtionController.text,
-        _nameController.text,
-        newid,
-        _image!.path,
-        _file_path!,
-        GenresModel(selectedGenre!.id, name: selectedGenre!.name,selectedGenre!.image_path));
+    // final newBook = Book(
+    //     _bookController.text,
+    //     _discribtionController.text,
+    //     _nameController.text,
+    //     newid,
+    //     _image!.path,
+    //     _file_path!,
+    //     GenresModel(selectedGenre!.id, name: selectedGenre!.name,selectedGenre!.image_path),
+    //     LanguageModel(selectedLanguage!.language,selectedLanguage!.id)
+    //     // LanguageModel()
+    //     );
 
-    await addBook(newBook);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Book Added Successful')));
+    // await addBook(newBook);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Book Added Successful')));
     // await getBooksByGenre(selectedGenre!.name);
 
     Navigator.of(context).pushReplacement(
-      
       MaterialPageRoute(builder: (context) => const AdminGenreScreen()),
     );
 
@@ -373,5 +536,16 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     //         GenresModel(name: selectedGenre!.name, newid));
     //     await addBook(newBook);
     //   }
+  }
+
+  Future<void> getAuthorimage() async {
+    final selectedimage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (selectedimage == null) return;
+    final imageTemborory = File(selectedimage.path);
+
+    setState(() {
+      _authorImage = imageTemborory;
+    });
   }
 }

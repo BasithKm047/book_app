@@ -2,6 +2,7 @@
 import 'package:book_app/User/welcome_screen.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
+import 'package:book_app/model/language_model.dart';
 import 'package:book_app/model/user_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ if(!Hive.isAdapterRegistered(UserModelAdapter().typeId)){
 
 Hive.openBox('admin');
 
+if(!Hive.isAdapterRegistered(LanguageModelAdapter().typeId)){
+  Hive.registerAdapter(LanguageModelAdapter());
+}
 
 
 // await Hive.openBox('books');
@@ -44,7 +48,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.blue,
-        scaffoldBackgroundColor: CostumColor().costum_color_6
+        scaffoldBackgroundColor: CostumColor().costum_color_6,
+        appBarTheme: const AppBarTheme(centerTitle: true,color: Colors.black)
         
       
       ),

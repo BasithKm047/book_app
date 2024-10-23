@@ -114,16 +114,16 @@
                 child: Column(
                   children: [
                     const SizedBox(height: 10,),
-                    Text(
-                      style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.normal).getFontstyle(),
+                    // Text(
+                    //   style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.normal).getFontstyle(),
                       
-                      bookDetails.authorName),
-                      const SizedBox(height: 10,),
-                      Expanded(
-                        child: Text(
-                          style: CostumFontStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.normal).getFontstyle_2(),
-                          bookDetails.discribtion),
-                      ),
+                    //   bookDetails.authorName),
+                    //   const SizedBox(height: 10,),
+                    //   Expanded(
+                    //     child: Text(
+                    //       style: CostumFontStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.normal).getFontstyle_2(),
+                    //       bookDetails.discribtion),
+                    //   ),
                   ],
                 ),
               ),

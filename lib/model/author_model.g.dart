@@ -1,53 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'book_model.dart';
+part of 'author_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BookAdapter extends TypeAdapter<Book> {
+class AuthorModelAdapter extends TypeAdapter<AuthorModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 6;
 
   @override
-  Book read(BinaryReader reader) {
+  AuthorModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Book(
+    return AuthorModel(
       fields[0] as int,
       fields[1] as String,
       fields[2] as String,
-      fields[4] as String,
-      fields[5] as String,
-      fields[6] as GenresModel,
-      fields[7] as LanguageModel,
-      fields[3] as AuthorModel,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Book obj) {
+  void write(BinaryWriter writer, AuthorModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.image_path)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.bookName)
-      ..writeByte(3)
-      ..write(obj.authors)
-      ..writeByte(4)
-      ..write(obj.discribtion)
-      ..writeByte(5)
-      ..write(obj.pdf_path)
-      ..writeByte(6)
-      ..write(obj.genre)
-      ..writeByte(7)
-      ..write(obj.language);
+      ..write(obj.image_path);
   }
 
   @override
@@ -56,7 +41,7 @@ class BookAdapter extends TypeAdapter<Book> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BookAdapter &&
+      other is AuthorModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

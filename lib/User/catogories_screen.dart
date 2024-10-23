@@ -9,7 +9,8 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 class CatogoriesScreen extends StatefulWidget {
   final String title;
   final bool isAdmin;
-  const CatogoriesScreen({super.key, required this.title, required this.isAdmin});
+  final bool isLanguage;
+  const CatogoriesScreen({super.key, required this.title, required this.isAdmin, required this.isLanguage});
 
   @override
   State<CatogoriesScreen> createState() => _CatogoriesScreenState();
@@ -35,7 +36,9 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
           style: CostumFontStyle(fontSize: 20, fontWeight: FontWeight.w400,color:Colors.white).getFontstyle(),
           widget.title),
       ),
-      body: ValueListenableBuilder(
+      body:
+         widget.isLanguage!=true?
+        ValueListenableBuilder(
         valueListenable: bookListbyGenreNotifier,
         builder: (context, List<Book>bookDetails, child) {
           return  GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
@@ -51,6 +54,7 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
             icon: const Icon(Icons.delete),
             icon_2:  const Icon(
               Boxicons.bx_edit),
+               isLanguage: false,
             // onDelete: (book) => deleteBook(book), 
             // onUpdate: () => updateBooks,
 
@@ -62,7 +66,36 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
         );
         },
         
-      ),
+      ): ValueListenableBuilder(
+         
+        valueListenable: bookListbyGenreNotifier,
+        builder: (context, List<Book>bookDetails, child) {
+          return  GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.50,
+        ), itemBuilder: (context, index) {
+          final book=bookDetails[index];
+          return BookCard(
+            imagePath: book.image_path,
+            title: book.bookName,
+            isAdmin: widget.isAdmin,
+            icon: const Icon(Icons.delete),
+            icon_2:  const Icon(
+              Boxicons.bx_edit),
+              isLanguage: true,
+            // onDelete: (book) => deleteBook(book), 
+            // onUpdate: () => updateBooks,
+
+          
+          );
+        
+        },
+        itemCount: bookDetails.length,
+        );
+        },
+        
+      )
     );
   }
   // void deleteBook(Book bookDetails){

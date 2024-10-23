@@ -1,52 +1,34 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'book_model.dart';
+part of 'language_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BookAdapter extends TypeAdapter<Book> {
+class LanguageModelAdapter extends TypeAdapter<LanguageModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 5;
 
   @override
-  Book read(BinaryReader reader) {
+  LanguageModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Book(
-      fields[0] as int,
+    return LanguageModel(
       fields[1] as String,
-      fields[2] as String,
-      fields[4] as String,
-      fields[5] as String,
-      fields[6] as GenresModel,
-      fields[7] as LanguageModel,
-      fields[3] as AuthorModel,
+      fields[0] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Book obj) {
+  void write(BinaryWriter writer, LanguageModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.image_path)
-      ..writeByte(2)
-      ..write(obj.bookName)
-      ..writeByte(3)
-      ..write(obj.authors)
-      ..writeByte(4)
-      ..write(obj.discribtion)
-      ..writeByte(5)
-      ..write(obj.pdf_path)
-      ..writeByte(6)
-      ..write(obj.genre)
-      ..writeByte(7)
       ..write(obj.language);
   }
 
@@ -56,7 +38,7 @@ class BookAdapter extends TypeAdapter<Book> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BookAdapter &&
+      other is LanguageModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

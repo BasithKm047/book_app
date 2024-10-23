@@ -46,7 +46,7 @@ class CostumHomescreenDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10),
                 child: GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,),));
 
                   },
                   child: Text(
@@ -58,7 +58,7 @@ class CostumHomescreenDetails extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,),));
                   },
                   icon:  Icon(
                     size: 13,

@@ -9,17 +9,14 @@ class BookstoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(style: CostumFontStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(), 'Book Store'),
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Scaffold(
+      
+        backgroundColor: Colors.black,
+       
+        body: CostumGrid(isAdmin: false,isGenre: true,)
       ),
-      body: CostumGrid(isAdmin: false,)
     );
   }
  

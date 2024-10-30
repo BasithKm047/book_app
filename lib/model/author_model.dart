@@ -12,5 +12,12 @@ class AuthorModel {
   @HiveField(2)
   final String image_path;
   AuthorModel(this.id, this.name, this.image_path);
+    @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthorModel && runtimeType == other.runtimeType && id == other.id && name == other.name;
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
 
 }

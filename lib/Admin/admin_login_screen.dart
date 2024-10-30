@@ -60,9 +60,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                   child: CircleAvatar(
                     // color: Colors.amber,
                     maxRadius: 50,
-                    backgroundImage: _image != null
-                        ? FileImage(_image!)
-                        : const AssetImage('Asset/download_1.jpeg'),
+                    backgroundImage:_image!=null?
+                         FileImage(_image!):
+                         const AssetImage('Asset/download_1.jpeg')
                   ),
                 ),
                 const SizedBox(
@@ -73,8 +73,13 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
+                        style: TextStyle(
+                          color: CostumColor().costum_color_1
+                        ),
                         controller: _adminNameController,
+                        
                         decoration: InputDecoration(
+                          
                           enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color.fromARGB(255, 104, 175, 107),
@@ -107,6 +112,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
+                        style: TextStyle(
+                          color: CostumColor().costum_color_1,
+                        ),
                         obscureText: true,
                         controller: _password_controller,
                         decoration: InputDecoration(
@@ -204,33 +212,85 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     await adminBox.put('isLoggedin', status);
   }
 
-  Future<void> _login() async {
-    await _setLoginStatus(true);
-    if (_formkey.currentState!.validate()) {
-      setState(() => _isLoading = true); // Start loading
+  // Future<void> _login() async {
 
-      try {
-        bool isLoggedIn = await Services().login(_adminNameController.text, _password_controller.text);
-        if (isLoggedIn) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => AdminNavigatorScreen(
-                image_path: _image?.path??'Asset/download_1.jpeg',
-                name: _adminNameController.text,
-              ),
-            ),
-            (Route<dynamic> route) => false,
-          );
-        } else {
-          _showErrorDialog('Invalid Username or Password');
-        }
-      } catch (e) {
-        _showErrorDialog('Login failed. Please try again.');
-      } finally {
-        setState(() => _isLoading = false); // Stop loading
-      }
-    }
+  //   await _setLoginStatus(true);
+    
+  //   if (_formkey.currentState!.validate()||_image!=null) {
+     
+     
+  //     setState(() => _isLoading = true); // Start loading
+
+    
+  //       bool isLoggedIn = await Services().login(_adminNameController.text, _password_controller.text);
+  //       if (isLoggedIn) {
+  //         Navigator.of(context).pushAndRemoveUntil(
+  //           MaterialPageRoute(
+  //             builder: (context) => AdminNavigatorScreen(
+  //               image_path: _image!.path,
+  //               name: _adminNameController.text,
+  //             ),
+  //           ),
+  //           (Route<dynamic> route) => false,
+  //         );
+  //       } 
+  //   }else {
+
+  //         _showErrorDialog('Invalid Username or Password');
+  //       setState(() => _isLoading = false); // Stop loading
+
+  //       }
+     
+  //     }
+  Future<void> _login() async {
+  // First, check if the form is valid and if an image has been selected
+  if (!_formkey.currentState!.validate()) {
+    // If form is not valid, show an error message and return
+    _showErrorDialog('Please fill in all fields correctly.');
+    return;
+  } 
+   if (_image == null) {
+    // If image is not selected, show an error message and return
+    _showErrorDialog('Please select an image.');
+    return;
   }
+
+  // Set loading state to true
+  setState(() => _isLoading = true);
+
+  try {
+    // Try logging in with the provided credentials
+    bool isLoggedIn = await Services().login(
+      _adminNameController.text,
+      _password_controller.text,
+    );
+
+    // If login is successful, navigate to the next screen
+    if (isLoggedIn) {
+      await _setLoginStatus(true); // Store the login status
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => AdminNavigatorScreen(
+            image_path: _image!.path,
+            name: _adminNameController.text,
+          ),
+        ),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      // If login fails, show an error message
+      _showErrorDialog('Invalid Username or Password');
+    }
+  } catch (e) {
+    // Catch any other errors and show an error message
+    _showErrorDialog('An unexpected error occurred. Please try again.');
+  } finally {
+    // Stop loading in both success and error cases
+    setState(() => _isLoading = false);
+  }
+}
+
+  
 
   // void login() {
   //   String enteredUsername = _adminNameController.text.trim().toLowerCase();

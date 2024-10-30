@@ -51,10 +51,7 @@ class _LanguageAddingScreenState extends State<LanguageAddingScreen> {
                         .getFontstyle_2(),
                     hintText: 'Language',
                     fillColor: CostumColor().costum_color_2,
-                    // border: OutlineInputBorder(
-                    //     // gapPadding: 10,
-
-                    //     borderRadius: BorderRadius.circular(10)),
+                   
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 10)),

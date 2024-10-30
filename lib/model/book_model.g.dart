@@ -17,21 +17,23 @@ class BookAdapter extends TypeAdapter<Book> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Book(
-      fields[0] as int,
-      fields[1] as String,
-      fields[2] as String,
-      fields[4] as String,
-      fields[5] as String,
-      fields[6] as GenresModel,
-      fields[7] as LanguageModel,
-      fields[3] as AuthorModel,
+      id: fields[0] as int,
+      image_path: fields[1] as String,
+      bookName: fields[2] as String,
+      discribtion: fields[4] as String,
+      pdf_path: fields[5] as String,
+      genre: fields[6] as GenresModel,
+      language: fields[7] as LanguageModel,
+      authors: fields[3] as AuthorModel,
+      isFavourite: fields[8] as bool,
+      isWantToRead: fields[9] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Book obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +49,11 @@ class BookAdapter extends TypeAdapter<Book> {
       ..writeByte(6)
       ..write(obj.genre)
       ..writeByte(7)
-      ..write(obj.language);
+      ..write(obj.language)
+      ..writeByte(8)
+      ..write(obj.isFavourite)
+      ..writeByte(9)
+      ..write(obj.isWantToRead);
   }
 
   @override

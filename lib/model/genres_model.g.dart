@@ -18,7 +18,6 @@ class GenresModelAdapter extends TypeAdapter<GenresModel> {
     };
     return GenresModel(
       fields[0] as int,
-      fields[2] as String?,
       name: fields[1] as String,
     );
   }
@@ -26,13 +25,11 @@ class GenresModelAdapter extends TypeAdapter<GenresModel> {
   @override
   void write(BinaryWriter writer, GenresModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
-      ..writeByte(2)
-      ..write(obj.image_path);
+      ..write(obj.name);
   }
 
   @override

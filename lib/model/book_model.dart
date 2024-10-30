@@ -24,9 +24,13 @@ class Book {
   final GenresModel genre;
   @HiveField(7)
   LanguageModel language;
-  
+  @HiveField(8)
+  final bool isFavourite;
+  @HiveField(9)
+  final bool isWantToRead;
 
-  Book(this.id, this.image_path, this.bookName, this.discribtion, this.pdf_path, this.genre,this.language,this.authors);
+
+  Book({required this.id,required this.image_path,required this.bookName,required this.discribtion,required this.pdf_path,required this.genre,required this.language,required this.authors,required this.isFavourite,required this.isWantToRead});
 
 
 }

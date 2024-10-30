@@ -1,4 +1,4 @@
-import 'package:book_app/User/book_card.dart';
+import 'package:book_app/util/book_card.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +12,12 @@ class LibraryDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     getAllBooks();
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         centerTitle: true,
         title: Text(
-          style: CostumFontStyle(fontSize: 20, fontWeight: FontWeight.w400,color:Colors.black).getFontstyle(),
+          style: CostumFontStyle(fontSize: 20, fontWeight: FontWeight.w400,color:Colors.white).getFontstyle(),
 
           title),
 

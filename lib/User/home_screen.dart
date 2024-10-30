@@ -53,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return 
+       Scaffold(
           backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black,
@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-          )),
+          )
     );
   }
 }

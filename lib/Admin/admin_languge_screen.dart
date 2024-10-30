@@ -9,14 +9,14 @@ class AdminLangugeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: Center(child: CostumGridForLanguage(isAdmin: true)),
+      body: Center(child: CostumGridForLanguage(isAdmin: true,isLanguage: true,)),
        floatingActionButton: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: CostumColor().costum_color),
+                backgroundColor: CostumColor().costum_color_4),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const LanguageAddingScreen(),

@@ -29,7 +29,7 @@ class Card1 extends StatelessWidget {
               name,
               style: CostumFontStyle(
                       color: CostumColor().costum_color_6,
-                      fontSize: ResponsiveHelper(context).getResponsiveFontSize(5),
+                      fontSize: ResponsiveHelper(context).getResponsiveFontSize(3.8),
                       fontWeight: FontWeight.w500)
                   .getFontstyle(),
             ),

@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:book_app/User/welcome_screen.dart';
-import 'package:book_app/util/costum_setting_screen.dart';
+import 'package:book_app/util/costum_color.dart';
+import 'package:book_app/util/font_style.dart';
+import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -19,20 +21,52 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.name??'Basith'),
-        leading: CircleAvatar(
-          backgroundImage: FileImage(File(widget.image_path??'Asset/download_1.jpeg')),
-        ),
+        
+        title: Text(
+          style: CostumFontStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
+          'Account'),
+        // leading: CircleAvatar(
+        //   backgroundImage: FileImage(File(widget.image_path??'Asset/download_1.jpeg')),
+        // ),
       ),
       body:
       
           Column(
             children: [
-              ElevatedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CostumSettingScreen(),));
-
-              }, child: const Text('Settings'),),
-
+               const SizedBox(height: 50,),
+            
+                  Container(
+            
+                    height: ResponsiveHelper(context).getResponsiveHeight(50),
+                    width: ResponsiveHelper(context).getResponsiveWidth(95),
+                    decoration: BoxDecoration(
+                      color: CostumColor().costum_color_3,
+                      
+                    ),
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.c,
+                      children: [
+                          const SizedBox(height: 20,),
+            
+                        SizedBox(
+                          height: ResponsiveHelper(context).getResponsiveHeight(10),
+                          width: ResponsiveHelper(context).getResponsiveWidth(30),
+                          child: CircleAvatar(
+                            backgroundImage: FileImage(
+                              
+                              File(widget.image_path??'')),
+                          ),
+                        
+                        
+                        ),
+                        const SizedBox(height: 30,),
+                        Text(
+                          style: CostumFontStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
+                          widget.name??'')
+                       
+                      ],
+                    ),
+            ),
               const SizedBox(height: 100,),
 
               ElevatedButton(
@@ -56,3 +90,10 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
     ));
   }
 }
+
+
+
+  // ElevatedButton(onPressed: (){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CostumSettingScreen(),));
+
+              // }, child: const Text('Settings'),),

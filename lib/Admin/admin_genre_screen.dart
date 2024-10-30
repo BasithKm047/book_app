@@ -13,7 +13,7 @@ class AdminGenreScreen extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: CostumGrid(isAdmin: true),
+        child: CostumGrid(isAdmin: true ,isGenre: true,),
       ),
       floatingActionButton: Align(
         alignment: Alignment.bottomCenter,
@@ -21,7 +21,7 @@ class AdminGenreScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 10),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: CostumColor().costum_color),
+                backgroundColor: CostumColor().costum_color_4),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const GenresAddingScreen(),

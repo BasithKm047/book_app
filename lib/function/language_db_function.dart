@@ -13,12 +13,13 @@ Future<void> addLanguage(LanguageModel value) async {
   getAllLanguage();
 }
 
-Future<void> getAllLanguage() async {
+Future<List<LanguageModel>> getAllLanguage() async {
   final langugeDb = await Hive.openBox<LanguageModel>('Language');
   final language = langugeDb.values.toList();
   languageModelList.value=language;
   print('Language Loaded:${language.map((lan) => lan.language).toList()}');
   languageModelList.notifyListeners();
+  return language;
 }
 
 Future<void>deleteLanguage(LanguageModel values)async{

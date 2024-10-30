@@ -1,5 +1,6 @@
 
 import 'package:book_app/User/welcome_screen.dart';
+import 'package:book_app/model/author_model.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/model/language_model.dart';
@@ -23,6 +24,11 @@ if(!Hive.isAdapterRegistered(GenresModelAdapter().typeId)){
 if(!Hive.isAdapterRegistered(UserModelAdapter().typeId)){
   Hive.registerAdapter(UserModelAdapter());
 }
+
+if(!Hive.isAdapterRegistered(AuthorModelAdapter().typeId)){
+  Hive.registerAdapter(AuthorModelAdapter());
+}
+
 
 Hive.openBox('admin');
 

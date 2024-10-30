@@ -4,7 +4,8 @@ import 'package:hive_flutter/adapters.dart';
 
 ValueNotifier<List<Book>> bookListnotifier = ValueNotifier([]);
 ValueNotifier<List<Book>> bookListbyGenreNotifier = ValueNotifier([]);
-ValueNotifier<List<Book>> bookListbyLanguage = ValueNotifier([]);
+ValueNotifier<List<Book>> bookListByLanguage = ValueNotifier([]);
+ValueNotifier <List<Book>>bookListbyAuthor=ValueNotifier([]);
 
 Future<void> addBook(Book value) async {
   final bookDb = await Hive.openBox<Book>('books');
@@ -30,6 +31,8 @@ Future<void> deleteBooks(Book value) async {
   print('Book deleted successfully');
   getAllBooks();
   getBooksByGenre(value.genre.name);
+  getBookByAuthor(value.authors.name);
+  getBookByLanguage(value.language.language);
 }
 
 Future<void> getAllBooks() async {
@@ -42,15 +45,49 @@ Future<void> getAllBooks() async {
 }
 
 Future<List<Book>> getBooksByGenre(String genreName) async {
-  final bookListbyGenre = Hive.box<Book>('books');
-  return bookListbyGenreNotifier.value = bookListbyGenre.values
-      .where((book) => book.genre.name == genreName)
+  final bookDb = Hive.box<Book>('books');
+  
+  // Print the available books and their genres for debugging
+  final allBooks = bookDb.values.toList();
+  print('Available books: ${allBooks.map((book) => '${book.bookName} - Genre:  ${book.genre.name}').join(', ')}') ;
+
+  print('Filtering books by genre: $genreName');
+
+  // Filter books by genre
+  final getBooksByGenre = allBooks
+      .where((book) => book.genre.name.trim().toLowerCase() == genreName.trim().toLowerCase())
+      .toSet()
       .toList();
+
+  // Log the filtered results
+  print('Books by $genreName: ${getBooksByGenre.map((book) => book.bookName)}');
+
+  // Update the notifier and return the filtered list
+  bookListbyGenreNotifier.value = getBooksByGenre;
+  bookListbyGenreNotifier.notifyListeners();
+
+  return getBooksByGenre;
 }
 
+
 Future<List<Book>> getBookByLanguage(String language) async {
-  final bookListbyLanguage = Hive.box<Book>('books');
-  return bookListbyGenreNotifier.value = bookListbyLanguage.values
-      .where((book) => book.language.language == language)
-      .toList();
+  final bookDb = Hive.box<Book>('books');
+  final bookListbyLanguage=bookDb.values.where((book)=>book.language.language==language).toSet().toList();
+  bookListByLanguage.value=bookListbyLanguage;
+  bookListByLanguage.notifyListeners();
+  print('Books by $language: ${bookListbyLanguage.map((book)=>book.bookName).toList()}');
+  return bookListbyLanguage;
+
 }
+
+Future <List<Book>> getBookByAuthor(String author)async{
+ final bookDb=Hive.box<Book>('books');
+ final booksByauthor=bookDb.values.where((book)=>book.authors!.name==author).toSet().toList();
+ bookListbyAuthor.value=booksByauthor;
+ bookListbyAuthor.notifyListeners();
+ print('Books by$author:    ${ booksByauthor.map((book)=>book.bookName).toList()}');
+ return booksByauthor;
+
+  
+}
+

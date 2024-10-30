@@ -8,7 +8,7 @@ class AdminAuthorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return   const Scaffold(
      body: SafeArea(child:
-     CostumRoundedGrid(isAdmin: true)
+     CostumRoundedGrid(isAdmin: true,isAUthor: true,)
      ),
     );
   }

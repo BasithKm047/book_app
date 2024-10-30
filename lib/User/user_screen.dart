@@ -68,6 +68,9 @@ class _UserScreenState extends State<UserScreen> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
+                      style: TextStyle(
+                        color: CostumColor().costum_color_1,
+                      ),
                       controller: _usernameController,
                       decoration: InputDecoration(
                           focusColor: CostumColor().costum_color,

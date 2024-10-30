@@ -8,11 +8,11 @@ class GenresModel {
   @HiveField(1)
   final String name;
 
-  @HiveField(2)
-  final String? image_path;
 
   GenresModel(
-    this.id,  this.image_path,  {
+    this.id,   {
     required this.name,
-  });
+  }
+  );
+  
 }

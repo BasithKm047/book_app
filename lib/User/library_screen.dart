@@ -1,4 +1,6 @@
 import 'package:book_app/User/library_details_screen.dart';
+import 'package:book_app/util/costum_color.dart';
+import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,9 +18,7 @@ class LibraryScreen extends StatelessWidget {
           title: Padding(
             padding: const EdgeInsets.only(top: 16.0,left: 8.0),
             child: Text(
-              style: GoogleFonts.lora(
-        
-              ),
+              style: CostumFontStyle(color: CostumColor().costum_color_1, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
               'Library'),
           ),
         ),
@@ -29,9 +29,7 @@ class LibraryScreen extends StatelessWidget {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));
           },
           title: Text(
-            style: GoogleFonts.lora(
-              fontWeight: FontWeight.w400,
-            ),
+            style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),
             LibrarDetails[index]),
           trailing: IconButton(onPressed: (){
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));

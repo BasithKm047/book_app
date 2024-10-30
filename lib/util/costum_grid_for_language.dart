@@ -1,7 +1,7 @@
-
 import 'package:book_app/Admin/language_updating_screen.dart';
 import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/function/language_db_function.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
@@ -10,8 +10,13 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 
 class CostumGridForLanguage extends StatefulWidget {
   final bool isAdmin;
+  final bool isLanguage;
 
-  CostumGridForLanguage({super.key, required this.isAdmin});
+  CostumGridForLanguage({
+    super.key,
+    required this.isAdmin,
+    required this.isLanguage,
+  });
 
   @override
   State<CostumGridForLanguage> createState() => _CostumGridForLanguageState();
@@ -40,10 +45,9 @@ class _CostumGridForLanguageState extends State<CostumGridForLanguage> {
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: .8,
-                crossAxisSpacing: 16,
-                // mainAxisExtent: 4,
-                mainAxisSpacing: 16,
+                childAspectRatio: .9,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
                 final language = value[index];
@@ -52,26 +56,22 @@ class _CostumGridForLanguageState extends State<CostumGridForLanguage> {
                     InkWell(
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CatogoriesScreen(
-                            title: language.language, isAdmin: widget.isAdmin,isLanguage: true,),
+                          title: language.language,
+                          isAdmin: widget.isAdmin,
+                          isLanguage: widget.isLanguage,
+                          isAUthor: false,
+                          isGenre: false,
+                        ),
                       )),
                       child: Card(
                         elevation: 10,
                         child: Container(
                           height:
-                              ResponsiveHelper(context).getResponsiveHeight(13),
+                              ResponsiveHelper(context).getResponsiveHeight(10),
                           width:
-                              ResponsiveHelper(context).getResponsiveWidth(50),
+                              ResponsiveHelper(context).getResponsiveWidth(40),
                           decoration: BoxDecoration(
-                            // image: DecorationImage(
-                            //   fit: BoxFit.cover,
-                            //   image: FileImage(
-
-                            //     File(
-                            //       value[index].image_path != null
-                            //           ? value[index].image_path!
-                            //           : '')),
-                            // ),
-                            color: CostumColor().costum_color,
+                            color: CostumColor().costum_color_4,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
@@ -93,9 +93,16 @@ class _CostumGridForLanguageState extends State<CostumGridForLanguage> {
                           Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: IconButton(
-                                onPressed: () async {
+                                onPressed: () {
                                   //delete the catogory
-                                  await deleteLanguage(language);
+                                  showDialog(context: context, builder: (context) {
+                                    return  alertDialogForDelete(
+                                      context: context,
+                                      itemDetails: language,
+                                      itemType: language.language,
+                                      deleteFunction: deleteLanguage);
+                                  },);
+                                 
                                 },
                                 icon: const Icon(
                                     // size: 10,

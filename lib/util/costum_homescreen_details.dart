@@ -22,7 +22,7 @@ class CostumHomescreenDetails extends StatelessWidget {
     getAllGenres();
     getBooksByGenre;
     return Container(
-      height: ResponsiveHelper(context).getResponsiveHeight(45),
+      height: ResponsiveHelper(context).getResponsiveHeight(50),
       width: double.infinity,
       decoration: BoxDecoration(
         boxShadow:  [
@@ -46,7 +46,7 @@ class CostumHomescreenDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10),
                 child: GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,isAUthor: false,isGenre: true,),));
 
                   },
                   child: Text(
@@ -58,7 +58,7 @@ class CostumHomescreenDetails extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,isAUthor: false,isGenre: true,),));
                   },
                   icon:  Icon(
                     size: 13,
@@ -67,7 +67,8 @@ class CostumHomescreenDetails extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 220,
+            height: ResponsiveHelper(context).getResponsiveHeight(30),
+            // width: ResponsiveHelper(context).getResponsiveWidth(46),
             child: Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 8),
               child: ValueListenableBuilder(
@@ -84,6 +85,8 @@ class CostumHomescreenDetails extends StatelessWidget {
                       
 
                       return Card(
+                        
+                        
                         elevation: 10,
                         child: Center(
                           child: ClipRRect(
@@ -93,8 +96,8 @@ class CostumHomescreenDetails extends StatelessWidget {
                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) =>   CostumBookviewScreen(name: bookDetails.bookName,),));
                               },
                               child: Image.file(
-                                
-                                  fit: BoxFit.contain,
+                                // width: ResponsiveHelper(context).getResponsiveWidth(45),
+                                  fit: BoxFit.cover,
                                   File(value[index].image_path)),
                             ),
                           ),

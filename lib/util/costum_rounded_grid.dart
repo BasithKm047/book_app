@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:book_app/Admin/author_updating_screen.dart';
 import 'package:book_app/Admin/genre_update_screen.dart';
+import 'package:book_app/User/catogories_screen.dart';
+import 'package:book_app/function/author_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
@@ -10,22 +14,28 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 
 class CostumRoundedGrid extends StatefulWidget {
   final bool isAdmin;
-  
-  const CostumRoundedGrid({super.key, required this.isAdmin});
+  final bool isAUthor;
+  const  CostumRoundedGrid({super.key, required this.isAdmin, required this.isAUthor});
 
   @override
   State<CostumRoundedGrid> createState() => _CostumRoundedGridState();
 }
 
+
 class _CostumRoundedGridState extends State<CostumRoundedGrid> {
   @override
+  void initState() {
+    super.initState();
+    getAllAuthor();
+  }
+  @override
   Widget build(BuildContext context) {
-    return  ValueListenableBuilder(
-        valueListenable: genremodelList,
+    return ValueListenableBuilder(
+        valueListenable: author_modelList,
         builder: (context, value, child) {
           if (value.isEmpty) {
             return const Center(
-              child: Text('Genres not found'),
+              child: Text('Author not found'),
             );
           }
 
@@ -34,53 +44,60 @@ class _CostumRoundedGridState extends State<CostumRoundedGrid> {
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: .8,
+                childAspectRatio: .7,
                 crossAxisSpacing: 16,
                 // mainAxisExtent: 4,
                 mainAxisSpacing: 16,
               ),
               itemBuilder: (context, index) {
-                final genre = value[index];
+                final author = value[index];
                 return Column(
                   children: [
                     InkWell(
-                      // onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      //   builder: (context) => CatogoriesScreen(
-                      //       ),
-                      // )),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CatogoriesScreen(
+                          title: author.name,
+                          isAdmin: widget.isAdmin,
+                          isLanguage: false,
+                          isAUthor: widget.isAUthor,
+                          isGenre: widget.isAUthor,
+                            ),
+                      )),
                       child: Container(
                         height:
                             ResponsiveHelper(context).getResponsiveHeight(15),
                         width: ResponsiveHelper(context).getResponsiveWidth(30),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
+                            borderRadius: BorderRadius.circular(100),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: FileImage(
-                                
-                                File(
-                                  value[index].image_path != null
-                                      ? value[index].image_path!
-                                      : '')),
+                              image: FileImage(File(author.image_path)),
                             ),
                             color: CostumColor().costum_color_2),
                         child: const SizedBox(
-                          width: 5,
+                          width: 10,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 5,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       height: ResponsiveHelper(context).getResponsiveHeight(5),
-                      width: ResponsiveHelper(context).getResponsiveWidth(30),
+                      width: ResponsiveHelper(context).getResponsiveWidth(40),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: CostumColor().costum_color
+                          borderRadius: BorderRadius.circular(10),
+                          color: CostumColor().costum_color_4),
+                      child: Center(
+                        child: Text(
+                            textAlign: TextAlign.center,
+                            style: CostumFontStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400)
+                                .getFontstyle(),
+                            author.name),
                       ),
-                      child:  Text(
-                        textAlign: TextAlign.center,
-                       style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),
-                        'author name'),
                     ),
                     if (widget.isAdmin == true)
                       Row(
@@ -89,9 +106,11 @@ class _CostumRoundedGridState extends State<CostumRoundedGrid> {
                           Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: IconButton(
-                                onPressed: () async {
+                                onPressed: ()  {
                                   //delete the catogory
-                                  await deletGenres(genre);
+                                  showDialog(context: context, builder: (context) {
+                                    return alertDialogForDelete(context: context, itemDetails: author, itemType: author.name, deleteFunction: deleteAuthor);
+                                  },);
                                 },
                                 icon: const Icon(
                                     // size: 10,
@@ -105,7 +124,7 @@ class _CostumRoundedGridState extends State<CostumRoundedGrid> {
                                 //edit the catogory
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      GenreUpdatScreen(genre: genre),
+                                      AuthorUpdatingScreen(author: author)
                                 ));
                                 // updateGeners(genre);
                               },

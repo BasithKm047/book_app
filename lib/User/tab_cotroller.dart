@@ -1,15 +1,15 @@
-import 'package:book_app/Admin/admin_author_screen.dart';
-import 'package:book_app/Admin/admin_genre_screen.dart';
-import 'package:book_app/Admin/admin_languge_screen.dart';
+import 'package:book_app/User/author_sreen.dart';
+import 'package:book_app/User/bookstore_screen.dart';
+import 'package:book_app/User/language_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
 
-class AdminTabcontrollerScreen extends StatelessWidget {
-  const AdminTabcontrollerScreen({super.key});
+class TabcontrollerScreen extends StatelessWidget {
+  const TabcontrollerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return  DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
@@ -36,9 +36,10 @@ class AdminTabcontrollerScreen extends StatelessWidget {
           ),
         ),
         body: const TabBarView(children: [
-          AdminGenreScreen(),
-          AdminAuthorScreen(),
-          AdminLangugeScreen(),
+          BookstoreScreen(),
+          AuthorSreen(),
+          LanguageScreen()
+      
         ]),
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:book_app/User/book_card.dart';
+import 'package:book_app/util/book_card.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/util/costum_color.dart';
@@ -10,21 +10,58 @@ class CatogoriesScreen extends StatefulWidget {
   final String title;
   final bool isAdmin;
   final bool isLanguage;
-  const CatogoriesScreen({super.key, required this.title, required this.isAdmin, required this.isLanguage});
+  final bool isAUthor;
+  final bool isGenre;
+  const CatogoriesScreen(
+      {super.key,
+      required this.title,
+      required this.isAdmin,
+      required this.isLanguage,
+      required this.isAUthor,
+      required this.isGenre});
 
   @override
   State<CatogoriesScreen> createState() => _CatogoriesScreenState();
 }
 
-
 class _CatogoriesScreenState extends State<CatogoriesScreen> {
   @override
   void initState() {
     super.initState();
-    getBooksByGenre(widget.title);
+   loadData();
   }
 
-  
+Future<void> loadData() async {
+  await getBooksByGenre(widget.title);
+  await getBookByLanguage(widget.title);
+  await getBookByAuthor(widget.title);
+}
+
+  Widget buildBookGrid(List<Book> bookDetails) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.50,
+      ),
+      itemCount: bookDetails.length,
+      itemBuilder: (context, index) {
+        final book = bookDetails[index];
+        return BookCard(
+          imagePath: book.image_path,
+          title: book.bookName,
+          isAdmin: widget.isAdmin,
+          icon: const Icon(Icons.delete),
+          icon_2: const Icon(Boxicons.bx_edit),
+          isLanguage: widget.isLanguage,
+          // onDelete: (book) => deleteBook(book),
+          // onUpdate: () => updateBooks,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,79 +69,34 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: CostumColor().costum_color_6,
-        title:  Text(
-          style: CostumFontStyle(fontSize: 20, fontWeight: FontWeight.w400,color:Colors.white).getFontstyle(),
-          widget.title),
+        title: Text(
+            style: CostumFontStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white)
+                .getFontstyle(),
+            widget.title),
       ),
-      body:
-         widget.isLanguage!=true?
-        ValueListenableBuilder(
-        valueListenable: bookListbyGenreNotifier,
-        builder: (context, List<Book>bookDetails, child) {
-          return  GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.50,
-        ), itemBuilder: (context, index) {
-          final book=bookDetails[index];
-          return BookCard(
-            imagePath: book.image_path,
-            title: book.bookName,
-            isAdmin: widget.isAdmin,
-            icon: const Icon(Icons.delete),
-            icon_2:  const Icon(
-              Boxicons.bx_edit),
-               isLanguage: false,
-            // onDelete: (book) => deleteBook(book), 
-            // onUpdate: () => updateBooks,
-
-          
-          );
-        
+      body: ValueListenableBuilder<List<Book>>(
+        valueListenable: widget.isAUthor
+            ? bookListbyAuthor
+            : widget.isLanguage
+                ? bookListByLanguage
+                : widget.isGenre
+                    ? bookListbyGenreNotifier
+                    : ValueNotifier<List<Book>>([]),
+        builder: (context, List<Book> bookDetails, child) {
+          return bookDetails.isEmpty
+              ? const Center(
+                  child: Text('No books Found'),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: buildBookGrid(bookDetails),
+                );
         },
-        itemCount: bookDetails.length,
-        );
-        },
-        
-      ): ValueListenableBuilder(
-         
-        valueListenable: bookListbyGenreNotifier,
-        builder: (context, List<Book>bookDetails, child) {
-          return  GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.50,
-        ), itemBuilder: (context, index) {
-          final book=bookDetails[index];
-          return BookCard(
-            imagePath: book.image_path,
-            title: book.bookName,
-            isAdmin: widget.isAdmin,
-            icon: const Icon(Icons.delete),
-            icon_2:  const Icon(
-              Boxicons.bx_edit),
-              isLanguage: true,
-            // onDelete: (book) => deleteBook(book), 
-            // onUpdate: () => updateBooks,
-
-          
-          );
-        
-        },
-        itemCount: bookDetails.length,
-        );
-        },
-        
-      )
+      ),
     );
   }
-  // void deleteBook(Book bookDetails){
-  //   deleteBooks(bookDetails);
-    
-  // }
-
-  // void updateBooks(Book bookDetails){
-  //   updateBook(bookDetails);
-
-  // }
+  
 }

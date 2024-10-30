@@ -1,7 +1,7 @@
-import 'package:book_app/User/bookstore_screen.dart';
 import 'package:book_app/User/home_screen.dart';
 import 'package:book_app/User/library_screen.dart';
-import 'package:book_app/User/search_screen.dart';
+import 'package:book_app/User/tab_cotroller.dart';
+import 'package:book_app/User/user_details_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +25,9 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
     super.initState();
    _pages = [
      HomeScreen(image_path: widget.image_path,userName: widget.userName,),
-    const BookstoreScreen(),
+     const TabcontrollerScreen(),
     LibraryScreen(),
-    const SearchScreen(),
+   UserDetailsScreen(image_path: widget.image_path, name: widget.userName,),
   ];
 
   }
@@ -54,15 +54,12 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: CostumColor().costum_color_3,
       body: _pages[selectedIndex],
 bottomNavigationBar: SizedBox(
   height: 83,
   child: DotNavigationBar(
     marginR: const EdgeInsets.only(bottom: 0),
-  
-    
-  
     backgroundColor: CostumColor().costum_color_3,
     selectedItemColor: Colors.white,
     splashColor: Colors.transparent,
@@ -72,6 +69,9 @@ bottomNavigationBar: SizedBox(
     DotNavigationBarItem(icon: navigationItems[0]),
     DotNavigationBarItem(icon: navigationItems[1]),
     DotNavigationBarItem(icon: navigationItems[2]),
+    DotNavigationBarItem(icon: navigationItems[3]),
+
+    
   ],
   onTap:(index) => onTapedItems(index),
   currentIndex: selectedIndex,
@@ -160,6 +160,7 @@ bottomNavigationBar: SizedBox(
   List navigationItems=[
     const Icon(Icons.home),
     const Icon(Icons.shopping_bag),
-    const Icon(Boxicons.bx_library)
+    const Icon(Boxicons.bx_library),
+    const Icon(Icons.person)
   ];
 }

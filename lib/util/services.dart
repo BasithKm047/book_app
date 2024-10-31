@@ -8,7 +8,7 @@ class Services{
   
   
 
-  Future<bool>login(String enterdusername,String enterdpassWord)async{
+  Future<bool>adminlogin(String enterdusername,String enterdpassWord)async{
     if(enterdusername.trim().toLowerCase()==username&&enterdpassWord==passWord){
       final admin=Hive.box('Admin');
       await admin.put('isLoggedIn', true);
@@ -20,6 +20,19 @@ class Services{
 
 
   }
+
+Future<bool>userLogin(String username )async{
+  if(username.isNotEmpty){
+    final user=await Hive.openBox('user');
+        await user.put('isLoggedIn', true);
+     return true;
+  
+  }else{
+    return false;
+  }
+
+}
+
 
   
 }

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/model/genres_model.dart';
@@ -6,7 +5,6 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 
 class GenresAddingScreen extends StatefulWidget {
   const GenresAddingScreen({super.key});
@@ -16,7 +14,6 @@ class GenresAddingScreen extends StatefulWidget {
 }
 
 class _GenresAddingScreenState extends State<GenresAddingScreen> {
-  File? _image;
   final TextEditingController _genersController = TextEditingController();
   @override
   void dispose() {
@@ -128,14 +125,5 @@ class _GenresAddingScreenState extends State<GenresAddingScreen> {
     }
   }
 
-  Future<void> getimage() async {
-    final selectedimage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (selectedimage == null) return;
-    final imageTemborory = File(selectedimage.path);
-
-    setState(() {
-      _image = imageTemborory;
-    });
-  }
+ 
 }

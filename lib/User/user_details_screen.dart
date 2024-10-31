@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:book_app/User/welcome_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class UserDetailsScreen extends StatelessWidget {
   final String ?image_path;
@@ -49,11 +51,25 @@ class UserDetailsScreen extends StatelessWidget {
                        
                       ],
                     ),
-            )
+            ),
+            ElevatedButton(onPressed: (){
+              _logoutuser(context);
+
+            }, child: const Text('Logout'))
 
           ],
 
         ),
     );
   }
+   Future<void> _logoutuser(BuildContext context) async {
+    final adminBox = Hive.box('user');
+    await adminBox.put('isLoggedin', false); // Mark admin as logged out
+
+    // Navigate back to the login screen
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const WelcomeScreen(),
+    ));
+  }
+
 }

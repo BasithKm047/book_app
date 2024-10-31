@@ -82,12 +82,22 @@ Future<List<Book>> getBookByLanguage(String language) async {
 
 Future <List<Book>> getBookByAuthor(String author)async{
  final bookDb=Hive.box<Book>('books');
- final booksByauthor=bookDb.values.where((book)=>book.authors!.name==author).toSet().toList();
+ final booksByauthor=bookDb.values.where((book)=>book.authors.name==author).toSet().toList();
  bookListbyAuthor.value=booksByauthor;
  bookListbyAuthor.notifyListeners();
  print('Books by$author:    ${ booksByauthor.map((book)=>book.bookName).toList()}');
  return booksByauthor;
 
   
+}
+
+Future<List<Book>>getFavouriteBooks()async{
+    final bookDb=await Hive.openBox<Book>('books');
+    final favouriteBooks=bookDb.values.where((book)=>book.isFavourite).toList();
+    bookListnotifier.value=favouriteBooks;
+    bookListnotifier.notifyListeners();
+  print('Favorite Books: ${favouriteBooks.map((book) => book.bookName).toList()}');
+  return favouriteBooks; 
+
 }
 

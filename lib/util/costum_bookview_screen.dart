@@ -149,14 +149,14 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
                 ResponsiveHelper(context).getResponsiveHeight(6)),
             backgroundColor: CostumColor().costum_color_4),
         onPressed: () {
-
+      onTap;
         },
         child: Row(
           children: [
             const SizedBox(
               width: 10,
             ),
-            
+
             Icon(
                 color: CostumColor().costum_color_1,
                 Icons.add_circle_outline_outlined),
@@ -203,6 +203,12 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
     );
   }
   Future<void>addtoFav()async{
+    
+   
+
+
+
+
 
   }
 

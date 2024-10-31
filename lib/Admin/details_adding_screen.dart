@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:book_app/Admin/admin_navigator_screen.dart';
 import 'package:book_app/Admin/author_adding_screen.dart';
 import 'package:book_app/util/costum_textformfield.dart';
 import 'package:book_app/function/author_db_function.dart';

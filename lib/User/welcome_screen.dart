@@ -1,10 +1,8 @@
 
-import 'package:book_app/Admin/admin_navigator_screen.dart';
 import 'package:book_app/User/login_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -14,11 +12,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
-  void initState() {
-    super.initState();
-
-    checkLoggedInStatus();
-  }
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,18 +102,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
     );
   }
-    Future<void> checkLoggedInStatus() async {
-    final admin = await Hive.openBox('Admin');
-    final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
+   
 
-    if (isLoggedIn) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => AdminNavigatorScreen(
-          // image_path: _image?.path ?? '',
-          // name: _adminNameController.text,
-        ),
-      ));
-    }
-  }
+
 
 }

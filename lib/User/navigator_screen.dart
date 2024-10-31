@@ -10,7 +10,7 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 class NavigatorScreen extends StatefulWidget {
     String ?userName;
    String ?image_path;
-   NavigatorScreen({super.key,required this.image_path,required this.userName});
+   NavigatorScreen({super.key, this.image_path, this.userName});
 
   @override
   State<NavigatorScreen> createState() => _NavigatorScreenState();

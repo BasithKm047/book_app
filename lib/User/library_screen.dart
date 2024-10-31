@@ -2,7 +2,6 @@ import 'package:book_app/User/library_details_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
 class LibraryScreen extends StatelessWidget {

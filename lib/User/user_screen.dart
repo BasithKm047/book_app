@@ -3,12 +3,12 @@
 import 'dart:io';
 
 import 'package:book_app/User/navigator_screen.dart';
-import 'package:book_app/function/user_db_function.dart';
-import 'package:book_app/model/user_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:book_app/util/services.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserScreen extends StatefulWidget {
@@ -124,29 +124,7 @@ class _UserScreenState extends State<UserScreen> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10)))),
                           onPressed: () {
-                            if (_formkey.currentState!.validate()) {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => NavigatorScreen(
-                                  userName: _usernameController.text,
-                                  image_path: _image?.path??'',
-                                ),
-                              ));
-                              adduserToDatabase();
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      backgroundColor:
-                                          CostumColor().costum_color_4,
-                                      content: Text(
-                                          style: CostumFontStyle(
-                                                  color: CostumColor()
-                                                      .costum_color,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w400)
-                                              .getFontstyle(),
-                                          'Enter a name')));
-                            }
+                            login();
                           },
                           child: Text(
                             'Log in',
@@ -187,10 +165,92 @@ class _UserScreenState extends State<UserScreen> {
       _image = imageTemporary;
     });
   }
+  Future<void> _setLoginStatus(bool status) async {
+    final adminBox = await Hive.openBox('user');
+    await adminBox.put('isLoggedin', status);
+  }
 
-  Future<void> adduserToDatabase() async {
-    int newid = DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
-    final newUser = UserModel(newid, _usernameController.text, _image!.path);
-    await addUser(newUser);
+  Future<void> login() async {
+    if (!_formkey.currentState!.validate()) {
+      _showErrorDialog('Please add userame');
+      
+    }
+    if(_image==null){
+        _showErrorDialog('Please add an image');
+      }
+    else{
+        try {
+    // Try logging in with the provided credentials
+    bool isLoggedIn = await Services().userLogin(
+      _usernameController.text
+    );
+
+    // If login is successful, navigate to the next screen
+    if (isLoggedIn) {
+      await _setLoginStatus(true); // Store the login status
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => NavigatorScreen(
+            image_path: _image!.path,
+             userName: _usernameController.text,
+          ),
+        ),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      // If login fails, show an error message
+      _showErrorDialog('Invalid Username or Password');
+    }
+  } catch (e) {
+    // Catch any other errors and show an error message
+    _showErrorDialog('An unexpected error occurred. Please try again.');
+  } finally {
+    // Stop loading in both success and error cases
+    // setState(() => _isLoading = false);
+  }
+
+    }
+    
+
+   
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: CostumColor().costum_color_4,
+          title: Text(
+              style: CostumFontStyle(
+                      color: CostumColor().costum_color,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400)
+                  .getFontstyle(),
+              'Error'),
+          content: Text(
+              style: CostumFontStyle(
+                      color: CostumColor().costum_color,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400)
+                  .getFontstyle(),
+              message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                  style: CostumFontStyle(
+                          color: CostumColor().costum_color,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400)
+                      .getFontstyle(),
+                  'OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

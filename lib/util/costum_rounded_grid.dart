@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:book_app/Admin/author_updating_screen.dart';
-import 'package:book_app/Admin/genre_update_screen.dart';
 import 'package:book_app/User/catogories_screen.dart';
 import 'package:book_app/function/author_db_function.dart';
-import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';

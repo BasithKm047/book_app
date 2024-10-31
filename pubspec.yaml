@@ -76,6 +76,8 @@ flutter:
     - Asset/downloads_2.jpg
     - Asset/downloads_3.jpg
     - Asset/download_4.jpg
+    - Asset/kitaab-removebg-preview.png
+    
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

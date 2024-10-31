@@ -260,7 +260,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   try {
     // Try logging in with the provided credentials
-    bool isLoggedIn = await Services().login(
+    bool isLoggedIn = await Services().adminlogin(
       _adminNameController.text,
       _password_controller.text,
     );

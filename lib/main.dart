@@ -1,11 +1,11 @@
 
-import 'package:book_app/User/welcome_screen.dart';
 import 'package:book_app/model/author_model.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/model/language_model.dart';
 import 'package:book_app/model/user_model.dart';
 import 'package:book_app/util/costum_color.dart';
+import 'package:book_app/util/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -31,6 +31,7 @@ if(!Hive.isAdapterRegistered(AuthorModelAdapter().typeId)){
 
 
 Hive.openBox('admin');
+Hive.openBox('user');
 
 if(!Hive.isAdapterRegistered(LanguageModelAdapter().typeId)){
   Hive.registerAdapter(LanguageModelAdapter());
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
       ),
       
     
-      home: const WelcomeScreen()
+      home: const SplashScreen()
     );
   }
 }

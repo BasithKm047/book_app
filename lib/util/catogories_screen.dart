@@ -28,14 +28,18 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
   @override
   void initState() {
     super.initState();
-   loadData();
+    loadData();
   }
 
-Future<void> loadData() async {
-  await getBooksByGenre(widget.title);
-  await getBookByLanguage(widget.title);
-  await getBookByAuthor(widget.title);
-}
+  Future<void> loadData() async {
+    if (widget.title == 'Want to read') {
+      await getAllBooks();
+    } else {
+      await getBooksByGenre(widget.title);
+      await getBookByLanguage(widget.title);
+      await getBookByAuthor(widget.title);
+    }
+  }
 
   Widget buildBookGrid(List<Book> bookDetails) {
     return GridView.builder(
@@ -84,8 +88,16 @@ Future<void> loadData() async {
                 ? bookListByLanguage
                 : widget.isGenre
                     ? bookListbyGenreNotifier
-                    : ValueNotifier<List<Book>>([]),
+                    : widget.title == 'Want to Read'||widget.title=='Finished'
+                        ? bookListnotifier
+                        : ValueNotifier<List<Book>>([]),
         builder: (context, List<Book> bookDetails, child) {
+          if (widget.title == 'Want to Read') {
+            bookDetails =
+                bookDetails.where((book) => book.isWantToRead).toList();
+          }else if(widget.title=='Finished'){
+            bookDetails=bookDetails;
+          } 
           return bookDetails.isEmpty
               ? const Center(
                   child: Text('No books Found'),
@@ -98,5 +110,4 @@ Future<void> loadData() async {
       ),
     );
   }
-  
 }

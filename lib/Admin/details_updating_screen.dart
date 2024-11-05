@@ -264,7 +264,8 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
         authors:  AuthorModel(selectedAuthor!.id, selectedAuthor!.name,
             selectedAuthor!.image_path),
             isFavourite: false,
-            isWantToRead: false
+            isWantToRead: false,
+            isFinished: false
             );
     updateBook(bookUpdate);
     Navigator.of(context).pop();

@@ -1,11 +1,11 @@
-import 'package:book_app/User/library_details_screen.dart';
+import 'package:book_app/util/library_details_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class LibraryScreen extends StatelessWidget {
-   LibraryScreen({super.key});
+   LibraryScreen({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class LibraryScreen extends StatelessWidget {
   }
   
     // ignore: non_constant_identifier_names
-    List LibrarDetails=[
+    List <String>LibrarDetails=[
       'Favourite',
       'Want to Read',
       'Finished'

@@ -1,6 +1,6 @@
 import 'package:book_app/Admin/admin_navigator_screen.dart';
 import 'package:book_app/User/navigator_screen.dart';
-import 'package:book_app/User/welcome_screen.dart';
+import 'package:book_app/util/welcome_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -34,6 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final admin = await Hive.openBox('Admin');
     final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
 
+    await Future.delayed(const Duration(seconds: 1));
+
     if (isLoggedIn) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => AdminNavigatorScreen(
@@ -42,6 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ));
     }else{
+      
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const WelcomeScreen(),));
     }
   }
@@ -49,6 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future<void> checkLoggedInStatusforUser() async {
     final admin = await Hive.openBox('user');
     final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
+    await Future.delayed(const Duration(seconds: 1));
 
     if (isLoggedIn) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(

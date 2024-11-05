@@ -1,0 +1,46 @@
+import 'package:book_app/util/library_details_screen.dart';
+import 'package:book_app/util/costum_color.dart';
+import 'package:book_app/util/font_style.dart';
+import 'package:flutter/material.dart';
+
+class AdminLibraryScreen extends StatelessWidget {
+   AdminLibraryScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size(double.infinity, 100),
+        child: AppBar(
+          centerTitle: true,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 16.0,left: 8.0),
+            child: Text(
+              style: CostumFontStyle(color: CostumColor().costum_color_1, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
+              'Library'),
+          ),
+        ),
+      ),
+      body: ListView.separated(itemBuilder: (context, index) {
+        return ListTile(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));
+          },
+          title: Text(
+            style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),
+            LibrarDetails[index]),
+          trailing: IconButton(onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));
+          }, icon: const Icon(Icons.arrow_forward_ios)),
+        );
+      }, separatorBuilder: (context, index) => const Divider(), itemCount: LibrarDetails.length),
+    );
+  }
+  
+    // ignore: non_constant_identifier_names
+    List LibrarDetails=[
+      'Favourite',
+      'Want to Read',
+      'Finished'
+    ];
+  }

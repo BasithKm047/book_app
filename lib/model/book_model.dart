@@ -25,12 +25,15 @@ class Book {
   @HiveField(7)
   LanguageModel language;
   @HiveField(8)
-  final bool isFavourite;
+  bool isFavourite;
   @HiveField(9)
-  final bool isWantToRead;
+  bool isWantToRead;
+  @HiveField(10)
+  bool isFinished;
+  @HiveField(11)
+  DateTime ?lastRead;
 
-
-  Book({required this.id,required this.image_path,required this.bookName,required this.discribtion,required this.pdf_path,required this.genre,required this.language,required this.authors,required this.isFavourite,required this.isWantToRead});
+  Book({required this.id,required this.image_path,required this.bookName,required this.discribtion,required this.pdf_path,required this.genre,required this.language,required this.authors,required this.isFavourite,required this.isWantToRead,required this.isFinished, this.lastRead});
 
 
 }

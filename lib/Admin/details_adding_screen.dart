@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:book_app/Admin/author_adding_screen.dart';
+import 'package:book_app/Admin/genres_adding_screen.dart';
+import 'package:book_app/Admin/language_adding_screen.dart';
 import 'package:book_app/util/costum_textformfield.dart';
 import 'package:book_app/function/author_db_function.dart';
 import 'package:book_app/function/book_db_function.dart';
@@ -97,6 +99,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                             height: 10,
                           ),
                           buildDropdown(
+                            buttonField: 'Author',
                               valueNotifier: author_modelList,
                               selectedValue: selectedAuthor,
                               hintText: 'Author',
@@ -111,6 +114,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                             height: 10,
                           ),
                           buildDropdown(
+                             buttonField: 'Genre',
                               valueNotifier: genremodelList,
                               selectedValue: selectedGenre,
                               hintText: 'Genre',
@@ -125,6 +129,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                             height: 10,
                           ),
                           buildDropdown(
+                            buttonField: 'Language',
                               valueNotifier: languageModelList,
                               selectedValue: selectedLanguage,
                               hintText: 'Language',
@@ -263,6 +268,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     required String Function(T)
         displayText, // function to get display text from model
     required void Function(T?) onChanged,
+    required String buttonField
   }) {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8),
@@ -275,8 +281,38 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
           valueListenable: valueNotifier,
           builder: (context, List<T> items, child) {
             if (items.isEmpty) {
-              return Center(
-                child: Text(emptyText),
+              return GestureDetector(
+                onTap: (){
+                  // print('HIhih$buttonField');
+                  if(buttonField=='Author'){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AuthorAddingScreen(),));
+                  }else if(buttonField=='Genre'){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const GenresAddingScreen(),));
+                  }else if(buttonField=='Language'){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LanguageAddingScreen(),));
+                  }
+                },
+                child: SizedBox(
+                  height: ResponsiveHelper(context).getResponsiveHeight(8.5),
+                  width: ResponsiveHelper(context).getResponsiveWidth(80),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          style: CostumFontStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.normal).getFontstyle(),
+                          emptyText),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          style: CostumFontStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.normal).getFontstyle(),
+                          'Add $buttonField?'),
+                      )
+                    ],
+                  ),
+                ),
               );
             }
             return DropdownButtonFormField<T>(
@@ -501,7 +537,10 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
           selectedAuthor!.image_path,
         ),
         isFavourite: false,
-        isWantToRead: false);
+        isWantToRead: false,
+        isFinished: false,
+        
+        );
 
     await addBook(newBook);
      Navigator.of(context).pop();

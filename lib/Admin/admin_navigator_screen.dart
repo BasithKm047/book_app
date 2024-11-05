@@ -1,4 +1,5 @@
 import 'package:book_app/Admin/admin_details_screen.dart';
+import 'package:book_app/Admin/admin_library_screen.dart';
 import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/admin_view_screen.dart';
 import 'package:book_app/Admin/details_adding_screen.dart';
@@ -24,7 +25,9 @@ int selectedIndex=0;
        const AdminViewScreen(),
        const AdminTabcontrollerScreen(),
          DetailsAddingScreen(),
+         AdminLibraryScreen(),
      AdminDetailsScreen(image_path: widget.image_path,name: widget.name,),
+
 
   ];
 
@@ -49,6 +52,7 @@ int selectedIndex=0;
     DotNavigationBarItem(icon: navigationItems[1]),
     DotNavigationBarItem(icon: navigationItems[2]),
     DotNavigationBarItem(icon: navigationItems[3]),
+    DotNavigationBarItem(icon: navigationItems[4]),
   ],
   onTap:(index) => onTappedItems(index),
   currentIndex: selectedIndex,
@@ -82,6 +86,7 @@ int selectedIndex=0;
     const Icon(Icons.view_cozy),
      const Icon(Icons.grid_view_outlined),
         const Icon(Icons.add_box_outlined),
-        const Icon(Boxicons.bx_user)
+        const Icon(Boxicons.bx_library),
+        const Icon(Boxicons.bx_user),
    ];
 }

@@ -44,7 +44,7 @@ class _BookCardState extends State<BookCard> {
       child: Column(
         children: [
           SizedBox(
-            height: ResponsiveHelper(context).getResponsiveHeight(25),
+            height: ResponsiveHelper(context).getResponsiveHeight(23),
             width: ResponsiveHelper(context).getResponsiveWidth(50),
             // color: Colors.amber,
             child: ClipRRect(
@@ -103,7 +103,8 @@ class _BookCardState extends State<BookCard> {
                       language:  languageModelList.value.first,
                       authors:  author_modelList.value.first,
                       isFavourite: false,
-                      isWantToRead: false
+                      isWantToRead: false,
+                      isFinished: false
                       ),
                 );
 

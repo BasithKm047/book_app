@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:book_app/User/catogories_screen.dart';
+import 'package:book_app/util/catogories_screen.dart';
+import 'package:book_app/model/book_model.dart';
 import 'package:book_app/util/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
@@ -14,7 +15,11 @@ class CostumHomescreenDetails extends StatelessWidget {
   // final String imagePath;
   final bool isAdmin;
   // final GenresModel genres;
-  const CostumHomescreenDetails({super.key, required this.title, required this.isAdmin,});
+  const CostumHomescreenDetails({
+    super.key,
+    required this.title,
+    required this.isAdmin,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +30,10 @@ class CostumHomescreenDetails extends StatelessWidget {
       height: ResponsiveHelper(context).getResponsiveHeight(50),
       width: double.infinity,
       decoration: BoxDecoration(
-        boxShadow:  [
+        boxShadow: [
           BoxShadow(
             color: CostumColor().costum_color_4,
-            offset: const Offset(-3,3),
+            offset: const Offset(-3, 3),
             blurRadius: 10,
             // spreadRadius: 3,
           )
@@ -45,25 +50,44 @@ class CostumHomescreenDetails extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,isAUthor: false,isGenre: true,),));
-
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CatogoriesScreen(
+                        title: title,
+                        isAdmin: isAdmin,
+                        isLanguage: false,
+                        isAUthor: false,
+                        isGenre: true,
+                        
+                      ),
+                    ));
                   },
                   child: Text(
                       style: CostumFontStyle(
-                              fontSize: 13, fontWeight: FontWeight.bold,color: CostumColor().costum_color_1)
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: CostumColor().costum_color_1)
                           .getFontstyle(),
                       title),
                 ),
               ),
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CatogoriesScreen(title: title,isAdmin: isAdmin,isLanguage: false,isAUthor: false,isGenre: true,),));
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CatogoriesScreen(
+                        title: title,
+                        isAdmin: isAdmin,
+                        isLanguage: false,
+                        isAUthor: false,
+                        isGenre: true,
+                       
+                      ),
+                    ));
                   },
-                  icon:  Icon(
-                    size: 13,
-                    color: CostumColor().costum_color_1,
-                    Icons.arrow_forward_ios_outlined))
+                  icon: Icon(
+                      size: 13,
+                      color: CostumColor().costum_color_1,
+                      Icons.arrow_forward_ios_outlined))
             ],
           ),
           SizedBox(
@@ -72,42 +96,49 @@ class CostumHomescreenDetails extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 8),
               child: ValueListenableBuilder(
-                valueListenable: bookListnotifier,
-                builder: (context, value, child) {
-                  return  ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(
-                          width: 10,
-                        ),
-                    scrollDirection: Axis.horizontal,
-                    // scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      final bookDetails=value[index];
-                      
+                  valueListenable: bookListnotifier,
+                  builder: (context, value, child) {
+                    List<Book> filterBooks = [];
+                     if(title=='Want to Read'){
+                       filterBooks=value.where((book)=>book.isWantToRead).toList();
+                     }else if(title=='Finished'){
+                       filterBooks=value.where((book)=>book.isFinished).toList();
+                     }
+                     
 
-                      return Card(
-                        
-                        
-                        elevation: 10,
-                        child: Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>   CostumBookviewScreen(name: bookDetails.bookName,),));
-                              },
-                              child: Image.file(
-                                // width: ResponsiveHelper(context).getResponsiveWidth(45),
-                                  fit: BoxFit.cover,
-                                  File(value[index].image_path)),
+                    return ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(
+                              width: 10,
                             ),
-                          ),
-                        ),
-                      );
-                    },
-                    itemCount: value.length);
-                }
-               
-              ),
+                        scrollDirection: Axis.horizontal,
+                        // scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            elevation: 10,
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          CostumBookviewScreen(
+                                              name: filterBooks[index]
+                                                  .bookName),
+                                    ));
+                                  },
+                                  child: Image.file(
+                                      // width: ResponsiveHelper(context).getResponsiveWidth(45),
+                                      fit: BoxFit.cover,
+                                      File(filterBooks[index].image_path)),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: filterBooks.length);
+                  }),
             ),
           ),
         ],

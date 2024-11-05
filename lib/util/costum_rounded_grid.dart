@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:book_app/Admin/author_updating_screen.dart';
-import 'package:book_app/User/catogories_screen.dart';
+import 'package:book_app/util/catogories_screen.dart';
 import 'package:book_app/function/author_db_function.dart';
 import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
@@ -59,12 +59,13 @@ class _CostumRoundedGridState extends State<CostumRoundedGrid> {
                           isLanguage: false,
                           isAUthor: widget.isAUthor,
                           isGenre: widget.isAUthor,
+                         
                             ),
                       )),
                       child: Container(
                         height:
                             ResponsiveHelper(context).getResponsiveHeight(15),
-                        width: ResponsiveHelper(context).getResponsiveWidth(30),
+                        width: ResponsiveHelper(context).getResponsiveWidth(31),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
                             image: DecorationImage(

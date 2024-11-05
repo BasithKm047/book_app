@@ -36,7 +36,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   // SizedBox(height: 5,),
                   Text(
                       style: CostumFontStyle(color: CostumColor().costum_color, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
-                      'My Books')
+                      ' Kitaab')
                 ],
               )),
           Expanded(

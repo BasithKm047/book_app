@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/author_adding_screen.dart';
 import 'package:book_app/Admin/genres_adding_screen.dart';
 import 'package:book_app/Admin/language_adding_screen.dart';
@@ -32,6 +33,7 @@ class DetailsAddingScreen extends StatefulWidget {
 class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
   final TextEditingController _bookController = TextEditingController();
   final TextEditingController _discribtionController = TextEditingController();
+  final TextEditingController _totalpageController = TextEditingController();
   final _fomKey = GlobalKey<FormState>();
 
   GenresModel? selectedGenre;
@@ -99,7 +101,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                             height: 10,
                           ),
                           buildDropdown(
-                            buttonField: 'Author',
+                              buttonField: 'Author',
                               valueNotifier: author_modelList,
                               selectedValue: selectedAuthor,
                               hintText: 'Author',
@@ -114,7 +116,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                             height: 10,
                           ),
                           buildDropdown(
-                             buttonField: 'Genre',
+                              buttonField: 'Genre',
                               valueNotifier: genremodelList,
                               selectedValue: selectedGenre,
                               hintText: 'Genre',
@@ -129,7 +131,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                             height: 10,
                           ),
                           buildDropdown(
-                            buttonField: 'Language',
+                              buttonField: 'Language',
                               valueNotifier: languageModelList,
                               selectedValue: selectedLanguage,
                               hintText: 'Language',
@@ -147,6 +149,12 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                               validatorText: 'Enter Discribtion',
                               hintText: 'Discribtion',
                               controller: _discribtionController),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          CostumTextformfield(
+                              title: 'Total page',
+                              controller: _totalpageController),
                           const SizedBox(
                             height: 10,
                           ),
@@ -260,16 +268,15 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
             text));
   }
 
-  Widget buildDropdown<T>({
-    required ValueNotifier<List<T>> valueNotifier,
-    required T? selectedValue,
-    required String hintText,
-    required String emptyText,
-    required String Function(T)
-        displayText, // function to get display text from model
-    required void Function(T?) onChanged,
-    required String buttonField
-  }) {
+  Widget buildDropdown<T>(
+      {required ValueNotifier<List<T>> valueNotifier,
+      required T? selectedValue,
+      required String hintText,
+      required String emptyText,
+      required String Function(T)
+          displayText, // function to get display text from model
+      required void Function(T?) onChanged,
+      required String buttonField}) {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8),
       child: Container(
@@ -282,14 +289,20 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
           builder: (context, List<T> items, child) {
             if (items.isEmpty) {
               return GestureDetector(
-                onTap: (){
+                onTap: () {
                   // print('HIhih$buttonField');
-                  if(buttonField=='Author'){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AuthorAddingScreen(),));
-                  }else if(buttonField=='Genre'){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const GenresAddingScreen(),));
-                  }else if(buttonField=='Language'){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LanguageAddingScreen(),));
+                  if (buttonField == 'Author') {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const AuthorAddingScreen(),
+                    ));
+                  } else if (buttonField == 'Genre') {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const GenresAddingScreen(),
+                    ));
+                  } else if (buttonField == 'Language') {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LanguageAddingScreen(),
+                    ));
                   }
                 },
                 child: SizedBox(
@@ -301,14 +314,22 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          style: CostumFontStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.normal).getFontstyle(),
-                          emptyText),
+                            style: CostumFontStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.normal)
+                                .getFontstyle(),
+                            emptyText),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          style: CostumFontStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.normal).getFontstyle(),
-                          'Add $buttonField?'),
+                            style: CostumFontStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal)
+                                .getFontstyle(),
+                            'Add $buttonField?'),
                       )
                     ],
                   ),
@@ -505,6 +526,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     if (_bookController.text.trim().isEmpty) missingFields.add('Name');
     if (_discribtionController.text.trim().isEmpty)
       missingFields.add('Description');
+      if(_totalpageController.text.isEmpty)missingFields.add('Totalpage');
     if (selectedAuthor == null) missingFields.add('Author');
     if (selectedGenre == null) missingFields.add('Genre');
     if (selectedLanguage == null) missingFields.add('Language');
@@ -523,28 +545,32 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     int newid = createUniqueId();
 
     final newBook = Book(
-        id: newid,
-        image_path: _image!.path,
-        bookName: _bookController.text,
-        discribtion: _discribtionController.text,
-        pdf_path: _file_path!,
-        genre: GenresModel(selectedGenre!.id, name: selectedGenre!.name),
-        language:
-            LanguageModel(selectedLanguage!.language, selectedLanguage!.id),
-        authors: AuthorModel(
-          selectedAuthor!.id,
-          selectedAuthor!.name,
-          selectedAuthor!.image_path,
-        ),
-        isFavourite: false,
-        isWantToRead: false,
-        isFinished: false,
-        
-        );
+      id: newid,
+      image_path: _image!.path,
+      bookName: _bookController.text,
+      discribtion: _discribtionController.text,
+      pdf_path: _file_path!,
+      genre: GenresModel(selectedGenre!.id, name: selectedGenre!.name),
+      language: LanguageModel(selectedLanguage!.language, selectedLanguage!.id),
+      authors: AuthorModel(
+        selectedAuthor!.id,
+        selectedAuthor!.name,
+        selectedAuthor!.image_path,
+      ),
+      isFavourite: false,
+      isWantToRead: false,
+      isFinished: false,
+      totalPage:  _totalpageController.text.isNotEmpty 
+    ? int.tryParse(_totalpageController.text) ?? 0 
+    : 0,
+  
+
+
+    );
+     await newAddedBooks(newBook);
 
     await addBook(newBook);
-     Navigator.of(context).pop();
-    
+    //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
 
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Book Added Successfully')));

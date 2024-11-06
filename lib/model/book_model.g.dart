@@ -29,13 +29,17 @@ class BookAdapter extends TypeAdapter<Book> {
       isWantToRead: fields[9] as bool,
       isFinished: fields[10] as bool,
       lastRead: fields[11] as DateTime?,
-    );
+      totalPage: fields[12] as int,
+      currentPage: fields[13] as int,
+      newAdded: fields[14] as DateTime?,
+      readingTimeInsecond: fields[15] as int,
+    )..targetTimeInsecond = fields[16] as int;
   }
 
   @override
   void write(BinaryWriter writer, Book obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +63,17 @@ class BookAdapter extends TypeAdapter<Book> {
       ..writeByte(10)
       ..write(obj.isFinished)
       ..writeByte(11)
-      ..write(obj.lastRead);
+      ..write(obj.lastRead)
+      ..writeByte(12)
+      ..write(obj.totalPage)
+      ..writeByte(13)
+      ..write(obj.currentPage)
+      ..writeByte(14)
+      ..write(obj.newAdded)
+      ..writeByte(15)
+      ..write(obj.readingTimeInsecond)
+      ..writeByte(16)
+      ..write(obj.targetTimeInsecond);
   }
 
   @override

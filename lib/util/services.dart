@@ -10,7 +10,7 @@ class Services{
 
   Future<bool>adminlogin(String enterdusername,String enterdpassWord)async{
     if(enterdusername.trim().toLowerCase()==username&&enterdpassWord==passWord){
-      final admin=Hive.box('Admin');
+      final admin=Hive.box('admin');
       await admin.put('isLoggedIn', true);
        return true;
        

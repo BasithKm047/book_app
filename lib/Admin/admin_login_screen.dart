@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:book_app/Admin/admin_navigator_screen.dart';
+import 'package:book_app/function/admin_db_function.dart';
+import 'package:book_app/model/admin_model.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
@@ -29,6 +32,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   // void initState() {
   //   super.initState();
     
+  //   loadAdminData();
   // }
   @override
   
@@ -208,7 +212,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 
   Future<void> _setLoginStatus(bool status) async {
-    final adminBox = await Hive.openBox('Admin');
+    final adminBox = await Hive.openBox('admin');
     await adminBox.put('isLoggedin', status);
   }
 
@@ -267,7 +271,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
     // If login is successful, navigate to the next screen
     if (isLoggedIn) {
-      await _setLoginStatus(true); // Store the login status
+      await _setLoginStatus(true);
+      int newid=createUniqueId();
+     final newAdmin=  AdminModel(id: newid, name: _adminNameController.text,image_path: _image!.path);
+    await addAdmin(newAdmin);
+      // Store the login status
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => AdminNavigatorScreen(
@@ -289,6 +297,23 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     setState(() => _isLoading = false);
   }
 }
+
+
+//   Future<void> loadAdminData() async {
+//   final box = await Hive.openBox('admin_data');
+  
+//   String? username = box.get('username');
+//   String? imagePath = box.get('image');
+  
+//   if (username != null && imagePath != null) {
+//     // Restore the username and image (e.g., set them to your app's UI)
+//    // Assuming you're using a File for image
+//    setState(() {
+//       _adminNameController.text = username;
+//     _image = File(imagePath);  
+//    });
+//   }
+// }
 
   
 

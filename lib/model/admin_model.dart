@@ -12,9 +12,8 @@ class AdminModel {
   @HiveField(2)
   String image_path;
 
-  @HiveField(3)
-  String password;
+  
 
   // ignore: non_constant_identifier_names
-  AdminModel({required this.id, required this.name, this.image_path = '',required this.password});
+  AdminModel({required this.id, required this.name, this.image_path=''});
 }

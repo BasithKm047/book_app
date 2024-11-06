@@ -1,12 +1,16 @@
+
 import 'package:book_app/Admin/admin_details_screen.dart';
 import 'package:book_app/Admin/admin_library_screen.dart';
 import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/admin_view_screen.dart';
 import 'package:book_app/Admin/details_adding_screen.dart';
+import 'package:book_app/function/admin_db_function.dart';
+import 'package:book_app/model/admin_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
+import 'package:hive/hive.dart';
 
 class AdminNavigatorScreen extends StatefulWidget {
   final String ?name;
@@ -19,6 +23,7 @@ class AdminNavigatorScreen extends StatefulWidget {
 
 class _AdminviewScreenState extends State<AdminNavigatorScreen> {
 int selectedIndex=0;
+
   @override
   Widget build(BuildContext context) {
       final List <Widget>_pages=[
@@ -89,4 +94,19 @@ int selectedIndex=0;
         const Icon(Boxicons.bx_library),
         const Icon(Boxicons.bx_user),
    ];
+   Future<void> loadUserData() async {
+  final box = await Hive.openBox('user_data');
+  
+  String? username = box.get('username');
+  String? imagePath = box.get('image');
+  
+  if (username != null && imagePath != null) {
+    // Restore the username and image (e.g., set them to your app's UI)
+    username = username;
+    imagePath =imagePath;  // Assuming you're using a File for image
+  }
+}
+
+
+
 }

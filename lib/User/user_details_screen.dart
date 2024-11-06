@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/welcome_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
@@ -101,7 +102,9 @@ class UserDetailsScreen extends StatelessWidget {
               backgroundColor: CostumColor().costum_color_3
             ),
               onPressed: () {
-                _logoutuser(context);
+               showDialog(context: context, builder: (context) {
+                 return alertDialogForLogout(context: context, itemDetails: context,deleteFunction: _logoutuser);
+               },);
               },
               child:  Text(
                 style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.normal).getFontstyle(),

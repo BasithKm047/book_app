@@ -1,6 +1,7 @@
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/util/book_card.dart';
 import 'package:book_app/function/book_db_function.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
@@ -30,12 +31,18 @@ class LibraryDetailsScreen extends StatelessWidget {
         valueListenable: bookListnotifier,
         builder: (context, bookList, child) {
           List<Book>filteredBooks=[];
-          if(title=='Favourite'){
+          // Future<List<Book>> recentlyReadBooks = getRecentlyReadBooks(5);
+          if(title==favourite){
             filteredBooks=bookList.where((book)=>book.isFavourite).toList();
-          }else if(title=='Want to Read'){
+          }else if(title==WantToRead){
             filteredBooks=bookList.where((book)=>book.isWantToRead).toList();
-          }else if(title=='Finished'){
+          }else if(title==Finished){
             filteredBooks=bookList.where((book)=>book.isFinished).toList();
+          }else if(title==recent){
+               filteredBooks=getNewAddedBooks(bookList);
+                 
+          }else if(title==newReleases){
+            filteredBooks=getNewAddedBooks(bookList);
           }
           
           return  GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,

@@ -1,3 +1,4 @@
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/library_details_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
@@ -39,8 +40,13 @@ class AdminLibraryScreen extends StatelessWidget {
   
     // ignore: non_constant_identifier_names
     List LibrarDetails=[
-      'Favourite',
-      'Want to Read',
-      'Finished'
+
+      favourite,
+      WantToRead,
+      Finished,
+      recent,
+      newReleases,
+
+      
     ];
   }

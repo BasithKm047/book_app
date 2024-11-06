@@ -65,8 +65,7 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
           //   MenuBar(children: )
           // ],
         ),
-        body: Column(
-          children: [
+        body: Column(children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextFormField(
@@ -76,7 +75,6 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                   isSearching = true;
                 });
               },
-
               style: CostumFontStyle(
                       color: CostumColor().costum_color_3,
                       fontSize: 13,
@@ -134,15 +132,13 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                             'No books found'),
                       )
                     : GestureDetector(
-                      onTap: () {
-                        
-                      },
-                      child: ListView.separated(
-                        
+                        onTap: () {},
+                        child: ListView.separated(
                           itemBuilder: (context, index) {
                             final book = filteredBook[index];
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: SizedBox(
                                 height: ResponsiveHelper(context)
                                     .getResponsiveHeight(
@@ -152,12 +148,18 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                                     // Leading Image
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => CostumBookviewScreen(name: book.bookName),));
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              CostumBookviewScreen(
+                                                  name: book.bookName),
+                                        ));
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           child: Image.file(
                                             File(book.image_path),
                                             width: ResponsiveHelper(context)
@@ -210,16 +212,24 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                               ),
                             );
                           },
-                          separatorBuilder: (context, index) => const Divider(thickness: 0, height: 0,),
+                          separatorBuilder: (context, index) => const Divider(
+                            thickness: 0,
+                            height: 0,
+                          ),
                           itemCount: filteredBook.length,
                         ),
-                    )
+                      )
                 : SingleChildScrollView(
                     child: Column(
                       children: [
                         const SizedBox(
                           height: 20,
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const CostumHomescreenDetails(
+                            title: 'New Releases', isAdmin: true),
                         const SizedBox(
                           height: 20,
                         ),
@@ -274,9 +284,28 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                           height: 30,
                         ),
                         const CostumHomescreenDetails(
-                          title: 'Finished',
+                          title: 'Recently Read',
                           isAdmin: true,
-                        )
+                        ),
+                        // ValueListenableBuilder(
+                        //   valueListenable: bookListnotifier,
+                        //   builder: (context, books, child) {
+                        //     return Column(
+                        //       children: books.map((book) {
+                        //         double progress = (book.readingTimeInsecond /
+                        //                 book.targetTimeInsecond) *
+                        //             100;
+                        //         return ListTile(
+                        //           title: Text(book.bookName),
+                        //           subtitle: Text(
+                        //               'Reading Progress: ${progress.toStringAsFixed(2)}%'),
+                        //           trailing: Text(
+                        //               'Time Read: ${book.readingTimeInsecond ~/ 60}:${book.readingTimeInsecond % 60}'),
+                        //         );
+                        //       }).toList(),
+                        //     );
+                        //   },
+                        // )
                       ],
                     ),
                   ),

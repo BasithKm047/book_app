@@ -31,9 +31,22 @@ class Book {
   @HiveField(10)
   bool isFinished;
   @HiveField(11)
-  DateTime ?lastRead;
+  DateTime? lastRead;
+  @HiveField(12)
+  int totalPage;
+  @HiveField(13)
+  int currentPage;
+  @HiveField(14)
+  DateTime ?newAdded;
+  @HiveField(15)
+  int readingTimeInsecond;
+  @HiveField(16)
+  int targetTimeInsecond=300;
+  
 
-  Book({required this.id,required this.image_path,required this.bookName,required this.discribtion,required this.pdf_path,required this.genre,required this.language,required this.authors,required this.isFavourite,required this.isWantToRead,required this.isFinished, this.lastRead});
+  Book({required this.id,required this.image_path,required this.bookName,required this.discribtion,required this.pdf_path,required this.genre,required this.language,required this.authors,required this.isFavourite,required this.isWantToRead,required this.isFinished, this.lastRead, this.totalPage=0,this.currentPage=0,this.newAdded, this.readingTimeInsecond=0});
+
+  
 
 
 }

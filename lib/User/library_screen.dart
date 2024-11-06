@@ -1,3 +1,4 @@
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/library_details_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
@@ -5,7 +6,9 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class LibraryScreen extends StatelessWidget {
-   LibraryScreen({super.key,});
+  LibraryScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,34 +18,56 @@ class LibraryScreen extends StatelessWidget {
         child: AppBar(
           centerTitle: true,
           title: Padding(
-            padding: const EdgeInsets.only(top: 16.0,left: 8.0),
+            padding: const EdgeInsets.only(top: 16.0, left: 8.0),
             child: Text(
-              style: CostumFontStyle(color: CostumColor().costum_color_1, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
-              'Library'),
+                style: CostumFontStyle(
+                        color: CostumColor().costum_color_1,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400)
+                    .getFontstyle(),
+                'Library'),
           ),
         ),
       ),
-      body: ListView.separated(itemBuilder: (context, index) {
-        return ListTile(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));
+      body: ListView.separated(
+          itemBuilder: (context, index) {
+            return ListTile(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      LibraryDetailsScreen(title: LibrarDetails[index]),
+                ));
+              },
+              title: Text(
+                  style: CostumFontStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400)
+                      .getFontstyle(),
+                  LibrarDetails[index]),
+              trailing: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          LibraryDetailsScreen(title: LibrarDetails[index]),
+                    ));
+                  },
+                  icon: const Icon(Icons.arrow_forward_ios)),
+            );
           },
-          title: Text(
-            style: CostumFontStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),
-            LibrarDetails[index]),
-          trailing: IconButton(onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LibraryDetailsScreen(title: LibrarDetails[index]),));
-          }, icon: const Icon(Icons.arrow_forward_ios)),
-        );
-      }, separatorBuilder: (context, index) => const Divider(), itemCount: LibrarDetails.length),
+          separatorBuilder: (context, index) => const Divider(),
+          itemCount: LibrarDetails.length),
     );
   }
-  
-    // ignore: non_constant_identifier_names
-    List <String>LibrarDetails=[
-      'Favourite',
-      'Want to Read',
-      'Finished'
-    ];
-  
+
+  // ignore: non_constant_identifier_names
+  List<String> LibrarDetails = [
+     favourite,
+     WantToRead,
+     Finished,
+     recent,
+     newReleases,
+
+    
+  ];
 }

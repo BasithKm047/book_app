@@ -30,6 +30,7 @@ class _CostumTextformfieldState extends State<CostumTextformfield> {
             color: CostumColor().costum_color_3,
             borderRadius: BorderRadius.circular(10)),
         child: TextFormField(
+          keyboardType: widget.title=='Book name'? TextInputType.text:TextInputType.number,
             style: CostumFontStyle(
                     color: Colors.white,
                     fontSize: 13,

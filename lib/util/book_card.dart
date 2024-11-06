@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:book_app/util/common_function.dart';
 
-
 // ignore: must_be_immutable
 class BookCard extends StatefulWidget {
   final bool isLanguage;
@@ -44,7 +43,7 @@ class _BookCardState extends State<BookCard> {
       child: Column(
         children: [
           SizedBox(
-            height: ResponsiveHelper(context).getResponsiveHeight(23),
+            height: ResponsiveHelper(context).getResponsiveHeight(22),
             width: ResponsiveHelper(context).getResponsiveWidth(50),
             // color: Colors.amber,
             child: ClipRRect(
@@ -87,6 +86,50 @@ class _BookCardState extends State<BookCard> {
                     widget.title),
               )),
 
+          ValueListenableBuilder(
+            valueListenable: bookListnotifier,
+            builder: (context, value, child) {
+              final bookDetails = value.firstWhere(
+                (val) => val.bookName == widget.title,
+                orElse: () => Book(
+                    id: 1,
+                    image_path: '',
+                    bookName: '',
+                    discribtion: '',
+                    pdf_path: '',
+                    genre: genremodelList.value.first,
+                    language: languageModelList.value.first,
+                    authors: author_modelList.value.first,
+                    isFavourite: false,
+                    isWantToRead: false,
+                    isFinished: false),
+              );
+              double progress = (bookDetails.currentPage /
+                      (bookDetails.totalPage > 0 ? bookDetails.totalPage : 1))
+                  .clamp(0.0, 1.0);
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(5),
+                    value: progress,
+                    backgroundColor: Colors.white,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    
+                    '${(progress * 100).toStringAsFixed(1)}%',
+                    style: const TextStyle(fontSize: 13, color: Colors.white),
+                  ),
+                ],
+              );
+            },
+          ),
+
           if (widget.isAdmin == true)
             ValueListenableBuilder(
               valueListenable: bookListnotifier,
@@ -95,17 +138,17 @@ class _BookCardState extends State<BookCard> {
                   (val) => val.bookName == widget.title,
                   orElse: () => Book(
                       id: 1,
-                      bookName:  '',
-                      discribtion:  '',
-                      image_path:  '',
-                      pdf_path:  '',
-                      genre:  genremodelList.value.first,
-                      language:  languageModelList.value.first,
-                      authors:  author_modelList.value.first,
+                      bookName: '',
+                      discribtion: '',
+                      image_path: '',
+                      pdf_path: '',
+                      genre: genremodelList.value.first,
+                      language: languageModelList.value.first,
+                      authors: author_modelList.value.first,
                       isFavourite: false,
                       isWantToRead: false,
-                      isFinished: false
-                      ),
+                      isFinished: false,
+                      readingTimeInsecond: 0),
                 );
 
                 // if(bookDetails==null){
@@ -122,12 +165,16 @@ class _BookCardState extends State<BookCard> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return alertDialogForDelete(context: context, itemDetails: bookDetails, itemType: bookDetails.bookName, deleteFunction: deleteBooks);
+                                    return alertDialogForDelete(
+                                        context: context,
+                                        itemDetails: bookDetails,
+                                        itemType: bookDetails.bookName,
+                                        deleteFunction: deleteBooks);
                                   },
                                 );
                               },
                               icon: Icon(
-                                  // size: 10,
+                                  // size: 23,
                                   color: const Color.fromARGB(255, 228, 45, 32),
                                   widget.icon!.icon))
                           : const SizedBox.shrink(),
@@ -143,7 +190,7 @@ class _BookCardState extends State<BookCard> {
                                 ));
                               },
                               icon: Icon(
-                                  // size: 10,
+                                  // size: 23,
                                   color: CostumColor().costum_color_1,
                                   widget.icon_2!.icon),
                             )
@@ -161,5 +208,4 @@ class _BookCardState extends State<BookCard> {
   }
 
   // Define a generic alert dialog for deletion that accepts a callback function and an item to delete
-  
 }

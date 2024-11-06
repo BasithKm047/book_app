@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:book_app/User/user_details_screen.dart';
+import 'package:book_app/function/admin_db_function.dart';
+import 'package:book_app/model/admin_model.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/welcome_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
@@ -18,6 +21,24 @@ class AdminDetailsScreen extends StatefulWidget {
 }
 
 class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
+  AdminModel ?admin;
+  bool _isLoading=true;
+Future<void>loadAdminDetails()async{
+  final adminList=await getAllAdmin();
+   print("Admin List Loaded: $adminList");
+  if(adminList.isNotEmpty){
+    admin=adminList.last;
+  }
+  setState(() {
+    _isLoading=false;
+    print("Loading Complete: $_isLoading");
+  });
+}
+@override
+  void initState() {
+    super.initState();
+    loadAdminDetails();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +54,9 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
         //   backgroundImage: FileImage(File(widget.image_path??'Asset/download_1.jpeg')),
         // ),
       ),
-      body: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        // crossAxisAlignment: CrossAxisAlignment.center,
+      body:_isLoading?
+      const Center(child: CircularProgressIndicator(),)
+      : Column(
         children: [
           const SizedBox(
             height: 10,
@@ -61,9 +82,9 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                       height: ResponsiveHelper(context).getResponsiveHeight(9),
                       width: ResponsiveHelper(context).getResponsiveWidth(30),
                       child: CircleAvatar(
-                        backgroundImage: widget.image_path == null
+                        backgroundImage: admin?.image_path == null
                             ? const AssetImage('Asset/download_1.jpeg')
-                            : FileImage(File(widget.image_path!)),
+                            : FileImage(File(admin!.image_path)) as ImageProvider
                       ),
                     ),
                     Text(
@@ -72,7 +93,7 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold)
                             .getFontstyle(),
-                        widget.name != null ? widget.name! : 'Basith')
+                        admin?.name ?? 'Basith')
                   ],
                 ),
               ),
@@ -111,7 +132,15 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: CostumColor().costum_color_3),
               onPressed: () {
-                _logoutAdmin(context);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return alertDialogForLogout(
+                        context: context,
+                        itemDetails: context,
+                        deleteFunction: _logoutAdmin);
+                  },
+                );
               },
               child: Text(
                   style: CostumFontStyle(
@@ -143,9 +172,15 @@ class UserWantedBookList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(
-        style: CostumFontStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w400).getFontstyle(),
-        'List of Books'),),
+      appBar: AppBar(
+        title: Text(
+            style: CostumFontStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400)
+                .getFontstyle(),
+            'List of Books'),
+      ),
       body: ValueListenableBuilder(
         valueListenable: Books,
         builder: (context, listOfBooks, child) {

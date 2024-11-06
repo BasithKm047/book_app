@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:book_app/User/book_reader_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/model/book_model.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class CostumBookviewScreen extends StatefulWidget {
   final String name;
@@ -55,6 +57,7 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
             isFavourite = bookDetails.isFavourite;
             isWantToRead = bookDetails.isWantToRead;
             isFinished=bookDetails.isFinished;
+            
 
             return Center(
               child: Column(
@@ -129,13 +132,11 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
                       onPressed: () {
-                        setState(() {
-                          bookDetails.lastRead=DateTime.now();
-                          recentlyReadBook(bookDetails);
-                        });
+                       recentlyReadBookFunction(bookDetails);
                         bookListnotifier.notifyListeners();
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => BookReaderScreen(
+                            book: bookDetails,
                             pdf_path: bookDetails.pdf_path,
                           ),
                         ));
@@ -168,7 +169,7 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
       itemBuilder: (context) {
         return [
           PopupMenuItem<String>(
-              value: 'Want to Read',
+              value: WantToRead,
               child: Text(
                 isWantToRead ? 'Remove from Want to Read' : 'Want to Read',
                 style: CostumFontStyle(
@@ -178,7 +179,7 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
                     .getFontstyle(),
               )),
           PopupMenuItem<String>(
-              value: 'Finished',
+              value: Finished,
               child: Text(
                 isFinished ? 'Remove from Finished' : 'Mark as Finished',
                 style: CostumFontStyle(
@@ -190,9 +191,9 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
         ];
       },
       onSelected: (value) {
-        if (value == 'Want to Read') {
+        if (value == WantToRead) {
           addtoWantToRead(book);
-        } else if (value == 'Finished') {
+        } else if (value == Finished) {
           finishedBook(book);
         }
       },
@@ -290,12 +291,29 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
     });
     bookListnotifier.notifyListeners(); 
   }
-  void recentlyReadBook(Book bookDetails){
-    setState(() {
-      if(!recentlyReadBooks.value.contains(bookDetails)){
-        recentlyReadBooks.value.add(bookDetails);
-      }
-    });
-    bookListnotifier.notifyListeners();
-  }
+  // void recentlyReadBook(Book bookDetails){
+  //   setState(() {
+  //     bookDetails.lastRead=DateTime.now();
+  //     if(!recentlyReadBooks.value.contains(bookDetails)){
+  //       recentlyReadBooks.value.add(bookDetails);
+  //     }
+  //   });
+  //   bookListnotifier.notifyListeners();
+  // }
+//   Future<void> addOrUpdateRecentlyRead(Book book) async {
+//   final box = Hive.box<Book>('booksBox');
+
+//   // Set the current date as the last read date
+//   book.lastRead = DateTime.now();
+
+//   // Update the book in the box
+//   await box.put(book.id, book);
+  
+//   recentlyReadBooks.value.add(book);
+
+//   bookListnotifier.value = box.values.toList();
+//   bookListnotifier.notifyListeners();
+
+// }
+
 }

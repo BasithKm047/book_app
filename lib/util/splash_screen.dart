@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
    checkLoggedInStatus();
-   checkLoggedInStatusforUser();
   
   }
   @override
@@ -32,7 +31,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
    Future<void> checkLoggedInStatus() async {
     final admin = await Hive.openBox('Admin');
+    final user= await Hive.openBox('user');
     final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
+    final isUserLoggedin=user.get('isLoggedin',defaultValue: false);
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -43,26 +44,29 @@ class _SplashScreenState extends State<SplashScreen> {
           // name: _adminNameController.text,
         ),
       ));
-    }else{
+    }else if(isUserLoggedin){
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => NavigatorScreen(),));
+    }
+    else{
       
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const WelcomeScreen(),));
     }
   }
 
-    Future<void> checkLoggedInStatusforUser() async {
-    final admin = await Hive.openBox('user');
-    final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
-    await Future.delayed(const Duration(seconds: 1));
+  //   Future<void> checkLoggedInStatusforUser() async {
+  //   final admin = await Hive.openBox('user');
+  //   final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
+  //   await Future.delayed(const Duration(seconds: 1));
 
-    if (isLoggedIn) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => NavigatorScreen(
-          // image_path: _image?.path ?? '',
-          // name: _adminNameController.text,
-        ),
-      ));
-    }else{
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const WelcomeScreen(),));
-    }
-  }
+  //   if (isLoggedIn) {
+  //     Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //       builder: (context) => NavigatorScreen(
+  //         // image_path: _image?.path ?? '',
+  //         // name: _adminNameController.text,
+  //       ),
+  //     ));
+  //   }else{
+  //     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const WelcomeScreen(),));
+  //   }
+  // }
 }

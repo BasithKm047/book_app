@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:book_app/User/navigator_screen.dart';
+import 'package:book_app/function/user_db_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
@@ -25,7 +26,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   // void initState() {
   //   super.initState();
-  //   getAllUser();
+  //   loadUserData();
   // }
 
   @override
@@ -187,6 +188,8 @@ class _UserScreenState extends State<UserScreen> {
 
     // If login is successful, navigate to the next screen
     if (isLoggedIn) {
+      await saveUserData(_usernameController.text, _image!.path);
+      loadUserData();
       await _setLoginStatus(true); // Store the login status
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
@@ -214,6 +217,25 @@ class _UserScreenState extends State<UserScreen> {
 
    
   }
+
+  Future<void> loadUserData() async {
+  final box = await Hive.openBox('user_data');
+  
+  String? username = box.get('username');
+  String? imagePath = box.get('image');
+  
+  if (username != null && imagePath != null) {
+    // Restore the username and image (e.g., set them to your app's UI)
+   // Assuming you're using a File for image
+   setState(() {
+       _usernameController.text = username;
+    _image = File(imagePath); 
+   });
+  }
+}
+
+
+  
 
   void _showErrorDialog(String message) {
     showDialog(

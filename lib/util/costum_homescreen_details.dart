@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:book_app/util/catogories_screen.dart';
 import 'package:book_app/model/book_model.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
@@ -58,7 +59,6 @@ class CostumHomescreenDetails extends StatelessWidget {
                         isLanguage: false,
                         isAUthor: false,
                         isGenre: true,
-                        
                       ),
                     ));
                   },
@@ -80,7 +80,6 @@ class CostumHomescreenDetails extends StatelessWidget {
                         isLanguage: false,
                         isAUthor: false,
                         isGenre: true,
-                       
                       ),
                     ));
                   },
@@ -99,12 +98,15 @@ class CostumHomescreenDetails extends StatelessWidget {
                   valueListenable: bookListnotifier,
                   builder: (context, value, child) {
                     List<Book> filterBooks = [];
-                     if(title=='Want to Read'){
-                       filterBooks=value.where((book)=>book.isWantToRead).toList();
-                     }else if(title=='Finished'){
-                       filterBooks=value.where((book)=>book.isFinished).toList();
-                     }
-                     
+
+                    if (title == WantToRead) {
+                      filterBooks =
+                          value.where((book) => book.isWantToRead).toList();
+                    } else if (title == recent) {
+                      filterBooks = getRecentlyReadBooks(value);
+                    } else if (title == newReleases) {
+                      filterBooks = getNewAddedBooks(value);
+                    }
 
                     return ListView.separated(
                         separatorBuilder: (context, index) => const SizedBox(
@@ -124,8 +126,8 @@ class CostumHomescreenDetails extends StatelessWidget {
                                         .push(MaterialPageRoute(
                                       builder: (context) =>
                                           CostumBookviewScreen(
-                                              name: filterBooks[index]
-                                                  .bookName),
+                                              name:
+                                                  filterBooks[index].bookName),
                                     ));
                                   },
                                   child: Image.file(

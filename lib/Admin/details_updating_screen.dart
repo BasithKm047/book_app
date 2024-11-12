@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/author_adding_screen.dart';
 import 'package:book_app/function/author_db_function.dart';
 import 'package:book_app/model/author_model.dart';
@@ -29,7 +28,7 @@ class DetailsUpdatingScreen extends StatefulWidget {
 class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
   TextEditingController _bookController = TextEditingController();
   TextEditingController _discribtionController = TextEditingController();
-  TextEditingController _totalpageController = TextEditingController();
+  // TextEditingController _totalpageController = TextEditingController();
   final _fomKey = GlobalKey<FormState>();
   List<AuthorModel> authors = [];
   List<GenresModel> genres = [];
@@ -88,7 +87,7 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
     _image = File(widget.bookDetails.image_path);
     _file_path = widget.bookDetails.pdf_path;
     loadAuthors();
-    _totalpageController =
+    // _totalpageController =
         TextEditingController(text: widget.bookDetails.totalPage.toString());
     loadGenre();
     loadLanguage();
@@ -208,9 +207,9 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          CostumTextformfield(
-                              title: 'Total page',
-                              controller: _totalpageController),
+                          // CostumTextformfield(
+                          //     title: 'Total page',
+                          //     controller: _totalpageController),
                           const SizedBox(
                             height: 10,
                           ),
@@ -263,7 +262,8 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
               Text('Please fill in the following fields: $missingFieldsText')));
       return;
     }
-    final bookUpdate = Book(
+     Book updatedBook=widget.bookDetails;
+      updatedBook = Book(
       id: widget.bookDetails.id,
       image_path: _image!.path,
       bookName: _bookController.text,
@@ -276,13 +276,20 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
       isFavourite: false,
       isWantToRead: false,
       isFinished: false,
-      totalPage: _totalpageController.text.isNotEmpty
-          ? int.tryParse(_totalpageController.text) ?? 0
-          : 0,
+      // totalPage: _totalpageController.text.isNotEmpty
+      //     ? int.tryParse(_totalpageController.text) ?? 0
+      //     : 0,
+          newAdded: updatedBook.newAdded,
+          isNewReleases: updatedBook.isNewReleases,
+        
           
     );
-    updateBook(bookUpdate);
-    //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
+    // await newAddedBooks(updatedBook);
+   await updateBook(updatedBook);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Book Updated Successfully')));
+    Navigator.of(context).pop();
+     //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
   }
 
   Future<void> getimage() async {

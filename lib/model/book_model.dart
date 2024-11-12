@@ -39,12 +39,15 @@ class Book {
   @HiveField(14)
   DateTime ?newAdded;
   @HiveField(15)
-  int readingTimeInsecond;
+   bool isNewReleases;
   @HiveField(16)
   int targetTimeInsecond=300;
+  @HiveField(17)
+  int readingTimeInsecond;
+  
   
 
-  Book({required this.id,required this.image_path,required this.bookName,required this.discribtion,required this.pdf_path,required this.genre,required this.language,required this.authors,required this.isFavourite,required this.isWantToRead,required this.isFinished, this.lastRead, this.totalPage=0,this.currentPage=0,this.newAdded, this.readingTimeInsecond=0});
+  Book({required this.id,required this.image_path,required this.bookName,required this.discribtion,required this.pdf_path,required this.genre,required this.language,required this.authors,required this.isFavourite,required this.isWantToRead,required this.isFinished, this.lastRead, this.totalPage=0,this.currentPage=0,this.newAdded, this.isNewReleases=true, this.readingTimeInsecond=0});
 
   
 

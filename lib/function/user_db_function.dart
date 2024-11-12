@@ -4,6 +4,9 @@ import 'package:hive_flutter/adapters.dart';
 
 ValueNotifier <List<UserModel>>userList_notifier=ValueNotifier([]);
 
+ String userBox='user';
+
+  
 // Future<void>addUser(UserModel value)async{
 //   userList_notifier.value.add(value);
 //   final userDb=await Hive.openBox<UserModel>('UserDetails');
@@ -41,11 +44,38 @@ ValueNotifier <List<UserModel>>userList_notifier=ValueNotifier([]);
 
 
 
+
 //   }
-Future<void> saveUserData(String username, String imagePath) async {
-  final box = await Hive.openBox('user_data');
-  
-  await box.put('username', username);
-  await box.put('image', imagePath);
+Future<void>addUser(UserModel user)async{
+  try {
+    final adminDb = await Hive.openBox<UserModel>(userBox);
+    await adminDb.put(user.id, user);
+    userList_notifier.notifyListeners();
+    print('Admin added: ${user.username}');
+    print('Admin added successfully');
+  } catch (e) {
+    print('Error adding admin: $e');
+    // You can handle the error or show an error dialog if needed
+    // showErrorDialog('Failed to save admin details. Please try again.');
+  }
+
 }
+
+Future<List> getUserdetails()async{
+  final adminDb=await Hive.openBox<UserModel>(userBox);
+  final adminList=adminDb.values.toList();
+  userList_notifier.value=adminList;
+  userList_notifier.notifyListeners();
+
+  return adminList;
+}
+
+
+
+// Future<void> saveUserData(String username, String imagePath) async {
+//   final box = await Hive.openBox('user_data');
+  
+//   await box.put('username', username);
+//   await box.put('image', imagePath);
+// }
 

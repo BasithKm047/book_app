@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:book_app/Admin/admin_navigator_screen.dart';
 import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/author_adding_screen.dart';
 import 'package:book_app/Admin/genres_adding_screen.dart';
@@ -20,6 +21,7 @@ import 'package:book_app/util/media_querry.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 
 class DetailsAddingScreen extends StatefulWidget {
   DetailsAddingScreen({
@@ -33,8 +35,10 @@ class DetailsAddingScreen extends StatefulWidget {
 class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
   final TextEditingController _bookController = TextEditingController();
   final TextEditingController _discribtionController = TextEditingController();
-  final TextEditingController _totalpageController = TextEditingController();
+  // final TextEditingController _totalpageController = TextEditingController();
+  bool autoValidate=false;
   final _fomKey = GlobalKey<FormState>();
+  bool _submitted = false;
 
   GenresModel? selectedGenre;
   LanguageModel? selectedLanguage;
@@ -43,6 +47,8 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
   File? _image;
   String? _file_path;
   var pickPdfFiles = true;
+
+  
 
   @override
   void initState() {
@@ -152,9 +158,9 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          CostumTextformfield(
-                              title: 'Total page',
-                              controller: _totalpageController),
+                          // CostumTextformfield(
+                          //     title: 'Total page',
+                          //     controller: _totalpageController),
                           const SizedBox(
                             height: 10,
                           ),
@@ -409,7 +415,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                   fontWeight: FontWeight.normal)
               .getFontstyle_2(),
           validator: (value) {
-            if (value == null && value!.trim().isEmpty) {
+            if (value == null || value.trim().isEmpty) {
               return 'Enter Discribtion';
             } else if (!RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(value)) {
               // Allowing spaces in description
@@ -417,6 +423,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
             }
             return null;
           },
+          autovalidateMode:   _submitted? AutovalidateMode.always: AutovalidateMode.disabled,
           controller: _discribtionController,
           onTap: () {},
           maxLines: null,
@@ -517,8 +524,11 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
   Future<void> bookAdding() async {
     // Explicitly validate the form using the _formKey
     bool isFormValid = _fomKey.currentState!.validate();
-
+    setState(() {
+      _submitted=true;
+    });
     // List to track missing fields
+
     List<String> missingFields = [];
 
     // Check for missing required fields
@@ -526,7 +536,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     if (_bookController.text.trim().isEmpty) missingFields.add('Name');
     if (_discribtionController.text.trim().isEmpty)
       missingFields.add('Description');
-      if(_totalpageController.text.isEmpty)missingFields.add('Totalpage');
+      // if(_totalpageController.text.isEmpty)missingFields.add('Totalpage');
     if (selectedAuthor == null) missingFields.add('Author');
     if (selectedGenre == null) missingFields.add('Genre');
     if (selectedLanguage == null) missingFields.add('Language');
@@ -560,19 +570,29 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
       isFavourite: false,
       isWantToRead: false,
       isFinished: false,
-      totalPage:  _totalpageController.text.isNotEmpty 
-    ? int.tryParse(_totalpageController.text) ?? 0 
-    : 0,
+
+    //   totalPage:  _totalpageController.text.isNotEmpty 
+    // ? int.tryParse(_totalpageController.text) ?? 0 
+    // : 0,
+    newAdded: DateTime.now(),
+    isNewReleases: true,
+
   
 
 
     );
      await newAddedBooks(newBook);
 
-    await addBook(newBook);
-    //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
+     await addBook(newBook);
+    showDialog(context: context, builder: (context) {
+       return AlertDialog(title: Lottie.asset(
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Book Added Successfully')));
+        animate: true,
+        repeat: false,
+        'Asset/animation.json'),);
+        
+    },);
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AdminNavigatorScreen(),));
   }
 }

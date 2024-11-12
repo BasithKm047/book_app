@@ -8,7 +8,6 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 
 class CostumBookviewScreen extends StatefulWidget {
   final String name;

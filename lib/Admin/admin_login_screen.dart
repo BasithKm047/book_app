@@ -212,7 +212,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 
   Future<void> _setLoginStatus(bool status) async {
-    final adminBox = await Hive.openBox('admin');
+    final adminBox = await Hive.openBox(adminServices);
     await adminBox.put('isLoggedin', status);
   }
 
@@ -271,10 +271,16 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
     // If login is successful, navigate to the next screen
     if (isLoggedIn) {
-      await _setLoginStatus(true);
+      print('Admin Name: ${_adminNameController.text}');
+      print('Password: ${_password_controller.text}');
+      print('Image path: ${_image!.path}');
+
+
       int newid=createUniqueId();
      final newAdmin=  AdminModel(id: newid, name: _adminNameController.text,image_path: _image!.path);
     await addAdmin(newAdmin);
+    await _setLoginStatus(true);
+
       // Store the login status
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
@@ -291,7 +297,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     }
   } catch (e) {
     // Catch any other errors and show an error message
-    _showErrorDialog('An unexpected error occurred. Please try again.');
+    _showErrorDialog('An unexpected error occurred. Please try again $e.');
   } finally {
     // Stop loading in both success and error cases
     setState(() => _isLoading = false);

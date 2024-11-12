@@ -144,6 +144,7 @@ Future<void> newAddedBooks(Book book) async {
   if (bookDb.containsKey(book.id)) {
     Book existingBook = bookDb.get(book.id)??book;
     existingBook.newAdded = DateTime.now();
+    existingBook.isNewReleases=true;
     await bookDb.put(book.id, existingBook);
   } else {
     book.newAdded = DateTime.now();
@@ -154,7 +155,7 @@ Future<void> newAddedBooks(Book book) async {
 }
 List<Book> getNewAddedBooks(List<Book> books) {
   // Filter books that have a non-null 'newAdded' field
-  List<Book> bookNewAdded = books.where((book) => book.newAdded != null).toList();
+  List<Book> bookNewAdded = books.where((book) => book.isNewReleases==true).toList();
 
   // Sort books by 'newAdded' in descending order (most recent first)
   bookNewAdded.sort((a, b) => b.newAdded!.compareTo(a.newAdded!)); // Ensure latest added books appear first
@@ -164,6 +165,6 @@ List<Book> getNewAddedBooks(List<Book> books) {
   newAddedBook.notifyListeners(); // This makes sure the UI updates with the new releases list
 
   // Return the top 10 most recent added books
-  return bookNewAdded.take(10).toList();
+  return bookNewAdded.take(5).toList();
 }
 

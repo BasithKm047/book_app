@@ -5,6 +5,7 @@ part 'genres_model.g.dart';
 class GenresModel {
   @HiveField(0)
   int id;
+  
   @HiveField(1)
   final String name;
 

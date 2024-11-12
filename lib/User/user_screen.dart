@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:book_app/User/navigator_screen.dart';
 import 'package:book_app/function/user_db_function.dart';
+import 'package:book_app/model/user_model.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
@@ -167,7 +169,7 @@ class _UserScreenState extends State<UserScreen> {
     });
   }
   Future<void> _setLoginStatus(bool status) async {
-    final adminBox = await Hive.openBox('user');
+    final adminBox = await Hive.openBox(userServices);
     await adminBox.put('isLoggedin', status);
   }
 
@@ -188,8 +190,9 @@ class _UserScreenState extends State<UserScreen> {
 
     // If login is successful, navigate to the next screen
     if (isLoggedIn) {
-      await saveUserData(_usernameController.text, _image!.path);
-      loadUserData();
+      int newId=createUniqueId();
+     final newUser=UserModel(newId, _usernameController.text, _image!.path);
+      await addUser(newUser);
       await _setLoginStatus(true); // Store the login status
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:book_app/User/user_details_screen.dart';
+import 'package:book_app/function/user_db_function.dart';
 import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_bookview_screen.dart';
 import 'package:book_app/util/costum_homescreen_details.dart';
@@ -41,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
     getAllGenres();
+    getUserdetails();
   }
 
   Future<void> filterBook(String query) async {
@@ -65,23 +67,38 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black,
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16, right: 20),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => UserDetailsScreen(
-                    image_path: widget.image_path,
-                    name: widget.userName,
+          ValueListenableBuilder(
+            valueListenable: userList_notifier,
+            builder: (context, userList, child) {
+              if (userList.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No user found',
+                    style: CostumFontStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal)
+                        .getFontstyle(),
                   ),
-                ));
-              },
-              child: CircleAvatar(
-                backgroundImage: widget.image_path != null
-                    ? FileImage(File(widget.image_path!))
-                    : const AssetImage('Asset/download_1.jpeg'),
-              ),
-            ),
+                );
+              }
+              final lastUser = userList.last;
+              return Padding(
+                padding: const EdgeInsets.only(top: 16, right: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const UserDetailsScreen(),
+                    ));
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: lastUser.image_path == null
+                        ? const AssetImage('Asset/download_1.jpeg')
+                        : FileImage(File(lastUser.image_path)),
+                  ),
+                ),
+              );
+            },
           ),
         ],
         title: Text(

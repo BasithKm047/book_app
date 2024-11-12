@@ -35,11 +35,11 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
   void initState() {
     super.initState();
     // loadPdfFromAsset();
-    setState(() {
+    secondsRead=widget.book.readingTimeInsecond;
       pdfPath=widget.pdf_path;
-     
-    });
-    savedReadingProgress(currentPage);
+      currentPage=widget.book.currentPage;
+      totalPage=widget.book.totalPage;
+    // savedReadingProgress(currentPage, totalPage: totalPage);
     //  recentlyReadBookFunction(widget.book);
     //  getRecentlyReadBooks(wi);
     startReadingTimer();
@@ -52,6 +52,11 @@ void startReadingTimer(){
     });
   },);
 }
+void onBackPressed() async {
+    stopReadingTimer(); // Stop the timer
+    await savedReadingProgress(currentPage); // Save current reading progress
+    Navigator.of(context).pop(); // Navigate back
+  }
 
 double getReadingprgress(){
   double targetTime=widget.book.targetTimeInsecond.toDouble();
@@ -78,109 +83,123 @@ Future<void>updateBookReadingTime()async{
 @override
   void dispose() {
     super.dispose();
-    startReadingTimer();
+    stopReadingTimer();
+    savedReadingProgress(currentPage);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(onPressed: (){
-          Navigator.of(context).pop();
-        }, icon: const Icon(
-          color: Colors.white,
-          Icons.arrow_back)),
-      ),
+    return WillPopScope(
+      onWillPop: () async{
+        onBackPressed();
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          leading: IconButton(onPressed: (){
+            Navigator.of(context).pop();
+          }, icon: const Icon(
+            color: Colors.white,
+            Icons.arrow_back)),
+        ),
+        
+         body: pdfPath != null
+            ? Stack(
+              children: [
+               
+                PDFView(
+                  
+                  fitEachPage: true,
+                  filePath: pdfPath,
+                  swipeHorizontal: true,
+                  pageFling: true,
+                  fitPolicy: FitPolicy.BOTH,
+                  autoSpacing: true,
+                  enableSwipe: true,
+                  nightMode: true,
+                onRender: (pages)async {
+                  setState(() {
+                    totalPage=pages!;
+                  pdfReady=true;
+                  });
+                  if(widget.book.totalPage!=totalPage){
+                   await savedReadingProgress(currentPage,totalPage: totalPage);
+                  }
+                  
+                },
+                onViewCreated: (controller) {
+                setState(() {
+                   pdfViewController=controller;
+                   pdfViewController.setPage(currentPage);
+                });
+                   
       
-       body: pdfPath != null
-          ? Stack(
-            children: [
-             
-              PDFView(
+                  
+                  
+                },
+                onPageChanged: (page, total) async{
+                  setState(() {
+                    currentPage=page!; 
+                  });
+                await  savedReadingProgress(currentPage,);
+                },
+                      
                 
-                fitEachPage: true,
-                filePath: pdfPath,
-                swipeHorizontal: true,
-                pageFling: true,
-                fitPolicy: FitPolicy.HEIGHT,
-                autoSpacing: true,
-                enableSwipe: true,
-                nightMode: true,
-              onRender: (pages) {
-                setState(() {
-                  totalPage=pages!;
-                pdfReady=true;
-                });
                 
-              },
-              onViewCreated: (controller) {
-                setState(() {
-                  pdfViewController=controller;
-                });
-                
-              },
-              onPageChanged: (page, total) {
-                setState(() {
-                  currentPage=page!;
-                });
-                savedReadingProgress(page!);
-              },
-                    
-              
-              
-              ),
-               Positioned(
-                // left: 20,
-                bottom: 330,
-
-                child: IconButton(onPressed: ()async{
-                  if(currentPage>0){
-                  await  pdfViewController.setPage(currentPage-1);
-
-                    setState(() {
-                      currentPage-=1;
-                    });
-                  }
-                }, icon: const Icon(
-                  color: Colors.white,
-                  Icons.arrow_back_ios)),
-              ),
-
-              Positioned(
-                right: 1,
-                bottom: 330,
-                child: IconButton(onPressed: ()async{
-                  if(currentPage<totalPage-1){
-                  await pdfViewController.setPage(currentPage+1);
-
-                    setState(() {
-                      currentPage+=1;
-                    });
-                  }
-                }, icon: const Icon(
-                  color: Colors.white,
-                  Icons.arrow_forward_ios)),
-              )
-
-            ] ,
-          )
-            //  canShowPageLoadingIndicator: true,
-         
-          : const Center(child: CircularProgressIndicator()),
-    
+                ),
+                 Positioned(
+                  bottom: 330,
+      
+                  child: IconButton(onPressed: ()async{
+                    if(currentPage>0){
+                    await  pdfViewController.setPage(currentPage-1);
+      
+                      setState(() {
+                        currentPage-=1;
+                      });
+                    }
+                    await savedReadingProgress(currentPage);
+                  }, icon: const Icon(
+                    color: Colors.white,
+                    Icons.arrow_back_ios)),
+                ),
+      
+                Positioned(
+                  right: 1,
+                  bottom: 330,
+                  child: IconButton(onPressed: ()async{
+                    if(currentPage<totalPage-1){
+                    await pdfViewController.setPage(currentPage+1);
+      
+                      setState(() {
+                        currentPage+=1;
+                      });
+                    }
+                  }, icon: const Icon(
+                    color: Colors.white,
+                    Icons.arrow_forward_ios)),
+                )
+      
+              ] ,
+            )
+              //  canShowPageLoadingIndicator: true,
+           
+            : const Center(child: CircularProgressIndicator()),
+      
+      ),
     );
   }
-  void savedReadingProgress(int currentPage)async{
+  Future<void> savedReadingProgress(int currentPage , {int ?totalPage})async{
       widget.book.currentPage=currentPage;
+      if(totalPage!=null){
+        widget.book.totalPage=totalPage;
+      }
       final bookDb=await Hive.openBox<Book>('books');
       await bookDb.put(widget.book.id, widget.book);
       bookListnotifier.notifyListeners();
       
   }
   
-// double getReadeProgress(Book book){
-//      double progress=(book.currentPage/(book.totalPage>0?book.totalPage:1)).clamp(0.0, 1.0);
-//     return progress;
-//   }
+
 }

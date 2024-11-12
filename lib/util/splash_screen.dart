@@ -1,5 +1,6 @@
 import 'package:book_app/Admin/admin_navigator_screen.dart';
 import 'package:book_app/User/navigator_screen.dart';
+import 'package:book_app/util/services.dart';
 import 'package:book_app/util/welcome_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
    Future<void> checkLoggedInStatus() async {
-    final admin = await Hive.openBox('Admin');
-    final user= await Hive.openBox('user');
+    final admin = await Hive.openBox(adminServices);
+    final user= await Hive.openBox(userServices);
     final isLoggedIn = admin.get('isLoggedin', defaultValue: false);
     final isUserLoggedin=user.get('isLoggedin',defaultValue: false);
 

@@ -4,6 +4,7 @@ import 'package:book_app/model/author_model.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/model/genres_model.dart';
 import 'package:book_app/model/language_model.dart';
+import 'package:book_app/model/requested_book_model.dart';
 import 'package:book_app/model/user_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/splash_screen.dart';
@@ -48,7 +49,12 @@ if(!Hive.isAdapterRegistered(AdminModelAdapter().typeId)){
   Hive.registerAdapter(AdminModelAdapter());
 }
 
+if(!Hive.isAdapterRegistered(RequestedBookModelAdapter().typeId)){
+  Hive.registerAdapter(RequestedBookModelAdapter());
+}
 
+// await Hive.openBox<AdminModel>('admin'); 
+// await Hive.openBox(adminServices);
 // await Hive.openBox('books');
 // await Hive.openBox('genres');
 

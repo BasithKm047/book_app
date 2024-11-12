@@ -54,14 +54,15 @@ class _CostumTextformfieldState extends State<CostumTextformfield> {
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 15)),
             validator: (value) {
-              if (value == null && value!.trim().isEmpty) {
+              if (value == null || value.trim().isEmpty) {
                 return 'Enter ${widget.title} ';
               } else if (!RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(value)) {
                 // Allowing spaces in description
                 return 'Only letters, numbers, and spaces are allowed';
               }
               return null;
-            }),
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,),
       ),
     );
   }

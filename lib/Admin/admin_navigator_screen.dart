@@ -4,8 +4,6 @@ import 'package:book_app/Admin/admin_library_screen.dart';
 import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/admin_view_screen.dart';
 import 'package:book_app/Admin/details_adding_screen.dart';
-import 'package:book_app/function/admin_db_function.dart';
-import 'package:book_app/model/admin_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';

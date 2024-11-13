@@ -1,4 +1,5 @@
 import 'package:book_app/function/requestbook_db_function.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 
@@ -51,6 +52,14 @@ class RequestBookListanbleBuilder extends StatelessWidget {
                             fontWeight: FontWeight.normal)
                         .getFontstyle(),
                     book.bookName),
+                    trailing: IconButton(onPressed: (){
+                      showDialog(context: context, builder: (context) {
+                        return alertDialogForDelete(context: context, itemDetails: book, itemType: book.bookName, deleteFunction: deleteRequestedBook);
+                      },);
+
+                    }, icon: const Icon(
+                      color: Colors.red,
+                      Icons.delete)),
               );
             },
             separatorBuilder: (context, index) => const Padding(
@@ -58,6 +67,7 @@ class RequestBookListanbleBuilder extends StatelessWidget {
               child: Divider(),
             ),
             itemCount: listOfBooks.length,
+        
           ),
         );
       },

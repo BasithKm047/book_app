@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:book_app/Admin/admin_navigator_screen.dart';
 import 'package:book_app/Admin/author_adding_screen.dart';
 import 'package:book_app/function/author_db_function.dart';
 import 'package:book_app/model/author_model.dart';
+import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_textformfield.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/function/genres_db_function.dart';
@@ -16,6 +18,7 @@ import 'package:book_app/util/media_querry.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 
 class DetailsUpdatingScreen extends StatefulWidget {
   final Book bookDetails;
@@ -88,7 +91,7 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
     _file_path = widget.bookDetails.pdf_path;
     loadAuthors();
     // _totalpageController =
-        TextEditingController(text: widget.bookDetails.totalPage.toString());
+    TextEditingController(text: widget.bookDetails.totalPage.toString());
     loadGenre();
     loadLanguage();
   }
@@ -262,8 +265,8 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
               Text('Please fill in the following fields: $missingFieldsText')));
       return;
     }
-     Book updatedBook=widget.bookDetails;
-      updatedBook = Book(
+    Book updatedBook = widget.bookDetails;
+    updatedBook = Book(
       id: widget.bookDetails.id,
       image_path: _image!.path,
       bookName: _bookController.text,
@@ -279,17 +282,17 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
       // totalPage: _totalpageController.text.isNotEmpty
       //     ? int.tryParse(_totalpageController.text) ?? 0
       //     : 0,
-          newAdded: updatedBook.newAdded,
-          isNewReleases: updatedBook.isNewReleases,
-        
-          
+      newAdded: updatedBook.newAdded,
+      isNewReleases: updatedBook.isNewReleases,
     );
     // await newAddedBooks(updatedBook);
-   await updateBook(updatedBook);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Book Updated Successfully')));
-    Navigator.of(context).pop();
-     //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
+    await updateBook(updatedBook);
+     Dailogueforlottie(context,'Book updated successfully');
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => AdminNavigatorScreen(),
+    ));
+    //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
   }
 
   Future<void> getimage() async {

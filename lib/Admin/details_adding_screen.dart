@@ -584,14 +584,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
      await newAddedBooks(newBook);
 
      await addBook(newBook);
-    showDialog(context: context, builder: (context) {
-       return AlertDialog(title: Lottie.asset(
-
-        animate: true,
-        repeat: false,
-        'Asset/animation.json'),);
-        
-    },);
+      Dailogueforlottie(context,'Book added successfully');
     await Future.delayed(const Duration(seconds: 2));
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AdminNavigatorScreen(),));
   }

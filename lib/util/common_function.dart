@@ -1,6 +1,7 @@
   import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 int createUniqueId() => DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
   AlertDialog alertDialogForDelete<T>({
@@ -138,6 +139,23 @@ int createUniqueId() => DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
   String Finished='Finished';
   String WantToRead='Want to Read';
 
+ Future<dynamic> Dailogueforlottie(BuildContext context,String dailogue) {
+    return showDialog(context: context, builder: (context) {
+    return AlertDialog(
+      title: Column(
+        children: [
+          Lottie.asset(
+            animate: true,
+            repeat: false,
+            'Asset/animation.json'),
+             Text(dailogue,
+            style:  TextStyle(color: Colors.black,fontSize: 15),)
+        ],
+      ),
+    
+    );
 
+  },);
+  }
 
 

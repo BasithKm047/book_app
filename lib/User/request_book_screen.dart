@@ -88,18 +88,11 @@ class RequestBookState extends State<RequestBook> {
    final newRequestBook= RequestedBookModel(id: newId, bookName: _bookName.text);
    await addRequestedBook(newRequestBook);
     
-    showDialog(context: context, builder: (context) {
-      return AlertDialog(
-        title: Lottie.asset(
-          animate: true,
-          repeat: false,
-          'Asset/animation.json'),
-      
-      );
-
-    },);
+    Dailogueforlottie(context,'Book requested successfully');
     await Future.delayed(const Duration(seconds: 2));
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => NavigatorScreen(),));
 
   }
+
+ 
 }

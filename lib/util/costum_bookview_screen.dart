@@ -137,6 +137,8 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
                           builder: (context) => BookReaderScreen(
                             book: bookDetails,
                             pdf_path: bookDetails.pdf_path,
+                            currentPage: bookDetails.currentPage,
+                            
                           ),
                         ));
                       },

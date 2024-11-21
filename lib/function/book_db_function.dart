@@ -7,7 +7,10 @@ ValueNotifier<List<Book>> bookListbyGenreNotifier = ValueNotifier([]);
 ValueNotifier<List<Book>> bookListByLanguage = ValueNotifier([]);
 ValueNotifier<List<Book>> bookListbyAuthor = ValueNotifier([]);
 ValueNotifier<List<Book>> recentlyReadBook = ValueNotifier([]);
-ValueNotifier<List<Book>> newAddedBook=ValueNotifier([]);
+ValueNotifier<List<Book>> newAddedBook = ValueNotifier([]);
+
+
+
 
 Future<void> addBook(Book value) async {
   final bookDb = await Hive.openBox<Book>('books');
@@ -27,7 +30,6 @@ Future<void> updateBook(Book value) async {
   getBooksByGenre(value.genre.name);
   bookListnotifier.value = bookDb.values.toList();
   bookListnotifier.notifyListeners();
-
 }
 
 Future<void> deleteBooks(Book value) async {
@@ -40,7 +42,7 @@ Future<void> deleteBooks(Book value) async {
   getBooksByGenre(value.genre.name);
   getBookByAuthor(value.authors.name);
   getBookByLanguage(value.language.language);
- bookListnotifier.notifyListeners();
+  bookListnotifier.notifyListeners();
 }
 
 Future<void> getAllBooks() async {
@@ -102,7 +104,7 @@ Future<List<Book>> getBookByAuthor(String author) async {
   bookListbyAuthor.value = booksByauthor;
   bookListbyAuthor.notifyListeners();
   print(
-      'Books by$author:    ${booksByauthor.map((book) => book.bookName).toList()}');
+      'Books by$author:  ${booksByauthor.map((book) => book.bookName).toList()}');
   return booksByauthor;
 }
 
@@ -130,7 +132,8 @@ Future<void> recentlyReadBookFunction(Book book) async {
 }
 
 List<Book> getRecentlyReadBooks(List<Book> book) {
-  List<Book>bookWithLastread=book.where((book)=>book.lastRead!=null).toList();
+  List<Book> bookWithLastread =
+      book.where((book) => book.lastRead != null).toList();
   bookWithLastread.sort((a, b) => b.lastRead!.compareTo(a.lastRead!));
   return bookWithLastread.take(5).toList();
   recentlyReadBook.value = bookWithLastread;
@@ -139,12 +142,14 @@ List<Book> getRecentlyReadBooks(List<Book> book) {
 
 Future<void> newAddedBooks(Book book) async {
   // Check if the box is already open
-  final bookDb = Hive.isBoxOpen('books') ? Hive.box<Book>('books') : await Hive.openBox<Book>('books');
+  final bookDb = Hive.isBoxOpen('books')
+      ? Hive.box<Book>('books')
+      : await Hive.openBox<Book>('books');
 
   if (bookDb.containsKey(book.id)) {
-    Book existingBook = bookDb.get(book.id)??book;
+    Book existingBook = bookDb.get(book.id) ?? book;
     existingBook.newAdded = DateTime.now();
-    existingBook.isNewReleases=true;
+    existingBook.isNewReleases = true;
     await bookDb.put(book.id, existingBook);
   } else {
     book.newAdded = DateTime.now();
@@ -153,18 +158,21 @@ Future<void> newAddedBooks(Book book) async {
 
   bookListnotifier.notifyListeners();
 }
+
 List<Book> getNewAddedBooks(List<Book> books) {
   // Filter books that have a non-null 'newAdded' field
-  List<Book> bookNewAdded = books.where((book) => book.isNewReleases==true).toList();
+  List<Book> bookNewAdded =
+      books.where((book) => book.isNewReleases == true).toList();
 
   // Sort books by 'newAdded' in descending order (most recent first)
-  bookNewAdded.sort((a, b) => b.newAdded!.compareTo(a.newAdded!)); // Ensure latest added books appear first
+  bookNewAdded.sort((a, b) => b.newAdded!
+      .compareTo(a.newAdded!)); // Ensure latest added books appear first
 
   // Notify listeners for the new added books
   newAddedBook.value = bookNewAdded;
-  newAddedBook.notifyListeners(); // This makes sure the UI updates with the new releases list
+  newAddedBook
+      .notifyListeners(); // This makes sure the UI updates with the new releases list
 
   // Return the top 10 most recent added books
   return bookNewAdded.take(5).toList();
 }
-

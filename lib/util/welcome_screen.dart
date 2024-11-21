@@ -1,8 +1,8 @@
-
 import 'package:book_app/User/login_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
+
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -10,11 +10,17 @@ class WelcomeScreen extends StatefulWidget {
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
+
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
- 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Adjust button width based on screen size
+    double buttonWidth =
+        screenWidth > 600 ? screenWidth * 0.5 : double.infinity;
+    double buttonHeight = screenWidth > 600 ? 60 : 40;
     return Scaffold(
       backgroundColor: CostumColor().costum_color_4,
       body: Column(
@@ -31,11 +37,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      style: CostumFontStyle(color: CostumColor().costum_color, fontSize: 13, fontWeight: FontWeight.w300).getFontstyle(),
+                      style: CostumFontStyle(
+                              color: CostumColor().costum_color,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w300)
+                          .getFontstyle(),
                       'Welcome to'),
                   // SizedBox(height: 5,),
                   Text(
-                      style: CostumFontStyle(color: CostumColor().costum_color, fontSize: 20, fontWeight: FontWeight.w400).getFontstyle(),
+                      style: CostumFontStyle(
+                              color: CostumColor().costum_color,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400)
+                          .getFontstyle(),
                       ' Kitaab')
                 ],
               )),
@@ -58,7 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   //                 borderRadius:
                   //                     BorderRadius.all(Radius.circular(10)))),
                   //         onPressed: () {
-                          
+
                   //         },
                   //         child: Text(
                   //             style: GoogleFonts.roboto(
@@ -77,8 +91,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
                         ),
-                        height: 50,
-                        width: double.infinity,
+                        height: buttonHeight,
+                        width: buttonWidth,
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               shape: const RoundedRectangleBorder(
@@ -93,7 +107,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               ));
                             },
                             child: Text(
-                                style: CostumFontStyle(color: CostumColor().costum_color_1, fontSize: 15, fontWeight: FontWeight.w400).getFontstyle(),
+                                style: CostumFontStyle(
+                                        color: CostumColor().costum_color_1,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400)
+                                    .getFontstyle(),
                                 'Get start'))),
                   )
                 ],
@@ -102,8 +120,4 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
     );
   }
-   
-
-
-
 }

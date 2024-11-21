@@ -3,6 +3,7 @@ import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/model/book_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 
@@ -45,9 +46,9 @@ class _CatogoriesScreenState extends State<CatogoriesScreen> {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.50,
+        crossAxisSpacing: kIsWeb? 500: 16 ,
+        mainAxisSpacing: kIsWeb? 100: 16,
+        childAspectRatio: kIsWeb? 1.8:0.5,
       ),
       itemCount: bookDetails.length,
       itemBuilder: (context, index) {

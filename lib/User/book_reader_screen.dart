@@ -1,247 +1,159 @@
-import 'dart:async';
-
-import 'package:book_app/function/book_db_function.dart';
-import 'package:book_app/model/book_model.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:book_app/model/book_model.dart';
 
 class BookReaderScreen extends StatefulWidget {
-  final String pdf_path;
-  final Book book;
-  final int currentPage;
+  final String pdfPath; // Either a file path (mobile) or Base64 (web)
+  final Book book; // Book object containing currentPage and other details
+  final int currentPage; // Starting page for the book
+
   const BookReaderScreen({
-    super.key,
-    required this.pdf_path,
-    required this.book, required this.currentPage,
-  });
+    Key? key,
+    required this.pdfPath,
+    required this.book,
+    required this.currentPage,
+  }) : super(key: key);
 
   @override
   State<BookReaderScreen> createState() => _BookReaderScreenState();
 }
 
 class _BookReaderScreenState extends State<BookReaderScreen> {
-  // late Timer _timer;
-  int secondsRead = 0;
-
-  String? pdfPath;
-  int currentPage = 0;
+  final PdfViewerController _pdfViewerController = PdfViewerController();
+  late int currentPage;
   int totalPage = 0;
-  bool pdfReady = false;
-  late PDFViewController pdfViewController;
 
   @override
   void initState() {
     super.initState();
-    // loadPdfFromAsset();
-    secondsRead = widget.book.readingTimeInsecond;
-    pdfPath = widget.pdf_path;
     currentPage = widget.book.currentPage;
-    totalPage = widget.book.totalPage;
-    // savedReadingProgress(currentPage, totalPage: totalPage);
-    //  recentlyReadBookFunction(widget.book);
-    //  getRecentlyReadBooks(wi);
-    // startReadingTimer();
-    print("initState: secondsRead = $secondsRead");
-    print("initState: pdfPath = $pdfPath");
-    print("initState: currentPage = $currentPage, totalPage = $totalPage");
-    loadingprogress();
+    _initializeReadingProgress();
   }
 
-  Future<void> loadingprogress() async {
-    final bookDb = await Hive.openBox('books');
-    Book? savedBoook = bookDb.get(widget.book.id);
-    if (savedBoook != null) {
+  /// Loads the reading progress from Hive.
+  Future<void> _initializeReadingProgress() async {
+    final bookDb = await Hive.openBox<Book>('books');
+    final storedBook = bookDb.get(widget.book.id);
+
+    if (storedBook != null) {
       setState(() {
-        widget.book.currentPage = savedBoook.currentPage;
-        currentPage = widget.book.currentPage;
-        totalPage - savedBoook.totalPage;
+        currentPage = storedBook.currentPage;
       });
-      print("Restored reading progress: Page $currentPage of $totalPage");
-    } else {
-      print("No saved progress found. Starting from page 0.");
     }
+  }
+
+  /// Saves the current page and total pages to Hive.
+  Future<void> _saveReadingProgress() async {
+    widget.book.currentPage = currentPage;
+    widget.book.totalPage = totalPage;
+
+    final bookDb = await Hive.openBox<Book>('books');
+    await bookDb.put(widget.book.id, widget.book);
+  }
+
+  /// Handles page change events in the PDF viewer.
+  void _onPageChanged(PdfPageChangedDetails details) {
+    setState(() {
+      currentPage = details.newPageNumber;
+    });
+    _saveReadingProgress();
+  }
+
+  /// Handles the document load event to update the total page count.
+  void _onDocumentLoaded(PdfDocumentLoadedDetails details) {
+    setState(() {
+      totalPage = details.document.pages.count;
+    });
+    _pdfViewerController.jumpToPage(currentPage);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(color: Colors.white, Icons.arrow_back)),
         title: Text(
-          '$currentPage of $totalPage',
-          style: const TextStyle(color: Colors.white, fontSize: 10),
+          "Page $currentPage of $totalPage",
+          style: const TextStyle(color: Colors.white, fontSize: 15),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              if (currentPage > 1) {
+                _pdfViewerController.previousPage();
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+            onPressed: () {
+              if (currentPage < totalPage) {
+                _pdfViewerController.nextPage();
+              }
+            },
+          ),
+        ],
       ),
-      body: GestureDetector(
-        onHorizontalDragEnd: (details) async {
-          if (details.primaryVelocity! < 0 && currentPage < totalPage - 1) {
-            currentPage++;
-    
-            pdfViewController.setPage(currentPage);
-            await savedReadingProgress(currentPage);
-          } else if (details.primaryVelocity! > 0 && currentPage > 0) {
-            currentPage--;
-            pdfViewController.setPage(currentPage);
-            await savedReadingProgress(currentPage);
-          }
-        },
-        child: pdfPath != null
-            ? Stack(
-                children: [
-                  PDFView(
-                    fitEachPage: true,
-                    filePath: pdfPath,
-                    swipeHorizontal: true,
-                    pageFling: true,
-                    fitPolicy: FitPolicy.WIDTH,
-                    autoSpacing: true,
-                    enableSwipe: true,
-                    nightMode: true,
-                    onRender:   (pages) async {
-                      setState(() {
-                        totalPage = pages!;
-                        pdfReady = true;
-                      });
-                      print(
-                          "PDF Rendered: Total pages = $totalPage, pdfReady = $pdfReady");
-                      if (pdfReady && pdfViewController != null) {
-                        print("Setting current page to: ${widget.currentPage}");
-                        pdfViewController.setPage(widget.currentPage);
-                      }else{
-                         print("Waiting for PDFViewController to be ready...");
-                      }
-                      if (widget.book.totalPage != totalPage) {
-                        await savedReadingProgress(currentPage,
-                            totalPage: totalPage);
-                      }
-                    },
-                    onViewCreated: (controller) {
-                      pdfViewController = controller;
-                      print("PDFViewController initialized.");
-                      if (pdfReady) {
-                        print(
-                            "PDF is ready. Setting initial page to: $currentPage");
-                        pdfViewController.setPage(currentPage);
-                      } else {
-                        print("PDF is not ready yet.");
-                      }
-                    },
-                    onPageChanged: (page, total) async {
-                      setState(() {
-                        currentPage = page!;
-                      });
-                      await savedReadingProgress(
-                        currentPage,
-                      );
-                    },
-                  ),
-                  Positioned(
-                    left: 1,
-                    bottom: 330,
-                    child: IconButton(
-                        onPressed: () async {
-                          if (currentPage > 0) {
-                            await pdfViewController.setPage(currentPage);
-    
-                            setState(() {
-                              currentPage -= 1;
-                            });
-                          }
-                          await savedReadingProgress(currentPage);
-                        },
-                        icon: const Icon(
-                            color: Colors.white, Icons.arrow_back_ios)),
-                  ),
-    
-                  Positioned(
-                    right: 1,
-                    bottom: 330,
-                    child: IconButton(
-                        onPressed: () async {
-                          if (currentPage < totalPage - 1) {
-                            await pdfViewController.setPage(currentPage);
-    
-                            setState(() {
-                              currentPage += 1;
-                            });
-                          }
-                        },
-                        icon: const Icon(
-                            color: Colors.white, Icons.arrow_forward_ios)),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-    
-                  // Positioned(
-                  //   right: 160,
-                  //   top: 10,
-                  //   child: Text('$currentPage of $totalPage',
-                  //   style:  const TextStyle(color: Colors.white,fontSize: 10),),
-                  // )
-                ],
-              )
-            : const Center(child: CircularProgressIndicator()),
-      ),
+      body: _buildPdfViewer(),
     );
   }
 
-  Future<void> savedReadingProgress(int currentPage, {int? totalPage}) async {
-    widget.book.currentPage = currentPage;
-    if (totalPage != null) {
-      widget.book.totalPage = totalPage;
+  /// Builds the PDF Viewer based on the platform (Web/Mobile).
+  Widget _buildPdfViewer() {
+    if (widget.pdfPath.isEmpty) {
+      return const Center(
+        child: Text(
+          "PDF not available.",
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      );
     }
-    final bookDb = await Hive.openBox<Book>('books');
-    await bookDb.put(widget.book.id, widget.book);
-    bookListnotifier.notifyListeners();
+
+    return kIsWeb
+        ? _buildWebPdfViewer()
+        : _buildMobilePdfViewer();
+  }
+
+  /// Builds the PDF Viewer for the web platform.
+  Widget _buildWebPdfViewer() {
+    try {
+      return SfPdfViewer.memory(
+        base64Decode(widget.pdfPath),
+        controller: _pdfViewerController,
+        onPageChanged: _onPageChanged,
+        onDocumentLoaded: _onDocumentLoaded,
+      );
+    } catch (e) {
+      return _buildErrorMessage("Failed to load PDF for the web.");
+    }
+  }
+
+  /// Builds the PDF Viewer for mobile platforms.
+  Widget _buildMobilePdfViewer() {
+    try {
+      return SfPdfViewer.file(
+        File(widget.pdfPath),
+        controller: _pdfViewerController,
+        onPageChanged: _onPageChanged,
+        onDocumentLoaded: _onDocumentLoaded,
+      );
+    } catch (e) {
+      return _buildErrorMessage("Failed to load PDF on mobile.");
+    }
+  }
+
+  /// Returns an error message widget.
+  Widget _buildErrorMessage(String message) {
+    return Center(
+      child: Text(
+        message,
+        style: const TextStyle(color: Colors.red, fontSize: 16),
+      ),
+    );
   }
 }
-
- // void startReadingTimer() {
-  //   _timer = Timer.periodic(
-  //     const Duration(seconds: 1),
-  //     (timer) {
-  //       setState(() {
-  //         secondsRead++;
-  //       });
-  //     },
-  //   );
-  // }
-
-  // void onBackPressed() async {
-  //   // stopReadingTimer(); // Stop the timer
-  //   await savedReadingProgress(currentPage); // Save current reading progress
-  //   Navigator.of(context).pop(); // Navigate back
-  // }
-
-  // double getReadingprgress() {
-  //   double targetTime = widget.book.targetTimeInsecond.toDouble();
-  //   double progress = (secondsRead / targetTime) * 100;
-  //   return progress > 100 ? 100 : progress;
-  // }
-
-  // void stopReadingTimer() {
-  //   _timer.cancel();
-  //   updateBookReadingTime();
-  // }
-
-  // Future<void> updateBookReadingTime() async {
-  //   final bookDb = await Hive.openBox<Book>('books');
-  //   Book book = widget.book;
-  //   book.readingTimeInsecond = secondsRead;
-  //   await bookDb.put(book.id, book);
-  //   print('Book reading time updated: ${book.readingTimeInsecond}');
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   stopReadingTimer();
-  //   savedReadingProgress(currentPage);
-  // }

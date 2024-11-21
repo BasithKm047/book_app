@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/User/book_reader_screen.dart';
@@ -7,7 +8,9 @@ import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 
 class CostumBookviewScreen extends StatefulWidget {
   final String name;
@@ -69,8 +72,10 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.file(
-                            fit: BoxFit.cover, File(bookDetails.image_path)),
+                        child: !kIsWeb?
+                        Image.file(
+                            fit: BoxFit.cover, File(bookDetails.image_path)):
+                            Image.memory(base64Decode(bookDetails.image_path))
                       ),
                     ),
                   ),
@@ -136,7 +141,8 @@ class _CostumBookviewScreenState extends State<CostumBookviewScreen> {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => BookReaderScreen(
                             book: bookDetails,
-                            pdf_path: bookDetails.pdf_path,
+                           pdfPath: bookDetails.pdf_path,
+                           
                             currentPage: bookDetails.currentPage,
                             
                           ),

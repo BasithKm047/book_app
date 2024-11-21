@@ -5,6 +5,7 @@ import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 
@@ -39,7 +40,7 @@ class _CostumGridState extends State<CostumGrid> {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: .9,
+              childAspectRatio: kIsWeb? 2:.9,
               crossAxisSpacing: 16,
               // mainAxisExtent: 4,
               mainAxisSpacing: 16,
@@ -66,15 +67,7 @@ class _CostumGridState extends State<CostumGrid> {
                             ResponsiveHelper(context).getResponsiveHeight(10),
                         width: ResponsiveHelper(context).getResponsiveWidth(40),
                         decoration: BoxDecoration(
-                            // image: DecorationImage(
-                            //   fit: BoxFit.cover,
-                            //   image: FileImage(
-
-                            //     File(
-                            //       value[index].image_path != null
-                            //           ? value[index].image_path!
-                            //           : '')),
-                            // ),
+               
                             color: CostumColor().costum_color_4,
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(

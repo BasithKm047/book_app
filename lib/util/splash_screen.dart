@@ -6,6 +6,7 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

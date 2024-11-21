@@ -18,6 +18,11 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isUser=false;
   @override
   Widget build(BuildContext context) {
+      double screenWidth = MediaQuery.of(context).size.width;
+
+    // Adjust button width based on screen size
+    double buttonWidth = screenWidth > 600 ? screenWidth * 0.4 : double.infinity;
+    // double buttonHeight = screenWidth > 600 ? 60 : 50;
     return Scaffold(
       backgroundColor: CostumColor().costum_color_4,
       appBar: AppBar(
@@ -36,16 +41,18 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
                 height: 50,
               ),
-              isAdmin ? const AdminLoginScreen() : const UserScreen(),
+              isAdmin ? const Center(child: AdminLoginScreen()) : const Center(child: UserScreen()),
               const SizedBox(
                 height: 20,
               ),
               Container(
-                width: double.infinity,
+                width: buttonWidth,
                 height: ResponsiveHelper(context).getResponsiveHeight(7),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),

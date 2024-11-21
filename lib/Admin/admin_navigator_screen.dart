@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:hive/hive.dart';
 
+
 class AdminNavigatorScreen extends StatefulWidget {
   final String ?name;
   final String ?image_path;

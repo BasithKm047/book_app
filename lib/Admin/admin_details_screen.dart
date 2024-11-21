@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/Admin/userwanted_booklist_screen.dart';
 import 'package:book_app/function/admin_db_function.dart';
-import 'package:book_app/function/requestbook_db_function.dart';
 import 'package:book_app/model/admin_model.dart';
 import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/services.dart';
@@ -10,6 +10,7 @@ import 'package:book_app/util/welcome_screen.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -93,9 +94,12 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                         height: ResponsiveHelper(context).getResponsiveHeight(9),
                         width: ResponsiveHelper(context).getResponsiveWidth(30),
                         child: CircleAvatar(
+                          // radius: 50,
                             backgroundImage: adminLast.image_path == null
                                 ? const AssetImage('Asset/download_1.jpeg')
-                                : FileImage(File(adminLast.image_path))
+                                  :  kIsWeb?
+                        MemoryImage(base64Decode(adminLast.image_path))
+                        :FileImage(File(adminLast.image_path))
                                     ),
                       ),
                       Text(

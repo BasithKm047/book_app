@@ -1,10 +1,7 @@
 import 'dart:io';
 
-import 'package:book_app/User/navigator_screen.dart';
 import 'package:book_app/User/request_book_screen.dart';
-import 'package:book_app/function/requestbook_db_function.dart';
 import 'package:book_app/function/user_db_function.dart';
-import 'package:book_app/model/requested_book_model.dart';
 import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/services.dart';
 import 'package:book_app/util/welcome_screen.dart';
@@ -12,10 +9,7 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
-import 'package:lottie/lottie.dart';
-
 
 class UserDetailsScreen extends StatefulWidget {
   final String? image_path;
@@ -65,7 +59,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 valueListenable: userList_notifier,
                 builder: (context, userList, child) {
                   if (userList.isEmpty) {
-
                     return Center(
                       child: Text(
                         'No user found',
@@ -77,7 +70,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       ),
                     );
                   }
-                   final LastUser=userList.last;
+                  final LastUser = userList.last;
                   return Container(
                     height: ResponsiveHelper(context).getResponsiveHeight(13),
                     width: ResponsiveHelper(context).getResponsiveWidth(85),
@@ -184,5 +177,3 @@ class RequestBook extends StatefulWidget {
   @override
   State<RequestBook> createState() => RequestBookState();
 }
-
-

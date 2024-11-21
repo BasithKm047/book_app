@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/Admin/admin_navigator_screen.dart';
-import 'package:book_app/Admin/admin_tabcontroller_screen.dart';
 import 'package:book_app/Admin/author_adding_screen.dart';
 import 'package:book_app/Admin/genres_adding_screen.dart';
 import 'package:book_app/Admin/language_adding_screen.dart';
@@ -19,9 +19,9 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottie/lottie.dart';
 
 class DetailsAddingScreen extends StatefulWidget {
   DetailsAddingScreen({
@@ -36,19 +36,18 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
   final TextEditingController _bookController = TextEditingController();
   final TextEditingController _discribtionController = TextEditingController();
   // final TextEditingController _totalpageController = TextEditingController();
-  bool autoValidate=false;
+  bool autoValidate = false;
   final _fomKey = GlobalKey<FormState>();
   bool _submitted = false;
-
+     Uint8List? _webPdfBytes;
   GenresModel? selectedGenre;
   LanguageModel? selectedLanguage;
   AuthorModel? selectedAuthor;
-
+  Uint8List? _webImageBytes;
   File? _image;
   String? _file_path;
+  String ?fileName;
   var pickPdfFiles = true;
-
-  
 
   @override
   void initState() {
@@ -78,7 +77,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
                       height:
-                          ResponsiveHelper(context).getResponsiveHeight(115),
+                          ResponsiveHelper(context).getResponsiveHeight(125),
                       width: ResponsiveHelper(context).getResponsiveWidth(90),
                       decoration: BoxDecoration(
                           color: CostumColor().costum_color_4,
@@ -88,7 +87,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          imageBox(_image?.path ?? '', 'Image', getimage),
+                          imageBox(_image?.path ?? '', 'Image', getImage),
                           const SizedBox(
                             height: 10,
                           ),
@@ -189,19 +188,58 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     );
   }
 
-  Future<void> getimage() async {
-    final selectedimage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (selectedimage == null) return;
-    final imageTemborory = File(selectedimage.path);
+  Future<void> getImage() async {
+    if (kIsWeb) {
+      final result = await FilePicker.platform
+          .pickFiles(type: FileType.image, withData: true);
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          _webImageBytes = result.files.first.bytes;
+          _image = null;
+        });
+        print('Web image selected');
+      } else {
+        print(' image not selected');
+      }
+    } else {
+      final selectedimage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      _image = imageTemborory;
-    });
+      if (selectedimage == null) {
+        print("No image selected.");
+        return;
+      }
+
+      final imageTemporary = File(selectedimage.path);
+
+      print("Image selected: ${imageTemporary.path}");
+
+      setState(() {
+        _image = imageTemporary;
+        _webImageBytes = null;
+      });
+      print("Image selected: ${_image!.path}");
+    }
   }
 
   Future<void> pickPdfFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    if(kIsWeb){
+      final result=await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ['pdf'],
+      withData: true);
+      if(result!=null&& result.files.isNotEmpty){
+        setState(() {
+          fileName=result.files.first.name;
+          _webPdfBytes=result.files.first.bytes;
+        });
+                print("Selected PDF (Web): $fileName");
+
+      }else{
+      
+        print('No pdf selected on web');
+
+      }
+    }else{
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
@@ -216,6 +254,9 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     } else {
       print('No File Selected');
     }
+    }
+
+  
   }
 
   Widget imageBox(String? imagePath, String text, Function getimage) {
@@ -230,12 +271,14 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                     fit: BoxFit.cover,
                     image: FileImage(File(imagePath!)),
                   )
-                : null,
+                : _webImageBytes != null
+                    ? DecorationImage(image: MemoryImage(_webImageBytes!))
+                    : null,
             color: CostumColor().costum_color_3,
             borderRadius: BorderRadius.circular(10)),
         height: ResponsiveHelper(context).getResponsiveHeight(22),
         width: ResponsiveHelper(context).getResponsiveWidth(35),
-        child: _image == null
+        child: _image == null &&_webImageBytes==null
             ? Center(
                 child: Text(
                     style: CostumFontStyle(
@@ -268,9 +311,9 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
             style: CostumFontStyle(
                     color: Colors.white,
                     fontSize:
-                        ResponsiveHelper(context).getResponsiveFontSize(4),
+                        ResponsiveHelper(context).getResponsiveFontSize(3),
                     fontWeight: FontWeight.w400)
-                .getFontstyle_2(),
+                .getFontstyle(),
             text));
   }
 
@@ -286,6 +329,7 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8),
       child: Container(
+        height: ResponsiveHelper(context).getResponsiveHeight(10),
         decoration: BoxDecoration(
           color: CostumColor().costum_color_3,
           borderRadius: BorderRadius.circular(10),
@@ -423,7 +467,8 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
             }
             return null;
           },
-          autovalidateMode:   _submitted? AutovalidateMode.always: AutovalidateMode.disabled,
+          // autovalidateMode:
+          //     _submitted ? AutovalidateMode.always : AutovalidateMode.disabled,
           controller: _discribtionController,
           onTap: () {},
           maxLines: null,
@@ -471,8 +516,8 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
                 padding: const EdgeInsets.only(right: 8.0),
                 child: IconButton(
                   onPressed: pickingPdfCallback,
-                  icon: filePath != null
-                      ? const Icon(Icons.check, color: Colors.green)
+                  icon: (_file_path!=null ||_webPdfBytes !=null)?
+                       const Icon(Icons.check, color: Colors.green)
                       : const Icon(Icons.upload, color: Colors.white),
                 ),
               ),
@@ -525,22 +570,22 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
     // Explicitly validate the form using the _formKey
     bool isFormValid = _fomKey.currentState!.validate();
     setState(() {
-      _submitted=true;
+      _submitted = true;
     });
     // List to track missing fields
 
     List<String> missingFields = [];
 
     // Check for missing required fields
-    if (_image == null) missingFields.add('Image');
+    if (_image == null&&_webImageBytes==null) missingFields.add('Image');
     if (_bookController.text.trim().isEmpty) missingFields.add('Name');
     if (_discribtionController.text.trim().isEmpty)
       missingFields.add('Description');
-      // if(_totalpageController.text.isEmpty)missingFields.add('Totalpage');
+    // if(_totalpageController.text.isEmpty)missingFields.add('Totalpage');
     if (selectedAuthor == null) missingFields.add('Author');
     if (selectedGenre == null) missingFields.add('Genre');
     if (selectedLanguage == null) missingFields.add('Language');
-    if (_file_path == null) missingFields.add('file');
+    if (_file_path == null&&_webPdfBytes==null) missingFields.add('file');
 
     // If there are missing fields, show a message and return early
     if (!isFormValid || missingFields.isNotEmpty) {
@@ -553,13 +598,14 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
 
     // Proceed with adding the book as all required fields are filled
     int newid = createUniqueId();
-
+    String imagePath = kIsWeb ? base64Encode(_webImageBytes!) : _image!.path;
+     String pdfPath = kIsWeb ? base64Encode(_webPdfBytes!) : _file_path!;
     final newBook = Book(
       id: newid,
-      image_path: _image!.path,
+      image_path: imagePath,
       bookName: _bookController.text,
       discribtion: _discribtionController.text,
-      pdf_path: _file_path!,
+      pdf_path: pdfPath,
       genre: GenresModel(selectedGenre!.id, name: selectedGenre!.name),
       language: LanguageModel(selectedLanguage!.language, selectedLanguage!.id),
       authors: AuthorModel(
@@ -571,21 +617,19 @@ class _DetailsAddingScreenState extends State<DetailsAddingScreen> {
       isWantToRead: false,
       isFinished: false,
 
-    //   totalPage:  _totalpageController.text.isNotEmpty 
-    // ? int.tryParse(_totalpageController.text) ?? 0 
-    // : 0,
-    newAdded: DateTime.now(),
-    isNewReleases: true,
-
-  
-
-
+      //   totalPage:  _totalpageController.text.isNotEmpty
+      // ? int.tryParse(_totalpageController.text) ?? 0
+      // : 0,
+      newAdded: DateTime.now(),
+      isNewReleases: true,
     );
-     await newAddedBooks(newBook);
+    await newAddedBooks(newBook);
 
-     await addBook(newBook);
-      Dailogueforlottie(context,'Book added successfully');
+    await addBook(newBook);
+    Dailogueforlottie(context, 'Book added successfully');
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AdminNavigatorScreen(),));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => AdminNavigatorScreen(),
+    ));
   }
 }

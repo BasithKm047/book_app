@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/Admin/details_updating_screen.dart';
@@ -9,6 +10,7 @@ import 'package:book_app/util/costum_bookview_screen.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:book_app/util/common_function.dart';
@@ -56,7 +58,12 @@ class _BookCardState extends State<BookCard> {
                     ),
                   ));
                 },
-                child: Image.file(
+                child: kIsWeb?
+                Image.memory(
+                  fit: BoxFit.cover,
+                  base64Decode(widget.imagePath)
+                ):
+                 Image.file(
                   File(widget.imagePath),
                   fit: BoxFit.cover,
                   width: double.infinity,

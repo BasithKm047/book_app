@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/Admin/admin_navigator_screen.dart';
@@ -8,6 +9,8 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:book_app/util/services.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,23 +27,24 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   TextEditingController _adminNameController = TextEditingController();
   final String Username = 'basith';
   final String Password = '1234';
-   bool _isLoading = false;
+  bool _isLoading = false;
   final _formkey = GlobalKey<FormState>();
-
+  Uint8List? _webImageBytes;
   File? _image;
   @override
   // void initState() {
   //   super.initState();
-    
+
   //   loadAdminData();
   // }
   @override
-  
   Widget build(BuildContext context) {
+    final screenWidth=MediaQuery.of(context).size.width;
+
     return SingleChildScrollView(
       child: SizedBox(
         height: ResponsiveHelper(context).getResponsiveHeight(60),
-        width: double.infinity,
+        width: screenWidth>600?screenWidth*0.4:screenWidth,
         child: Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formkey,
@@ -58,17 +62,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                   height: 20,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    getImage();
-                  },
-                  child: CircleAvatar(
-                    // color: Colors.amber,
-                    maxRadius: 50,
-                    backgroundImage:_image!=null?
-                         FileImage(_image!):
-                         const AssetImage('Asset/download_1.jpeg')
-                  ),
-                ),
+                    onTap: () {
+                      getImage();
+                    },
+                    child: CircleAvatar(
+                        // color: Colors.amber,
+                        maxRadius: 50,
+                        backgroundImage: _image != null
+                            ? FileImage(_image!) // For mobile
+                            : (_webImageBytes != null
+                                ? MemoryImage(_webImageBytes!) // For web
+                                : const AssetImage('Asset/download_1.jpeg')))),
                 const SizedBox(
                   height: 20,
                 ),
@@ -77,13 +81,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
-                        style: TextStyle(
-                          color: CostumColor().costum_color_1
-                        ),
+                        style: TextStyle(color: CostumColor().costum_color_1),
                         controller: _adminNameController,
-                        
                         decoration: InputDecoration(
-                          
                           enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color.fromARGB(255, 104, 175, 107),
@@ -168,16 +168,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                 shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)))),
-                            onPressed:
-                             _isLoading? null:_login,
-                            child:_isLoading?const CircularProgressIndicator(): Text(
-                              'Log in',
-                              style: CostumFontStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400)
-                                  .getFontstyle(),
-                            )),
+                            onPressed: _isLoading ? null : _login,
+                            child: _isLoading
+                                ? const CircularProgressIndicator()
+                                : Text(
+                                    'Log in',
+                                    style: CostumFontStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w400)
+                                        .getFontstyle(),
+                                  )),
                       ),
                     ),
                     const SizedBox(
@@ -194,21 +195,37 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 
   Future<void> getImage() async {
-    final selectedimage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (kIsWeb) {
+      final result = await FilePicker.platform
+          .pickFiles(type: FileType.image, withData: true);
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          _webImageBytes = result.files.first.bytes;
+          _image=null;
+        });
+        print('Web image selected');
+      } else {
+        print(' image not selected');
+      }
+    } else {
+      final selectedimage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (selectedimage == null) {
-      print("No image selected.");
-      return;
+      if (selectedimage == null) {
+        print("No image selected.");
+        return;
+      }
+
+      final imageTemporary = File(selectedimage.path);
+
+      print("Image selected: ${imageTemporary.path}");
+
+      setState(() {
+        _image = imageTemporary;
+        _webImageBytes=null;
+      });
+      print("Image selected: ${_image!.path}");
     }
-
-    final imageTemporary = File(selectedimage.path);
-
-    print("Image selected: ${imageTemporary.path}");
-
-    setState(() {
-      _image = imageTemporary;
-    });
   }
 
   Future<void> _setLoginStatus(bool status) async {
@@ -219,13 +236,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   // Future<void> _login() async {
 
   //   await _setLoginStatus(true);
-    
+
   //   if (_formkey.currentState!.validate()||_image!=null) {
-     
-     
+
   //     setState(() => _isLoading = true); // Start loading
 
-    
   //       bool isLoggedIn = await Services().login(_adminNameController.text, _password_controller.text);
   //       if (isLoggedIn) {
   //         Navigator.of(context).pushAndRemoveUntil(
@@ -237,91 +252,91 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   //           ),
   //           (Route<dynamic> route) => false,
   //         );
-  //       } 
+  //       }
   //   }else {
 
   //         _showErrorDialog('Invalid Username or Password');
   //       setState(() => _isLoading = false); // Stop loading
 
   //       }
-     
+
   //     }
   Future<void> _login() async {
-  // First, check if the form is valid and if an image has been selected
-  if (!_formkey.currentState!.validate()) {
-    // If form is not valid, show an error message and return
-    _showErrorDialog('Please fill in all fields correctly.');
-    return;
-  } 
-   if (_image == null) {
-    // If image is not selected, show an error message and return
+    // First, check if the form is valid and if an image has been selected
+    if (!_formkey.currentState!.validate()) {
+      // If form is not valid, show an error message and return
+      _showErrorDialog('Please fill in all fields correctly.');
+      return;
+    }
+   // Check if image is selected based on the platform
+  if ((kIsWeb && _webImageBytes == null) || (!kIsWeb && _image == null)) {
     _showErrorDialog('Please select an image.');
     return;
   }
 
-  // Set loading state to true
-  setState(() => _isLoading = true);
+    // Set loading state to true
+    setState(() => _isLoading = true);
 
-  try {
-    // Try logging in with the provided credentials
-    bool isLoggedIn = await Services().adminlogin(
-      _adminNameController.text,
-      _password_controller.text,
-    );
-
-    // If login is successful, navigate to the next screen
-    if (isLoggedIn) {
-      print('Admin Name: ${_adminNameController.text}');
-      print('Password: ${_password_controller.text}');
-      print('Image path: ${_image!.path}');
-
-
-      int newid=createUniqueId();
-     final newAdmin=  AdminModel(id: newid, name: _adminNameController.text,image_path: _image!.path);
-    await addAdmin(newAdmin);
-    await _setLoginStatus(true);
-
-      // Store the login status
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => AdminNavigatorScreen(
-            image_path: _image!.path,
-            name: _adminNameController.text,
-          ),
-        ),
-        (Route<dynamic> route) => false,
+    try {
+      // Try logging in with the provided credentials
+      bool isLoggedIn = await Services().adminlogin(
+        _adminNameController.text,
+        _password_controller.text,
       );
-    } else {
-      // If login fails, show an error message
-      _showErrorDialog('Invalid Username or Password');
-    }
-  } catch (e) {
-    // Catch any other errors and show an error message
-    _showErrorDialog('An unexpected error occurred. Please try again $e.');
-  } finally {
-    // Stop loading in both success and error cases
-    setState(() => _isLoading = false);
-  }
-}
 
+      // If login is successful, navigate to the next screen
+      if (isLoggedIn) {
+        print('Admin Name: ${_adminNameController.text}');
+        print('Password: ${_password_controller.text}');
+        print('Image path: ${kIsWeb? 'Webimage':_image!.path}');
+
+        int newid = createUniqueId();
+      String imagePath = kIsWeb ? base64Encode(_webImageBytes!) : _image!.path;
+        final newAdmin = AdminModel(
+            id: newid,
+            name: _adminNameController.text,
+            image_path:imagePath);
+        await addAdmin(newAdmin);
+        await _setLoginStatus(true);
+
+        // Store the login status
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => AdminNavigatorScreen(
+              image_path: imagePath,
+              name: _adminNameController.text,
+            ),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        // If login fails, show an error message
+        _showErrorDialog('Invalid Username or Password');
+      }
+    } catch (e) {
+      // Catch any other errors and show an error message
+      _showErrorDialog('An unexpected error occurred. Please try again $e.');
+    } finally {
+      // Stop loading in both success and error cases
+      setState(() => _isLoading = false);
+    }
+  }
 
 //   Future<void> loadAdminData() async {
 //   final box = await Hive.openBox('admin_data');
-  
+
 //   String? username = box.get('username');
 //   String? imagePath = box.get('image');
-  
+
 //   if (username != null && imagePath != null) {
 //     // Restore the username and image (e.g., set them to your app's UI)
 //    // Assuming you're using a File for image
 //    setState(() {
 //       _adminNameController.text = username;
-//     _image = File(imagePath);  
+//     _image = File(imagePath);
 //    });
 //   }
 // }
-
-  
 
   // void login() {
   //   String enteredUsername = _adminNameController.text.trim().toLowerCase();
@@ -333,7 +348,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   //     admin.put('isLoggedin', true);
   //   } else {
   //     print('not ok');
-     
+
   //   }
   // }
 
@@ -388,5 +403,4 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   //     contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
   //   );
   // }
-
 }

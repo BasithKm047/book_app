@@ -1,4 +1,3 @@
-import 'package:book_app/User/user_details_screen.dart';
 import 'package:book_app/model/requested_book_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/User/user_details_screen.dart';
@@ -12,7 +13,9 @@ import 'package:book_app/model/book_model.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 
 class HomeScreen extends StatefulWidget {
   String? userName;
@@ -94,7 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: CircleAvatar(
                     backgroundImage: lastUser.image_path == null
                         ? const AssetImage('Asset/download_1.jpeg')
-                        : FileImage(File(lastUser.image_path)),
+                        :  kIsWeb?
+                        MemoryImage(base64Decode(lastUser.image_path))
+                        :FileImage(File(lastUser.image_path))
+                         ,
                   ),
                 ),
               );
@@ -105,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
           "Home",
           style: CostumFontStyle(
                   color: CostumColor().costum_color_1,
-                  fontSize: 20,
+                  fontSize: kIsWeb?ResponsiveHelper(context).getResponsiveFontSize(3): ResponsiveHelper(context).getResponsiveFontSize(7),
                   fontWeight: FontWeight.w400)
               .getFontstyle(),
         ),
@@ -273,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'Hi ${widget.userName}',
                                   style: CostumFontStyle(
                                           color: Colors.white,
-                                          fontSize: 15,
+                                          fontSize:kIsWeb? ResponsiveHelper(context).getResponsiveFontSize(2.5): ResponsiveHelper(context).getResponsiveFontSize(5.5),
                                           fontWeight: FontWeight.w400)
                                       .getFontstyle(),
                                 ),
@@ -284,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'What do you want to read today?',
                                   style: CostumFontStyle(
                                           color: Colors.white,
-                                          fontSize: 12,
+                                          fontSize: kIsWeb? ResponsiveHelper(context).getResponsiveFontSize(1.5): ResponsiveHelper(context).getResponsiveFontSize(3.5),
                                           fontWeight: FontWeight.w400)
                                       .getFontstyle(),
                                 ),

@@ -7,7 +7,6 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottie/lottie.dart';
 
 class RequestBookState extends State<RequestBook> {
   TextEditingController _bookName = TextEditingController();

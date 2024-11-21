@@ -5,6 +5,7 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+
 android {
     namespace = "com.example.book_app"
     compileSdk = flutter.compileSdkVersion
@@ -26,8 +27,9 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+         // Increment the versionCode and versionName for each new release.
+        versionCode 2 // Increment this with each new release.
+        versionName "1.0.1" // Update the version name as necessary.  
     }
 
     buildTypes {
@@ -41,4 +43,8 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10" // Add this dependency for Kotlin compatibility
 }

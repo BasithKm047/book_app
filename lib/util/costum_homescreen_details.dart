@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/util/catogories_screen.dart';
@@ -9,6 +10,7 @@ import 'package:book_app/function/genres_db_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CostumHomescreenDetails extends StatelessWidget {
@@ -130,10 +132,17 @@ class CostumHomescreenDetails extends StatelessWidget {
                                                   filterBooks[index].bookName),
                                     ));
                                   },
-                                  child: Image.file(
-                                      // width: ResponsiveHelper(context).getResponsiveWidth(45),
-                                      fit: BoxFit.cover,
-                                      File(filterBooks[index].image_path)),
+                                  child: kIsWeb
+                                      ? Image.memory(
+                                          base64Decode(filterBooks[index]
+                                              .image_path), // Decode Base64 for Web
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.file(
+                                          File(filterBooks[index]
+                                              .image_path), // File path for Mobile
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
                             ),

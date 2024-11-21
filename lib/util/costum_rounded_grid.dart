@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/Admin/author_updating_screen.dart';
@@ -7,6 +8,7 @@ import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 
@@ -42,8 +44,8 @@ class _CostumRoundedGridState extends State<CostumRoundedGrid> {
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: .7,
-                crossAxisSpacing: 16,
+                childAspectRatio: kIsWeb? 1.3: .7,
+                crossAxisSpacing: kIsWeb?500: 16,
                 // mainAxisExtent: 4,
                 mainAxisSpacing: 16,
               ),
@@ -63,15 +65,23 @@ class _CostumRoundedGridState extends State<CostumRoundedGrid> {
                             ),
                       )),
                       child: Container(
-                        height:
+                        height: 
+                        kIsWeb? ResponsiveHelper(context).getResponsiveHeight(40):
                             ResponsiveHelper(context).getResponsiveHeight(15),
-                        width: ResponsiveHelper(context).getResponsiveWidth(31),
+
+                        width:kIsWeb? ResponsiveHelper(context).getResponsiveWidth(20):
+                         ResponsiveHelper(context).getResponsiveWidth(31),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            image: DecorationImage(
+                            image:
+                            !kIsWeb? DecorationImage(
                               fit: BoxFit.cover,
-                              image: FileImage(File(author.image_path)),
-                            ),
+                              image:
+                               FileImage(File(author.image_path)),
+                            ):
+                            DecorationImage(
+                              fit: BoxFit.cover,
+                              image: MemoryImage(base64Decode(author.image_path))),
                             color: CostumColor().costum_color_2),
                         child: const SizedBox(
                           width: 10,

@@ -3,6 +3,7 @@ import 'package:book_app/util/book_card.dart';
 import 'package:book_app/function/book_db_function.dart';
 import 'package:book_app/util/common_function.dart';
 import 'package:book_app/util/font_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class LibraryDetailsScreen extends StatelessWidget {
@@ -77,9 +78,9 @@ class LibraryDetailsScreen extends StatelessWidget {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16,
+              crossAxisSpacing: !kIsWeb? 16:303,
               mainAxisSpacing: 16,
-              childAspectRatio: 0.50,
+              childAspectRatio: !kIsWeb ? 0.50: 2,
             ),
             itemBuilder: (context, index) {
               return BookCard(

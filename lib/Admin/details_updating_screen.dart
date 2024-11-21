@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_app/Admin/admin_navigator_screen.dart';
@@ -16,9 +17,9 @@ import 'package:book_app/util/costum_color.dart';
 import 'package:book_app/util/font_style.dart';
 import 'package:book_app/util/media_querry.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottie/lottie.dart';
 
 class DetailsUpdatingScreen extends StatefulWidget {
   final Book bookDetails;
@@ -36,11 +37,13 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
   List<AuthorModel> authors = [];
   List<GenresModel> genres = [];
   List<LanguageModel> languages = [];
-
+  Uint8List? _webPdfBytes; // For storing picked file bytes on web
+  String? _fileName;
+  //  dynamic _webImageBytes;
   GenresModel? selectedGenre;
   LanguageModel? selectedLanguage;
   AuthorModel? selectedAuthor;
-
+  Uint8List? _webImageBytes;
   File? _image;
   String? _file_path;
   var pickPdfFilePick = true;
@@ -87,11 +90,22 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
     // TextEditingController(text: widget.bookDetails.authorName);
     _discribtionController =
         TextEditingController(text: widget.bookDetails.discribtion);
-    _image = File(widget.bookDetails.image_path);
-    _file_path = widget.bookDetails.pdf_path;
+    if (kIsWeb) {
+      // If it's a base64-encoded string, decode it
+
+      _webImageBytes = base64Decode(widget.bookDetails.image_path);
+    } else {
+      // For mobile devices, load the image from the file path
+      _image = File(widget.bookDetails.image_path);
+    }
+    if (kIsWeb) {
+      _webPdfBytes=base64Decode( widget.bookDetails.pdf_path);
+    }else{
+      _file_path=widget.bookDetails.pdf_path;
+    }
+
     loadAuthors();
-    // _totalpageController =
-    TextEditingController(text: widget.bookDetails.totalPage.toString());
+
     loadGenre();
     loadLanguage();
   }
@@ -242,85 +256,148 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
   }
 
   Future<void> updatebook() async {
-    bool isFormValid = _fomKey.currentState!.validate();
+    try {
+      bool isFormValid = _fomKey.currentState!.validate();
 
-    // List to track missing fields
-    List<String> missingFields = [];
+      // List to track missing fields
+      List<String> missingFields = [];
 
-    // Check for missing required fields
-    if (_image == null) missingFields.add('Image');
-    if (_bookController.text.trim().isEmpty) missingFields.add('Name');
-    if (_discribtionController.text.trim().isEmpty)
-      missingFields.add('Description');
-    if (selectedAuthor == null) missingFields.add('Author');
-    if (selectedGenre == null) missingFields.add('Genre');
-    if (selectedLanguage == null) missingFields.add('Language');
-    if (_file_path == null) missingFields.add('file');
+      // Check for missing required fields
+      if (_image == null && _webImageBytes == null) {
+        throw Exception("Image is required");
+      }
+      if (_file_path == null && _webPdfBytes == null) {
+        throw Exception("PDF file is required");
+      }
 
-    // If there are missing fields, show a message and return early
-    if (!isFormValid || missingFields.isNotEmpty) {
-      String missingFieldsText = missingFields.join(', ');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text('Please fill in the following fields: $missingFieldsText')));
-      return;
+      if (_image == null && _webImageBytes == null) missingFields.add('Image');
+      if (_bookController.text.trim().isEmpty) missingFields.add('Name');
+      if (_discribtionController.text.trim().isEmpty)
+        missingFields.add('Description');
+      if (selectedAuthor == null) missingFields.add('Author');
+      if (selectedGenre == null) missingFields.add('Genre');
+      if (selectedLanguage == null) missingFields.add('Language');
+      if (_file_path == null && _webPdfBytes == null) missingFields.add('file');
+
+      // If there are missing fields, show a message and return early
+      if (!isFormValid || missingFields.isNotEmpty) {
+        String missingFieldsText = missingFields.join(', ');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                'Please fill in the following fields: $missingFieldsText')));
+        return;
+      }
+
+      Book updatedBook = widget.bookDetails;
+      String imagePath = kIsWeb ? base64Encode(_webImageBytes!) : _image!.path;
+      String pdfPath = kIsWeb ? base64Encode(_webPdfBytes!) : _file_path!;
+      updatedBook = Book(
+        id: widget.bookDetails.id,
+        image_path: imagePath,
+        bookName: _bookController.text,
+        discribtion: _discribtionController.text,
+        pdf_path: pdfPath,
+        genre: GenresModel(selectedGenre!.id, name: selectedGenre!.name),
+        language:
+            LanguageModel(selectedLanguage!.language, selectedLanguage!.id),
+        authors: AuthorModel(selectedAuthor!.id, selectedAuthor!.name,
+            selectedAuthor!.image_path),
+        isFavourite: false,
+        isWantToRead: false,
+        isFinished: false,
+        // totalPage: _totalpageController.text.isNotEmpty
+        //     ? int.tryParse(_totalpageController.text) ?? 0
+        //     : 0,
+        newAdded: updatedBook.newAdded,
+        isNewReleases: updatedBook.isNewReleases,
+      );
+      // await newAddedBooks(updatedBook);
+      await updateBook(updatedBook);
+      Dailogueforlottie(context, 'Book updated successfully');
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => AdminNavigatorScreen(),
+      ));
+      //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
+    } catch (e) {
+      print("Error updating book: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Failed to update book. Please try again.')),
+      );
     }
-    Book updatedBook = widget.bookDetails;
-    updatedBook = Book(
-      id: widget.bookDetails.id,
-      image_path: _image!.path,
-      bookName: _bookController.text,
-      discribtion: _discribtionController.text,
-      pdf_path: _file_path!,
-      genre: GenresModel(selectedGenre!.id, name: selectedGenre!.name),
-      language: LanguageModel(selectedLanguage!.language, selectedLanguage!.id),
-      authors: AuthorModel(
-          selectedAuthor!.id, selectedAuthor!.name, selectedAuthor!.image_path),
-      isFavourite: false,
-      isWantToRead: false,
-      isFinished: false,
-      // totalPage: _totalpageController.text.isNotEmpty
-      //     ? int.tryParse(_totalpageController.text) ?? 0
-      //     : 0,
-      newAdded: updatedBook.newAdded,
-      isNewReleases: updatedBook.isNewReleases,
-    );
-    // await newAddedBooks(updatedBook);
-    await updateBook(updatedBook);
-     Dailogueforlottie(context,'Book updated successfully');
-    await Future.delayed(const Duration(seconds: 2));
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => AdminNavigatorScreen(),
-    ));
-    //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AdminTabcontrollerScreen(),));
   }
 
   Future<void> getimage() async {
-    final selectedimage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (selectedimage == null) return;
-    final imageTemborory = File(selectedimage.path);
+    if (kIsWeb) {
+      final result = await FilePicker.platform
+          .pickFiles(type: FileType.image, withData: true);
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          _webImageBytes = result.files.first.bytes;
+        });
+        print('web image is selected');
+      } else {
+        print('no image is selected');
+      }
+    } else {
+      final selectedimage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (selectedimage == null) return;
+      final imageTemborory = File(selectedimage.path);
 
-    setState(() {
-      _image = imageTemborory;
-    });
+      setState(() {
+        _image = imageTemborory;
+      });
+    }
   }
 
   Future<void> pickPdfFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
+    try {
+      if (kIsWeb) {
+        if (kIsWeb) {
+          if (_webPdfBytes == null) {
+            throw Exception("PDF selection failed on web.");
+          }
+        } else {
+          if (_file_path == null) {
+            throw Exception("PDF selection failed on mobile.");
+          }
+        }
 
-    if (result != null) {
-      PlatformFile file = result.files.first;
-      // print('selected file:${file.name}');
-      print('File path:${file.path} File added');
-      setState(() {
-        _file_path = result.paths.first;
-      });
-    } else {
-      print('No File Selected');
+        final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom, allowedExtensions: ['pdf'], withData: true);
+        if (result != null && result.files.isNotEmpty) {
+          setState(() {
+            _webImageBytes = result.files.first.bytes;
+            _fileName = result.files.first.name;
+          });
+          print("Selected PDF (Web): $_fileName");
+        } else {
+          print('no files  selected ');
+        }
+      } else {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+
+        if (result != null) {
+          PlatformFile file = result.files.first;
+          // print('selected file:${file.name}');
+          print('File path:${file.path} File added');
+          setState(() {
+            _file_path = result.paths.first;
+          });
+        } else {
+          print('No File Selected');
+        }
+      }
+    } catch (e) {
+      print("Error picking PDF file: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to pick a PDF file.')),
+      );
     }
   }
 
@@ -334,14 +411,19 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
             image: _image != null
                 ? DecorationImage(
                     fit: BoxFit.cover,
-                    image: FileImage(File(imagePath!)),
+                    image: FileImage(File(imagePath!)), // For mobile
                   )
-                : null,
+                : _webImageBytes != null
+                    ? DecorationImage(
+                        fit: BoxFit.cover,
+                        image: MemoryImage(_webImageBytes!), // For web
+                      )
+                    : null,
             color: CostumColor().costum_color_3,
             borderRadius: BorderRadius.circular(10)),
         height: ResponsiveHelper(context).getResponsiveHeight(22),
         width: ResponsiveHelper(context).getResponsiveWidth(35),
-        child: _image == null
+        child: _image == null && _webImageBytes == null
             ? Center(
                 child: Text(
                     style: CostumFontStyle(
@@ -532,7 +614,7 @@ class _DetailsUpdatingScreenState extends State<DetailsUpdatingScreen> {
                 padding: const EdgeInsets.only(right: 8.0),
                 child: IconButton(
                   onPressed: pickingPdfCallback,
-                  icon: filePath != null
+                  icon: (filePath != null && _webPdfBytes != null)
                       ? const Icon(Icons.check, color: Colors.green)
                       : const Icon(Icons.upload, color: Colors.white),
                 ),

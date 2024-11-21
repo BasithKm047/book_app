@@ -62,7 +62,8 @@ class _CostumTextformfieldState extends State<CostumTextformfield> {
               }
               return null;
             },
-            autovalidateMode: AutovalidateMode.onUserInteraction,),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            ),
       ),
     );
   }

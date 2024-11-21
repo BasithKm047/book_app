@@ -149,7 +149,7 @@ int createUniqueId() => DateTime.now().microsecondsSinceEpoch % 0xFFFFFFFF;
             repeat: false,
             'Asset/animation.json'),
              Text(dailogue,
-            style:  TextStyle(color: Colors.black,fontSize: 15),)
+            style:  const TextStyle(color: Colors.black,fontSize: 15),)
         ],
       ),
     

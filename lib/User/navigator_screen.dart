@@ -7,6 +7,7 @@ import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 
+
 class NavigatorScreen extends StatefulWidget {
     String ?userName;
    String ?image_path;
